@@ -2,10 +2,11 @@ package jsonparser;
 
 import java.io.File;
 
-public class ArgumentParser {
-    private ArgumentParser() {}
+public class ArgumentToFileParser {
+    private ArgumentToFileParser() {}
     public static File parse(String[] args) {
         if (args.length != 1) {
+            System.out.println("DEBUG:" + args.length);
             throw new IllegalArgumentException("Error: expected exactly one argument.");
         }
 
