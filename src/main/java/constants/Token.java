@@ -1,9 +1,12 @@
 package constants;
 
 public enum Token {
-    OPEN_BRACE("{"),
-    CLOSED_BRACE("}");
+    OPEN_BRACE('{'),
+    CLOSED_BRACE('}');
 
-    Token(String format) {
+    public final char label;
+
+    Token(char label) {
+        this.label = label;
     }
 }
