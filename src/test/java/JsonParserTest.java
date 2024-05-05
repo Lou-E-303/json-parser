@@ -1,12 +1,14 @@
 import constants.TokenType;
+import jsonparser.Json;
 import jsonparser.Token;
 import jsonparser.JsonParser;
 import org.junit.jupiter.api.Test;
+import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class JsonParserTest {
     JsonParser jsonParser = new JsonParser();
@@ -32,5 +34,18 @@ public class JsonParserTest {
                 () -> jsonParser.parse(inputList));
 
         assertEquals("Error: Provided JSON file is not valid as an unexpected token 'a' was encountered.", exception.getMessage());
+    }
+
+    @Test
+    void givenObjectOpenerAndCloserInputShouldReportValidJson() {
+        Token openBrace = new Token(TokenType.OBJECT_OPENER, '{');
+        Token closedBrace = new Token(TokenType.OBJECT_CLOSER, '}');
+
+        List<Token> inputList = List.of(openBrace, closedBrace);
+
+        Json expectedJson = Json.from(new ArrayList<>());
+        Json json = jsonParser.parse(inputList);
+
+        assertTrue(new ReflectionEquals(expectedJson).matches(json));
     }
 }
