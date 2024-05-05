@@ -12,7 +12,7 @@ public class ArgumentToFileParserTest {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 () -> ArgumentToFileParser.parse(new String[]{"Two", "Args"}));
 
-        assertEquals("Error: expected exactly one argument.", exception.getMessage());
+        assertEquals("Error: expected exactly one argument, received 2.", exception.getMessage());
     }
 
     @Test

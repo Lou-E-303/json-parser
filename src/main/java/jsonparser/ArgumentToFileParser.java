@@ -6,7 +6,7 @@ public class ArgumentToFileParser {
     private ArgumentToFileParser() {}
     public static File parse(String[] args) {
         if (args.length != 1) {
-            throw new IllegalArgumentException("Error: expected exactly one argument, received " + args.length);
+            throw new IllegalArgumentException("Error: expected exactly one argument, received " + args.length + ".");
         }
 
         File inputFile = new File(args[0]);
