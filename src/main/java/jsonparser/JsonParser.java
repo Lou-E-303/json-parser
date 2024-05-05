@@ -11,7 +11,7 @@ public class JsonParser {
     public Json parse(List<Token> tokens) {
         List<HashMap<String, Json>> jsonEntries = new ArrayList<>();
 
-        List<TokenType> expectedTokenTypes = List.of(OBJECT_OPENER, OBJECT_CLOSER);
+        ArrayList<TokenType> expectedTokenTypes = new ArrayList<>(List.of(OBJECT_OPENER));
         boolean containsContent = false;
 
         if (tokens.isEmpty()) {
@@ -25,9 +25,32 @@ public class JsonParser {
                 throw new IllegalArgumentException("Error: Provided JSON file is not valid as an unexpected token '" + token.value() + "' was encountered.");
             }
 
-            if (containsContent) {
-                HashMap<String, Json> entry = new HashMap<>();
-                jsonEntries.add(entry);
+            switch (tokenType) {
+                case OBJECT_OPENER:
+                    expectedTokenTypes.remove(OBJECT_OPENER);
+                    expectedTokenTypes.add(OBJECT_CLOSER);
+                    expectedTokenTypes.add(CONTENT);
+                    break;
+
+                case OBJECT_CLOSER:
+                {
+                    expectedTokenTypes.remove(CONTENT);
+                    expectedTokenTypes.add(OBJECT_OPENER);
+
+                    if (containsContent) {
+                        HashMap<String, Json> entry = new HashMap<>();
+                        jsonEntries.add(entry);
+                    }
+
+                    break;
+                }
+
+                case CONTENT:
+                    containsContent = true;
+                    break;
+
+                default:
+                    // Do nothing
             }
         }
 
