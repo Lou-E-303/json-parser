@@ -48,9 +48,6 @@ public class JsonParser {
                 case CONTENT:
                     containsContent = true;
                     break;
-
-                default:
-                    // Do nothing
             }
         }
 
