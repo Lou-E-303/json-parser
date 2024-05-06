@@ -11,8 +11,7 @@ public class JsonParser {
     public Json parse(List<Token> tokens) {
         List<HashMap<String, Json>> jsonEntries = new ArrayList<>();
 
-        ArrayList<TokenType> expectedTokenTypes = new ArrayList<>(List.of(OBJECT_OPENER));
-        boolean containsContent = false;
+        String content = "";
 
         if (tokens.isEmpty()) {
             throw new IllegalArgumentException("Error: Provided JSON file is not valid as it is empty.");
@@ -37,17 +36,14 @@ public class JsonParser {
                     expectedTokenTypes.remove(CONTENT);
                     expectedTokenTypes.add(OBJECT_OPENER);
 
-                    if (containsContent) {
-                        HashMap<String, Json> entry = new HashMap<>();
-                        jsonEntries.add(entry);
-                    }
-
+                    HashMap<String, Json> entry = new HashMap<>();
+                    entry.put("Object", null);
+                    jsonEntries.add(entry);
                     break;
                 }
 
                 case CONTENT:
-                    containsContent = true;
-                    break;
+                    content = content.concat(String.valueOf(token.value()));
             }
         }
 

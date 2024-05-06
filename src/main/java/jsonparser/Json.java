@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Json {
-    List<HashMap<String, Json>> content;
+    private List<HashMap<String, Json>> content;
 
     private Json(List<HashMap<String, Json>> content) {
         this.content = content;

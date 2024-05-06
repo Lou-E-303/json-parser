@@ -37,13 +37,19 @@ public class JsonParserTest {
     }
 
     @Test
-    void givenObjectOpenerAndCloserInputShouldReportValidJson() {
+    void givenObjectOpenerAndCloserInputShouldContainSingleObjectEntry() {
         Token openBrace = new Token(TokenType.OBJECT_OPENER, '{');
         Token closedBrace = new Token(TokenType.OBJECT_CLOSER, '}');
 
         List<Token> inputList = List.of(openBrace, closedBrace);
 
-        Json expectedJson = Json.from(new ArrayList<>());
+        HashMap<String, Json> expectedEntry = new HashMap<>();
+        expectedEntry.put("Object", null);
+
+        ArrayList<HashMap<String, Json>> expectedList = new ArrayList<>();
+        expectedList.add(expectedEntry);
+
+        Json expectedJson = Json.from(expectedList);
         Json json = jsonParser.parse(inputList);
 
         assertTrue(new ReflectionEquals(expectedJson).matches(json));
