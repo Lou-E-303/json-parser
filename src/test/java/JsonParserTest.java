@@ -1,9 +1,7 @@
 import constants.TokenType;
-import jsonparser.Json;
-import jsonparser.Token;
-import jsonparser.JsonParser;
+import jsonparser.*;
 import org.junit.jupiter.api.Test;
-import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,34 +42,30 @@ public class JsonParserTest {
 
         List<Token> inputList = List.of(openBrace, closedBrace);
 
-        HashMap<String, Json> expectedEntry = new HashMap<>();
-        expectedEntry.put("Object", null);
+        HashMap<String, Json> expectedValues = new HashMap<>();
+        expectedValues.put("Object", null);
+        Json expectedJsonObject = JsonObject.from(expectedValues);
 
-        ArrayList<HashMap<String, Json>> expectedList = new ArrayList<>();
-        expectedList.add(expectedEntry);
-
-        Json expectedJson = Json.from(expectedList);
+        Json expectedRootNode = JsonRootNode.from(expectedJsonObject);
         Json json = jsonParser.parse(inputList);
 
-        assertTrue(new ReflectionEquals(expectedJson).matches(json));
+        assertThat(json).isEqualToComparingFieldByFieldRecursively(expectedRootNode);
     }
 
     @Test
-    void givenArrayOpenerAndCloserInputShouldReportValidJson() {
+    void givenArrayOpenerAndCloserInputShouldShouldContainSingleArrayEntry() {
         Token openBracket = new Token(TokenType.ARRAY_OPENER, '[');
         Token closedBracket = new Token(TokenType.ARRAY_CLOSER, ']');
 
         List<Token> inputList = List.of(openBracket, closedBracket);
 
-        HashMap<String, Json> expectedEntry = new HashMap<>();
-        expectedEntry.put("Array", null);
+        ArrayList<Json> expectedValues = new ArrayList<>();
+        expectedValues.add(null);
+        Json expectedJsonArray = JsonArray.from(expectedValues);
 
-        ArrayList<HashMap<String, Json>> expectedList = new ArrayList<>();
-        expectedList.add(expectedEntry);
-
-        Json expectedJson = Json.from(expectedList);
+        Json expectedRootNode = JsonRootNode.from(expectedJsonArray);
         Json json = jsonParser.parse(inputList);
 
-        assertTrue(new ReflectionEquals(expectedJson).matches(json));
+        assertThat(json).isEqualToComparingFieldByFieldRecursively(expectedRootNode);
     }
 }

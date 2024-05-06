@@ -6,13 +6,12 @@ import static constants.TokenType.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class JsonParser {
     public Json parse(List<Token> tokens) {
-        List<HashMap<String, Json>> jsonEntries = new ArrayList<>();
         ArrayList<TokenType> expectedTokenTypes = new ArrayList<>(List.of(OBJECT_OPENER, ARRAY_OPENER));
-
-        String content = "";
+        JsonRootNode jsonRootNode = JsonRootNode.from(null);
 
         if (tokens.isEmpty()) {
             throw new IllegalArgumentException("Error: Provided JSON file is not valid as it is empty.");
@@ -34,11 +33,12 @@ public class JsonParser {
                 case OBJECT_CLOSER:
                 {
                     expectedTokenTypes.remove(CONTENT);
-                    expectedTokenTypes.add(OBJECT_OPENER);
 
-                    HashMap<String, Json> entry = new HashMap<>();
-                    entry.put("Object", null);
-                    jsonEntries.add(entry);
+                    Map<String, Json> entryMap = new HashMap<>();
+                    entryMap.put("Object", null);
+
+                    JsonObject entry = JsonObject.from(entryMap);
+                    jsonRootNode.setValue(entry);
                     break;
                 }
 
@@ -46,17 +46,23 @@ public class JsonParser {
                 {
                     expectedTokenTypes.add(ARRAY_CLOSER);
                     expectedTokenTypes.add(CONTENT);
-                    HashMap<String, Json> entry = new HashMap<>();
-                    entry.put("Array", null);
-                    jsonEntries.add(entry);
                     break;
                 }
 
-                case CONTENT:
-                    content = content.concat(String.valueOf(token.value()));
+                case ARRAY_CLOSER:
+                {
+                    expectedTokenTypes.remove(CONTENT);
+
+                    ArrayList<Json> entryList = new ArrayList<>();
+                    entryList.add(null);
+
+                    JsonArray entry = JsonArray.from(entryList);
+                    jsonRootNode.setValue(entry);
+                    break;
+                }
             }
         }
 
-        return Json.from(jsonEntries);
+        return jsonRootNode;
     }
 }
