@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -45,6 +46,25 @@ public class JsonParserTest {
 
         HashMap<String, Json> expectedEntry = new HashMap<>();
         expectedEntry.put("Object", null);
+
+        ArrayList<HashMap<String, Json>> expectedList = new ArrayList<>();
+        expectedList.add(expectedEntry);
+
+        Json expectedJson = Json.from(expectedList);
+        Json json = jsonParser.parse(inputList);
+
+        assertTrue(new ReflectionEquals(expectedJson).matches(json));
+    }
+
+    @Test
+    void givenArrayOpenerAndCloserInputShouldReportValidJson() {
+        Token openBracket = new Token(TokenType.ARRAY_OPENER, '[');
+        Token closedBracket = new Token(TokenType.ARRAY_CLOSER, ']');
+
+        List<Token> inputList = List.of(openBracket, closedBracket);
+
+        HashMap<String, Json> expectedEntry = new HashMap<>();
+        expectedEntry.put("Array", null);
 
         ArrayList<HashMap<String, Json>> expectedList = new ArrayList<>();
         expectedList.add(expectedEntry);
