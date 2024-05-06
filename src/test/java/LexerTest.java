@@ -8,8 +8,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class LexerTest {
     private static Lexer lexer;
@@ -29,7 +28,7 @@ public class LexerTest {
         ArrayList<Token> expectedTokens = new ArrayList<>(List.of(openBrace, closedBrace));
         ArrayList<Token> tokens = new ArrayList<>(lexer.lex(new File(inputFilePath)));
 
-        assertTrue(new ReflectionEquals(expectedTokens).matches(tokens));
+        assertThat(tokens).isEqualTo(expectedTokens);
     }
 
     @Test
@@ -39,7 +38,7 @@ public class LexerTest {
         ArrayList<Token> expectedTokens = new ArrayList<>(List.of());
         ArrayList<Token> tokens = new ArrayList<>(lexer.lex(new File(inputFilePath)));
 
-        assertTrue(new ReflectionEquals(expectedTokens).matches(tokens));
+        assertThat(tokens).isEqualTo(expectedTokens);
     }
 }
 

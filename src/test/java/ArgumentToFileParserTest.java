@@ -1,9 +1,9 @@
 import jsonparser.ArgumentToFileParser;
 import org.junit.jupiter.api.Test;
-import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
 
 import java.io.File;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ArgumentToFileParserTest {
@@ -30,6 +30,6 @@ public class ArgumentToFileParserTest {
         File testFile = new File(input);
         File parsedFile = ArgumentToFileParser.parse(new String[]{input});
 
-        assertTrue(new ReflectionEquals(testFile).matches(parsedFile));
+        assertThat(parsedFile).isEqualTo(testFile);
     }
 }
