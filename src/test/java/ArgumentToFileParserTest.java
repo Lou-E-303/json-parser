@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class ArgumentToFileParserTest {
     @Test
-    void givenArgsOfLengthNotOneThenThrowsIllegalArgumentException() {
+    void givenArgsOfLengthNotOneThenThrowIllegalArgumentException() {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 () -> ArgumentToFileParser.parse(new String[]{"Two", "Args"}));
 
@@ -16,7 +16,7 @@ public class ArgumentToFileParserTest {
     }
 
     @Test
-    void givenInvalidInputFileThenThrowsIllegalArgumentException() {
+    void givenInvalidInputFileThenThrowIllegalArgumentException() {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 () -> ArgumentToFileParser.parse(new String[]{"This is not a file"}));
 
