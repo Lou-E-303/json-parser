@@ -28,6 +28,8 @@ public class Lexer {
         return switch (c) {
             case '{' -> TokenType.OBJECT_OPENER;
             case '}' -> TokenType.OBJECT_CLOSER;
+            case '[' -> TokenType.ARRAY_OPENER;
+            case ']' -> TokenType.ARRAY_CLOSER;
             default -> TokenType.CONTENT;
         };
     }
