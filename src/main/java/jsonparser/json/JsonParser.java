@@ -1,12 +1,12 @@
-package jsonparser;
+package jsonparser.json;
 
 import constants.TokenType;
+import jsonparser.Token;
+
 import static constants.TokenType.*;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class JsonParser {
     public Json parse(List<Token> tokens) {
@@ -34,10 +34,7 @@ public class JsonParser {
                 {
                     expectedTokenTypes.remove(CONTENT);
 
-                    Map<String, Json> entryMap = new HashMap<>();
-                    entryMap.put("Object", null);
-
-                    JsonObject entry = JsonObject.from(entryMap);
+                    JsonObject entry = JsonObject.from(null);
                     jsonRootNode.setValue(entry);
                     break;
                 }
@@ -53,10 +50,7 @@ public class JsonParser {
                 {
                     expectedTokenTypes.remove(CONTENT);
 
-                    ArrayList<Json> entryList = new ArrayList<>();
-                    entryList.add(null);
-
-                    JsonArray entry = JsonArray.from(entryList);
+                    JsonArray entry = JsonArray.from(null);
                     jsonRootNode.setValue(entry);
                     break;
                 }

@@ -1,12 +1,12 @@
 import jsonparser.*;
+import jsonparser.json.*;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -41,30 +41,35 @@ public class JsonParserTest {
     }
 
     @Test
-    void givenObjectOpenerAndCloserInputShouldReturnSingleObjectEntry() {
+    void givenObjectOpenerAndCloserInputShouldReturnSingleNullObjectEntry() {
         List<Token> inputList = lexer.lex(new File("src/test/resources/pass0_brackets.json"));
 
-        HashMap<String, Json> expectedValues = new HashMap<>();
-        expectedValues.put("Object", null);
-        Json expectedJsonObject = JsonObject.from(expectedValues);
+        Json expectedRootNode = JsonRootNode.from(JsonObject.from(null));
+        Json actualRootNode = jsonParser.parse(inputList);
 
-        Json expectedRootNode = JsonRootNode.from(expectedJsonObject);
-        Json json = jsonParser.parse(inputList);
-
-        assertThat(json).isEqualToComparingFieldByFieldRecursively(expectedRootNode);
+        assertThat(actualRootNode).isEqualToComparingFieldByFieldRecursively(expectedRootNode);
     }
 
     @Test
-    void givenArrayOpenerAndCloserInputShouldReturnSingleArrayEntry() {
+    void givenArrayOpenerAndCloserInputShouldReturnSingleNullArrayEntry() {
         List<Token> inputList = lexer.lex(new File("src/test/resources/pass1_array.json"));
 
-        ArrayList<Json> expectedValues = new ArrayList<>();
-        expectedValues.add(null);
-        Json expectedJsonArray = JsonArray.from(expectedValues);
+        Json expectedRootNode = JsonRootNode.from(JsonArray.from(null));
+        Json actualRootNode = jsonParser.parse(inputList);
 
-        Json expectedRootNode = JsonRootNode.from(expectedJsonArray);
-        Json json = jsonParser.parse(inputList);
+        assertThat(actualRootNode).isEqualToComparingFieldByFieldRecursively(expectedRootNode);
+    }
 
-        assertThat(json).isEqualToComparingFieldByFieldRecursively(expectedRootNode);
+    @Test
+    void givenObjectContainingContentShouldReturnValidObject() {
+        List<Token> inputList = lexer.lex(new File("src/test/resources/pass2_content.json"));
+
+        Json valueString = JsonString.from("value");
+        Json jsonObject = JsonObject.from(Map.of("key", valueString));
+
+        Json expectedRootNode = JsonRootNode.from(jsonObject);
+        Json actualRootNode = jsonParser.parse(inputList);
+
+        assertThat(actualRootNode).isEqualToComparingFieldByFieldRecursively(expectedRootNode);
     }
 }
