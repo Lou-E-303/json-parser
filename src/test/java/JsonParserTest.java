@@ -1,8 +1,9 @@
-import constants.TokenType;
 import jsonparser.*;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,11 +11,18 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class JsonParserTest {
-    JsonParser jsonParser = new JsonParser();
+    private static JsonParser jsonParser;
+    private static Lexer lexer;
+
+    @BeforeAll
+    static void init() {
+        jsonParser = new JsonParser();
+        lexer = new Lexer();
+    }
 
     @Test
     void givenEmptyInputShouldReportInvalidJson() {
-        List<Token> inputList = List.of();
+        List<Token> inputList = lexer.lex(new File("src/test/resources/fail0_empty.json"));
 
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 () -> jsonParser.parse(inputList));
@@ -24,23 +32,17 @@ public class JsonParserTest {
 
     @Test
     void givenRawTextInputShouldReportInvalidJson() {
-        Token a = new Token(TokenType.CONTENT, 'a');
-        Token b = new Token(TokenType.CONTENT, 'b');
-
-        List<Token> inputList = List.of(a, b);
+        List<Token> inputList = lexer.lex(new File("src/test/resources/fail1_invalid.json"));
 
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 () -> jsonParser.parse(inputList));
 
-        assertEquals("Error: Provided JSON file is not valid as an unexpected token 'a' was encountered.", exception.getMessage());
+        assertEquals("Error: Provided JSON file is not valid as an unexpected token 'I' was encountered.", exception.getMessage());
     }
 
     @Test
     void givenObjectOpenerAndCloserInputShouldReturnSingleObjectEntry() {
-        Token openBrace = new Token(TokenType.OBJECT_OPENER, '{');
-        Token closedBrace = new Token(TokenType.OBJECT_CLOSER, '}');
-
-        List<Token> inputList = List.of(openBrace, closedBrace);
+        List<Token> inputList = lexer.lex(new File("src/test/resources/pass0_brackets.json"));
 
         HashMap<String, Json> expectedValues = new HashMap<>();
         expectedValues.put("Object", null);
@@ -54,10 +56,7 @@ public class JsonParserTest {
 
     @Test
     void givenArrayOpenerAndCloserInputShouldReturnSingleArrayEntry() {
-        Token openBracket = new Token(TokenType.ARRAY_OPENER, '[');
-        Token closedBracket = new Token(TokenType.ARRAY_CLOSER, ']');
-
-        List<Token> inputList = List.of(openBracket, closedBracket);
+        List<Token> inputList = lexer.lex(new File("src/test/resources/pass1_array.json"));
 
         ArrayList<Json> expectedValues = new ArrayList<>();
         expectedValues.add(null);

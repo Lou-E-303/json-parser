@@ -20,7 +20,7 @@ public class LexerTest {
 
     @Test
     void givenInputOfValidTokensThenReturnTokenList() {
-        String inputFilePath = "src/test/resources/pass0.json";
+        String inputFilePath = "src/test/resources/pass0_brackets.json";
 
         Token openBrace = new Token(TokenType.OBJECT_OPENER, '{');
         Token closedBrace = new Token(TokenType.OBJECT_CLOSER, '}');
@@ -33,7 +33,7 @@ public class LexerTest {
 
     @Test
     void givenEmptyInputThenReturnEmptyList() {
-        String inputFilePath = "src/test/resources/fail0.json";
+        String inputFilePath = "src/test/resources/fail0_empty.json";
 
         ArrayList<Token> expectedTokens = new ArrayList<>(List.of());
         ArrayList<Token> tokens = new ArrayList<>(lexer.lex(new File(inputFilePath)));
