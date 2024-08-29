@@ -1,4 +1,4 @@
-package jsonparser;
+package jsonparser.json;
 
 import constants.JsonType;
 
