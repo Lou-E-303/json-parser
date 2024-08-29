@@ -36,7 +36,7 @@ public class JsonParserTest {
     }
 
     @Test
-    void givenObjectOpenerAndCloserInputShouldContainSingleObjectEntry() {
+    void givenObjectOpenerAndCloserInputShouldReturnSingleObjectEntry() {
         Token openBrace = new Token(TokenType.OBJECT_OPENER, '{');
         Token closedBrace = new Token(TokenType.OBJECT_CLOSER, '}');
 
@@ -53,7 +53,7 @@ public class JsonParserTest {
     }
 
     @Test
-    void givenArrayOpenerAndCloserInputShouldShouldContainSingleArrayEntry() {
+    void givenArrayOpenerAndCloserInputShouldReturnSingleArrayEntry() {
         Token openBracket = new Token(TokenType.ARRAY_OPENER, '[');
         Token closedBracket = new Token(TokenType.ARRAY_CLOSER, ']');
 

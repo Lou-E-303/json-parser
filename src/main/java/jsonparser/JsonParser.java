@@ -21,7 +21,7 @@ public class JsonParser {
             TokenType tokenType = token.type();
 
             if (!expectedTokenTypes.contains(tokenType)) {
-                throw new IllegalArgumentException("Error: Provided JSON file is not valid as an unexpected token '" + token.value() + "' was encountered.");
+                throw new IllegalArgumentException("Error: Provided JSON file is not valid as an unexpected token '" + token.getValue() + "' was encountered.");
             }
 
             switch (tokenType) {
