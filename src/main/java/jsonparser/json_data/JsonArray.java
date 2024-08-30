@@ -1,7 +1,5 @@
 package jsonparser.json_data;
 
-import constants.JsonType;
-
 import java.util.ArrayList;
 
 public class JsonArray implements Json {

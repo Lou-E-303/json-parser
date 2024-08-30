@@ -1,4 +1,4 @@
-package constants;
+package jsonparser.lexing_parsing;
 
 public enum TokenType {
     OBJECT_OPENER,

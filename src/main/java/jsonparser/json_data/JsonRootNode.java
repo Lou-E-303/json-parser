@@ -1,7 +1,5 @@
 package jsonparser.json_data;
 
-import constants.JsonType;
-
 public class JsonRootNode implements Json {
     private Json value;
     private final JsonType type = JsonType.ROOT_NODE;

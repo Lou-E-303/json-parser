@@ -1,7 +1,5 @@
 package jsonparser.lexing_parsing;
 
-import constants.TokenType;
-
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;

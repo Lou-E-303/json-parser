@@ -64,7 +64,7 @@ public class JsonParserTest {
 
     @Test
     void givenObjectContainingContentShouldReturnValidObject() {
-        List<Token> inputList = lexer.lex(new File("src/test/resources/pass2_content.json"));
+        List<Token> inputList = lexer.lex(new File("src/test/resources/pass2_keyvalue.json"));
 
         Json valueString = JsonString.from("value");
         Json jsonObject = JsonObject.from(Map.of("key", valueString));

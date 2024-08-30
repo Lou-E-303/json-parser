@@ -1,7 +1,5 @@
 package jsonparser.json_data;
 
-import constants.JsonType;
-
 public class JsonString implements Json {
     private final String value;
     private final JsonType type = JsonType.STRING;

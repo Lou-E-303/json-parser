@@ -1,4 +1,4 @@
-package constants;
+package jsonparser.json_data;
 
 public enum JsonType {
     ROOT_NODE,

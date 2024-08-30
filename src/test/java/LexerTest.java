@@ -1,4 +1,4 @@
-import constants.TokenType;
+import jsonparser.lexing_parsing.TokenType;
 import jsonparser.lexing_parsing.Token;
 import jsonparser.lexing_parsing.Lexer;
 import org.junit.jupiter.api.BeforeAll;
