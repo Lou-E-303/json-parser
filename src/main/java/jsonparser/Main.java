@@ -1,7 +1,10 @@
 package jsonparser;
 
-import jsonparser.json.Json;
-import jsonparser.json.JsonParser;
+import jsonparser.json_data.Json;
+import jsonparser.lexing_parsing.ArgumentToFileParser;
+import jsonparser.lexing_parsing.JsonParser;
+import jsonparser.lexing_parsing.Lexer;
+import jsonparser.lexing_parsing.Token;
 
 import java.io.File;
 import java.util.List;

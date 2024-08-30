@@ -1,4 +1,4 @@
-package jsonparser;
+package jsonparser.lexing_parsing;
 
 import java.io.File;
 

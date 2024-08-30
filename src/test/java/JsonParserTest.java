@@ -1,5 +1,7 @@
-import jsonparser.*;
-import jsonparser.json.*;
+import jsonparser.json_data.*;
+import jsonparser.lexing_parsing.JsonParser;
+import jsonparser.lexing_parsing.Lexer;
+import jsonparser.lexing_parsing.Token;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;

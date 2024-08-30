@@ -1,7 +1,10 @@
-package jsonparser.json;
+package jsonparser.lexing_parsing;
 
 import constants.TokenType;
-import jsonparser.Token;
+import jsonparser.json_data.Json;
+import jsonparser.json_data.JsonArray;
+import jsonparser.json_data.JsonObject;
+import jsonparser.json_data.JsonRootNode;
 
 import static constants.TokenType.*;
 

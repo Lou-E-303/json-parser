@@ -1,4 +1,4 @@
-import jsonparser.ArgumentToFileParser;
+import jsonparser.lexing_parsing.ArgumentToFileParser;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
