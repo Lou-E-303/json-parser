@@ -1,7 +1,6 @@
 package jsonparser.state_management;
 
 import jsonparser.lexing_parsing.TokenType;
-import jsonparser.lexing_parsing.Token;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -24,7 +23,7 @@ public class FiniteStateMachine {
         this.stateTransitionTable = new EnumMap<>(State.class);
 
         for (State state : State.values()) {
-            stateTransitionTable.put(state, new EnumMap<>(Token.class));
+            stateTransitionTable.put(state, new EnumMap<>(TokenType.class));
         }
 
         stateTransitionTable.get(State.IDLE).put(TokenType.OBJECT_OPENER, State.OPEN_OBJECT);
