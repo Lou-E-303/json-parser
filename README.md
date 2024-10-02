@@ -1,6 +1,6 @@
 # Intro
 
-This is a simple JSON parser.
+This is a JSON parser.
 
 # Run
 

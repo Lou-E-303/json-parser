@@ -25,7 +25,7 @@ public class ArgumentToFileParserTest {
 
     @Test
     void givenValidInputFilepathThenReturnFile() {
-        String input = "src/test/resources/pass0_brackets.json";
+        String input = "src/test/resources/pass_brackets.json";
 
         File testFile = new File(input);
         File parsedFile = ArgumentToFileParser.parse(new String[]{input});
