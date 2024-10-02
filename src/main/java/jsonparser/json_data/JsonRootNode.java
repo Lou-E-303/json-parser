@@ -13,13 +13,13 @@ public class JsonRootNode implements Json {
     }
 
     @Override
-    public Json getValue() {
-        return value;
+    public JsonType getType() {
+        return type;
     }
 
     @Override
-    public JsonType getType() {
-        return type;
+    public Json getValue() {
+        return value;
     }
 
     public void setValue(Json value) {

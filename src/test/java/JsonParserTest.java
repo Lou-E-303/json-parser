@@ -2,13 +2,12 @@ import jsonparser.json_data.*;
 import jsonparser.lexing_parsing.JsonParser;
 import jsonparser.lexing_parsing.Lexer;
 import jsonparser.lexing_parsing.Token;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -16,15 +15,15 @@ public class JsonParserTest {
     private static JsonParser jsonParser;
     private static Lexer lexer;
 
-    @BeforeAll
-    static void init() {
+    @BeforeEach
+    void init() {
         jsonParser = new JsonParser();
         lexer = new Lexer();
     }
 
     @Test
     void givenEmptyInputShouldReportInvalidJson() {
-        List<Token> inputList = lexer.lex(new File("src/test/resources/fail0_empty.json"));
+        List<Token> inputList = lexer.lex(new File("src/test/resources/fail_empty.json"));
 
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 () -> jsonParser.parse(inputList));
@@ -34,19 +33,20 @@ public class JsonParserTest {
 
     @Test
     void givenRawTextInputShouldReportInvalidJson() {
-        List<Token> inputList = lexer.lex(new File("src/test/resources/fail1_invalid.json"));
+        List<Token> inputList = lexer.lex(new File("src/test/resources/fail_invalid.json"));
 
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+        IllegalStateException exception = assertThrows(IllegalStateException.class,
                 () -> jsonParser.parse(inputList));
 
-        assertEquals("Error: Provided JSON file is not valid as an unexpected token 'I' was encountered.", exception.getMessage());
+        assertEquals("Error: Invalid JSON. Cannot go from IDLE to CONTENT.", exception.getMessage());
     }
 
     @Test
     void givenObjectOpenerAndCloserInputShouldReturnSingleNullObjectEntry() {
-        List<Token> inputList = lexer.lex(new File("src/test/resources/pass0_brackets.json"));
+        List<Token> inputList = lexer.lex(new File("src/test/resources/pass_brackets.json"));
 
-        Json expectedRootNode = JsonRootNode.from(JsonObject.from(null));
+        JsonObject emptyObject = JsonObject.from();
+        Json expectedRootNode = JsonRootNode.from(emptyObject);
         Json actualRootNode = jsonParser.parse(inputList);
 
         assertThat(actualRootNode).isEqualToComparingFieldByFieldRecursively(expectedRootNode);
@@ -54,9 +54,10 @@ public class JsonParserTest {
 
     @Test
     void givenArrayOpenerAndCloserInputShouldReturnSingleNullArrayEntry() {
-        List<Token> inputList = lexer.lex(new File("src/test/resources/pass1_array.json"));
+        List<Token> inputList = lexer.lex(new File("src/test/resources/pass_simpleArray.json"));
 
-        Json expectedRootNode = JsonRootNode.from(JsonArray.from(null));
+        JsonArray emptyArray = JsonArray.from();
+        Json expectedRootNode = JsonRootNode.from(emptyArray);
         Json actualRootNode = jsonParser.parse(inputList);
 
         assertThat(actualRootNode).isEqualToComparingFieldByFieldRecursively(expectedRootNode);
@@ -64,10 +65,11 @@ public class JsonParserTest {
 
     @Test
     void givenObjectContainingContentShouldReturnValidObject() {
-        List<Token> inputList = lexer.lex(new File("src/test/resources/pass2_keyvalue.json"));
+        List<Token> inputList = lexer.lex(new File("src/test/resources/pass_keyValue.json"));
 
-        Json valueString = JsonString.from("value");
-        Json jsonObject = JsonObject.from(Map.of("key", valueString));
+        JsonString valueString = JsonString.from("value");
+        JsonObject jsonObject = JsonObject.from();
+        jsonObject.setValue("key", valueString);
 
         Json expectedRootNode = JsonRootNode.from(jsonObject);
         Json actualRootNode = jsonParser.parse(inputList);
