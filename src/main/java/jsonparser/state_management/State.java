@@ -5,5 +5,10 @@ public enum State {
     OPEN_OBJECT,
     OPEN_ARRAY,
     OPEN_STRING,
+    ARRAY_VALUE,
+    OBJECT_KEY,
+    OBJECT_VALUE,
+    AWAITING_COLON,
+    AWAITING_VALUE,
     PREVIOUS
 }

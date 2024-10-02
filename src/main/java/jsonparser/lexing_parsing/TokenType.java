@@ -6,5 +6,6 @@ public enum TokenType {
     ARRAY_OPENER,
     ARRAY_CLOSER,
     QUOTE,
+    COLON,
     CONTENT
 }
