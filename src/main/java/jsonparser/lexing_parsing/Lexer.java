@@ -28,6 +28,8 @@ public class Lexer {
             case '}' -> TokenType.OBJECT_CLOSER;
             case '[' -> TokenType.ARRAY_OPENER;
             case ']' -> TokenType.ARRAY_CLOSER;
+            case '"' -> TokenType.QUOTE;
+            case ':' -> TokenType.COLON;
             default -> TokenType.CONTENT;
         };
     }
