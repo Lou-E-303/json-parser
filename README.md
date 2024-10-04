@@ -1,6 +1,7 @@
 # Intro
 
 This is a JSON parser.
+As of right now, it's a WIP. If you clone it, it probably won't work!
 
 # Run
 
