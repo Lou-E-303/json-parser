@@ -1,7 +1,6 @@
 # Intro
 
-This is a JSON parser.
-As of right now, it's a WIP. If you clone it, it probably won't work!
+This is a JSON parser. As of right now, it's a work-in-progress and won't be fully-featured if cloned.
 
 # Run
 
