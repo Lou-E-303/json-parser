@@ -16,7 +16,7 @@ public class Main {
             File inputFile = ArgumentToFileParser.parse(args);
             List<Token> tokens = new Lexer().lex(inputFile);
             Json json = parser.parse(tokens);
-            parser.flush();
+            parser.reset();
         } catch (Exception e) {
             System.out.println(e.getMessage());
             System.exit(1);

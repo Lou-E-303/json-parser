@@ -45,8 +45,7 @@ public class JsonParserTest {
     void givenObjectOpenerAndCloserInputShouldReturnSingleNullObjectEntry() {
         List<Token> inputList = lexer.lex(new File("src/test/resources/pass_brackets.json"));
 
-        JsonObject emptyObject = JsonObject.from();
-        Json expectedRootNode = JsonRootNode.from(emptyObject);
+        JsonObject expectedRootNode = JsonObject.from();
         Json actualRootNode = jsonParser.parse(inputList);
 
         assertThat(actualRootNode).isEqualToComparingFieldByFieldRecursively(expectedRootNode);
@@ -56,8 +55,7 @@ public class JsonParserTest {
     void givenArrayOpenerAndCloserInputShouldReturnSingleNullArrayEntry() {
         List<Token> inputList = lexer.lex(new File("src/test/resources/pass_simpleArray.json"));
 
-        JsonArray emptyArray = JsonArray.from();
-        Json expectedRootNode = JsonRootNode.from(emptyArray);
+        JsonArray expectedRootNode = JsonArray.from();
         Json actualRootNode = jsonParser.parse(inputList);
 
         assertThat(actualRootNode).isEqualToComparingFieldByFieldRecursively(expectedRootNode);
@@ -68,10 +66,9 @@ public class JsonParserTest {
         List<Token> inputList = lexer.lex(new File("src/test/resources/pass_keyValue.json"));
 
         JsonString valueString = JsonString.from("value");
-        JsonObject jsonObject = JsonObject.from();
-        jsonObject.setValue("key", valueString);
+        JsonObject expectedRootNode = JsonObject.from();
+        expectedRootNode.setValue("key", valueString);
 
-        Json expectedRootNode = JsonRootNode.from(jsonObject);
         Json actualRootNode = jsonParser.parse(inputList);
 
         assertThat(actualRootNode).isEqualToComparingFieldByFieldRecursively(expectedRootNode);
