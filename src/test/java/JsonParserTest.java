@@ -38,7 +38,7 @@ public class JsonParserTest {
         IllegalStateException exception = assertThrows(IllegalStateException.class,
                 () -> jsonParser.parse(inputList));
 
-        assertEquals("Error: Invalid JSON. Cannot go from IDLE to CONTENT.", exception.getMessage());
+        assertEquals("Error: Invalid JSON. Cannot transition from IDLE with CONTENT.", exception.getMessage());
     }
 
     @Test
@@ -63,11 +63,26 @@ public class JsonParserTest {
 
     @Test
     void givenObjectContainingContentShouldReturnValidObject() {
-        List<Token> inputList = lexer.lex(new File("src/test/resources/pass_keyValue.json"));
+        List<Token> inputList = lexer.lex(new File("src/test/resources/pass_objectKeyValue.json"));
 
         JsonString valueString = JsonString.from("value");
         JsonObject expectedRootNode = JsonObject.from();
         expectedRootNode.setValue("key", valueString);
+
+        Json actualRootNode = jsonParser.parse(inputList);
+
+        assertThat(actualRootNode).isEqualToComparingFieldByFieldRecursively(expectedRootNode);
+    }
+
+    @Test
+    void givenObjectContainingMultipleContentEntriesShouldReturnValidObject() {
+        List<Token> inputList = lexer.lex(new File("src/test/resources/pass_multipleObjectKeyValues.json"));
+
+        JsonObject expectedRootNode = JsonObject.from();
+
+        expectedRootNode.setValue("key1", JsonString.from("value1"));
+        expectedRootNode.setValue("key2", JsonString.from("value2"));
+        expectedRootNode.setValue("key3", JsonString.from("value3"));
 
         Json actualRootNode = jsonParser.parse(inputList);
 

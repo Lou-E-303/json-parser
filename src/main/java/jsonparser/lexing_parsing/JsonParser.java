@@ -20,6 +20,7 @@ public class JsonParser {
 
         for (Token token : tokens) {
             State previousState = stateMachine.getCurrentState();
+            // System.out.println("Token: " + token.value() + " Char Value: " + (int) token.value() + " Token Type: " + token.type()); // TODO DEBUG ONLY
             stateMachine.nextState(token.type());
 
             processToken(previousState, token);
@@ -44,7 +45,7 @@ public class JsonParser {
             case OBJECT_OPENER -> handleObjectOpener();
             case ARRAY_OPENER -> handleArrayOpener();
             case QUOTE -> handleQuote(previousState);
-            case CONTENT -> currentString.append(token.getValue());
+            case CONTENT -> currentString.append(token.value());
             case OBJECT_CLOSER, ARRAY_CLOSER -> handleCloser();
         }
     }

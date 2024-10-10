@@ -1,7 +1,3 @@
 package jsonparser.lexing_parsing;
 
-public record Token(TokenType type, Character value) {
-    public Character getValue() {
-        return value;
-    }
-}
+public record Token(TokenType type, Character value) {}

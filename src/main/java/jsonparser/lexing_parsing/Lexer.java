@@ -42,6 +42,7 @@ public class Lexer {
             case ']' -> TokenType.ARRAY_CLOSER;
             case '"' -> TokenType.QUOTE;
             case ':' -> TokenType.COLON;
+            case ',' -> TokenType.COMMA;
             default -> TokenType.CONTENT;
         };
     }

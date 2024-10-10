@@ -35,6 +35,7 @@ public class JsonFiniteStateMachine {
         stateTransitionTable.get(OPEN_OBJECT).put(TokenType.ARRAY_OPENER, OPEN_ARRAY);
         stateTransitionTable.get(OPEN_OBJECT).put(TokenType.QUOTE, OBJECT_KEY);
         stateTransitionTable.get(OPEN_OBJECT).put(TokenType.OBJECT_CLOSER, RETURN_TO_PREVIOUS);
+        stateTransitionTable.get(OPEN_OBJECT).put(TokenType.COMMA, OPEN_OBJECT);
 
         stateTransitionTable.get(OBJECT_KEY).put(TokenType.QUOTE, AWAITING_COLON);
         stateTransitionTable.get(OBJECT_KEY).put(TokenType.CONTENT, OBJECT_KEY);
@@ -61,7 +62,7 @@ public class JsonFiniteStateMachine {
         State nextState = stateTransitionTable.get(currentState).get(currentTokenType);
 
         if (nextState == null) {
-            throw new IllegalStateException("Error: Invalid JSON. Cannot go from " + currentState + " to " + currentTokenType + ".");
+            throw new IllegalStateException("Error: Invalid JSON. Cannot transition from " + currentState + " with " + currentTokenType + ".");
         }
 
         boolean nextStateIsAnOpenState = (nextState == OPEN_OBJECT || nextState == OPEN_ARRAY);
