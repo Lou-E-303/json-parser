@@ -10,5 +10,5 @@ public enum State {
     OBJECT_VALUE,
     AWAITING_COLON,
     AWAITING_VALUE,
-    PREVIOUS
+    RETURN_TO_PREVIOUS
 }

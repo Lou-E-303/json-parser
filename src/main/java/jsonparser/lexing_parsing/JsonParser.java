@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Stack;
 
 public class JsonParser {
-    private JsonFiniteStateMachine stateMachine = JsonFiniteStateMachine.FINITE_STATE_MACHINE;
+    private JsonFiniteStateMachine stateMachine = JsonFiniteStateMachine.JSON_FINITE_STATE_MACHINE;
     private final Stack<Json> jsonStack = new Stack<>();
     private final StringBuilder currentString = new StringBuilder();
     private String currentKey = null;
@@ -26,14 +26,14 @@ public class JsonParser {
         }
 
         if (jsonStack.size() != 1) {
-            throw new IllegalStateException("Invalid JSON structure. Unclosed objects or arrays remain.");
+            throw new IllegalStateException("Error: Invalid JSON structure. Unclosed objects or arrays remain.");
         }
 
         return jsonStack.pop();
     }
 
     public void reset() {
-        stateMachine = JsonFiniteStateMachine.FINITE_STATE_MACHINE;
+        stateMachine = JsonFiniteStateMachine.JSON_FINITE_STATE_MACHINE;
         currentKey = null;
         currentString.setLength(0);
         jsonStack.clear();
@@ -51,13 +51,13 @@ public class JsonParser {
 
     private void handleObjectOpener() {
         JsonObject newObject = JsonObject.from();
-        addValueToCurrentContext(newObject);
+        addJsonToCurrentContext(newObject);
         jsonStack.push(newObject);
     }
 
     private void handleArrayOpener() {
         JsonArray newArray = JsonArray.from();
-        addValueToCurrentContext(newArray);
+        addJsonToCurrentContext(newArray);
         jsonStack.push(newArray);
     }
 
@@ -70,7 +70,7 @@ public class JsonParser {
                 currentKey = value;
             } else {
                 JsonString jsonString = JsonString.from(value);
-                addValueToCurrentContext(jsonString);
+                addJsonToCurrentContext(jsonString);
             }
         }
     }
@@ -85,20 +85,20 @@ public class JsonParser {
         }
     }
 
-    private void addValueToCurrentContext(Json value) {
+    private void addJsonToCurrentContext(Json json) {
         if (!jsonStack.isEmpty()) {
             Json currentContext = jsonStack.peek();
 
             if (currentContext instanceof JsonObject) {
                 if (currentKey != null) {
-                    ((JsonObject) currentContext).setValue(currentKey, value);
+                    ((JsonObject) currentContext).setValue(currentKey, json);
                     currentKey = null;
                 }
             } else if (currentContext instanceof JsonArray) {
-                ((JsonArray) currentContext).addValue(value);
+                ((JsonArray) currentContext).addValue(json);
             }
         } else {
-            jsonStack.push(value);
+            jsonStack.push(json);
         }
     }
 }
