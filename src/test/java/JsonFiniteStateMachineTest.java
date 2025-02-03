@@ -31,7 +31,7 @@ public class JsonFiniteStateMachineTest {
     }
 
     @Test
-    public void givenInvalidTokenTypeProvidedToNextStateLogicThenThrowException() {
+    public void givenInvalidStateTransitionThenThrowException() {
         IllegalStateException exception = assertThrows(IllegalStateException.class,
                 () -> jsonFiniteStateMachine.nextState(TokenType.CONTENT));
 
