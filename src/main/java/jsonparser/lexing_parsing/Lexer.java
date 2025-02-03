@@ -11,16 +11,17 @@ public class Lexer {
         List<Token> tokens = new ArrayList<>();
 
         try (BufferedReader reader = new BufferedReader(new FileReader(inputFile))) {
-            int c;
-            while ((c = reader.read()) > 0) {
-                char character = (char) c;
-                TokenType tokenType = getTokenType(character);
+            int charAsInt;
+            while ((charAsInt = reader.read()) > 0) {
+                char character = (char) charAsInt;
+                Token token = createToken(character);
 
-                if (tokenType == TokenType.QUOTE) {
+                if (token.type() == TokenType.QUOTE) {
                     insideString = !insideString;
-                    tokens.add(new Token(tokenType, character));
-                } else if (insideString || !isWhitespace(character)) {
-                    tokens.add(new Token(tokenType, character));
+                }
+
+                if (insideString || !isWhitespace(character)) {
+                    tokens.add(token);
                 }
             }
         } catch (IOException e) {
@@ -28,6 +29,11 @@ public class Lexer {
         }
 
         return tokens;
+    }
+
+    public Token createToken(char c) {
+        TokenType tokenType = getTokenType(c);
+        return new Token(tokenType, c);
     }
 
     private boolean isWhitespace(char c) {
