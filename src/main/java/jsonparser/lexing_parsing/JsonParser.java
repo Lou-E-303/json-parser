@@ -20,7 +20,6 @@ public class JsonParser {
 
         for (Token token : tokens) {
             State previousState = stateMachine.getCurrentState();
-            // System.out.println("Token: " + token.value() + " Char Value: " + (int) token.value() + " Token Type: " + token.type()); // TODO DEBUG ONLY
             stateMachine.nextState(token.type());
 
             processToken(previousState, token);
