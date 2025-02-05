@@ -16,6 +16,9 @@ public class JsonFiniteStateMachine {
     private EnumMap<State, Map<TokenType, State>> stateTransitionTable;
 
     private JsonFiniteStateMachine() {
+        if (JSON_FINITE_STATE_MACHINE != null) {
+            throw new IllegalStateException("Error: Cannot instantiate state machine. Singleton instance already exists.");
+        }
         this.currentState = IDLE;
         this.stateHistory = new Stack<>();
         initialiseStateTransitionTable();
