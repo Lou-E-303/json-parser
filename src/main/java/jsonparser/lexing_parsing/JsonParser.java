@@ -91,7 +91,7 @@ public class JsonParser {
 
             if (currentContext instanceof JsonObject) {
                 if (currentKey != null) {
-                    ((JsonObject) currentContext).setValue(currentKey, json);
+                    ((JsonObject) currentContext).addValue(currentKey, json);
                     currentKey = null;
                 }
             } else if (currentContext instanceof JsonArray) {

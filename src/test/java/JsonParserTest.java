@@ -73,7 +73,7 @@ public class JsonParserTest {
 
         JsonString valueString = new JsonString("value");
         JsonObject expectedRootNode = new JsonObject();
-        expectedRootNode.setValue("key", valueString);
+        expectedRootNode.addValue("key", valueString);
 
         Json actualRootNode = jsonParser.parse(inputList);
 
@@ -86,9 +86,9 @@ public class JsonParserTest {
 
         JsonObject expectedRootNode = new JsonObject();
 
-        expectedRootNode.setValue("key1", new JsonString("value1"));
-        expectedRootNode.setValue("key2", new JsonString("value2"));
-        expectedRootNode.setValue("key3", new JsonString("value3"));
+        expectedRootNode.addValue("key1", new JsonString("value1"));
+        expectedRootNode.addValue("key2", new JsonString("value2"));
+        expectedRootNode.addValue("key3", new JsonString("value3"));
 
         Json actualRootNode = jsonParser.parse(inputList);
 

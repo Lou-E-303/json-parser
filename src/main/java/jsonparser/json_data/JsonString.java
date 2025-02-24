@@ -16,4 +16,9 @@ public class JsonString implements Json {
     public JsonType getType() {
         return type;
     }
+
+    @Override
+    public String toString() {
+        return "\"" + value + "\"";
+    }
 }
