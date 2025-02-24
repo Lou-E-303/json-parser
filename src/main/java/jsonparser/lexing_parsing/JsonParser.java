@@ -69,7 +69,7 @@ public class JsonParser {
             if (previousState == State.OBJECT_KEY) {
                 currentKey = value;
             } else {
-                JsonString jsonString = JsonString.from(value);
+                JsonString jsonString = new JsonString(value);
                 addJsonToCurrentContext(jsonString);
             }
         }

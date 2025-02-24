@@ -71,7 +71,7 @@ public class JsonParserTest {
     void givenObjectContainingContentShouldReturnValidObject() {
         List<Token> inputList = lexer.lex(new File("src/test/resources/pass_objectKeyValue.json"));
 
-        JsonString valueString = JsonString.from("value");
+        JsonString valueString = new JsonString("value");
         JsonObject expectedRootNode = new JsonObject();
         expectedRootNode.setValue("key", valueString);
 
@@ -86,9 +86,9 @@ public class JsonParserTest {
 
         JsonObject expectedRootNode = new JsonObject();
 
-        expectedRootNode.setValue("key1", JsonString.from("value1"));
-        expectedRootNode.setValue("key2", JsonString.from("value2"));
-        expectedRootNode.setValue("key3", JsonString.from("value3"));
+        expectedRootNode.setValue("key1", new JsonString("value1"));
+        expectedRootNode.setValue("key2", new JsonString("value2"));
+        expectedRootNode.setValue("key3", new JsonString("value3"));
 
         Json actualRootNode = jsonParser.parse(inputList);
 
