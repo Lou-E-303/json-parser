@@ -13,25 +13,25 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class LexerTest {
     private static Lexer lexer;
 
-    Token s = new Token(TokenType.CONTENT, 's');
-    Token o = new Token(TokenType.CONTENT, 'o');
-    Token m = new Token(TokenType.CONTENT, 'm');
-    Token e = new Token(TokenType.CONTENT, 'e');
-    Token K = new Token(TokenType.CONTENT, 'K');
-    Token y = new Token(TokenType.CONTENT, 'y');
-    Token S = new Token(TokenType.CONTENT, 'S');
-    Token v = new Token(TokenType.CONTENT, 'v');
-    Token a = new Token(TokenType.CONTENT, 'a');
-    Token l = new Token(TokenType.CONTENT, 'l');
-    Token u = new Token(TokenType.CONTENT, 'u');
+    Token s = Token.of(TokenType.CONTENT, 's');
+    Token o = Token.of(TokenType.CONTENT, 'o');
+    Token m = Token.of(TokenType.CONTENT, 'm');
+    Token e = Token.of(TokenType.CONTENT, 'e');
+    Token K = Token.of(TokenType.CONTENT, 'K');
+    Token y = Token.of(TokenType.CONTENT, 'y');
+    Token S = Token.of(TokenType.CONTENT, 'S');
+    Token v = Token.of(TokenType.CONTENT, 'v');
+    Token a = Token.of(TokenType.CONTENT, 'a');
+    Token l = Token.of(TokenType.CONTENT, 'l');
+    Token u = Token.of(TokenType.CONTENT, 'u');
 
-    Token colon = new Token(TokenType.COLON, ':');
-    Token whitespace = new Token(TokenType.CONTENT, ' ');
-    Token openBrace = new Token(TokenType.OBJECT_OPENER, '{');
-    Token closedBrace = new Token(TokenType.OBJECT_CLOSER, '}');
-    Token openBracket = new Token(TokenType.ARRAY_OPENER, '[');
-    Token closedBracket = new Token(TokenType.ARRAY_CLOSER, ']');
-    Token quote = new Token(TokenType.QUOTE, '"');
+    Token colon = Token.of(TokenType.COLON, ':');
+    Token whitespace = Token.of(TokenType.CONTENT, ' ');
+    Token openBrace = Token.of(TokenType.OBJECT_OPENER, '{');
+    Token closedBrace = Token.of(TokenType.OBJECT_CLOSER, '}');
+    Token openBracket = Token.of(TokenType.ARRAY_OPENER, '[');
+    Token closedBracket = Token.of(TokenType.ARRAY_CLOSER, ']');
+    Token quote = Token.of(TokenType.QUOTE, '"');
 
     @BeforeEach
     void init() {
@@ -41,7 +41,7 @@ public class LexerTest {
     @Test
     void givenInputOfValidTokensThenReturnTokenList() {
         String inputFilePath = "src/test/resources/lexer_pass_validTokens.json";
-        Token quote = new Token(TokenType.QUOTE, '"');
+        Token quote = Token.of(TokenType.QUOTE, '"');
 
         ArrayList<Token> expectedTokens = new ArrayList<>(List.of(openBrace, closedBrace, openBracket, closedBracket, quote));
         ArrayList<Token> tokens = new ArrayList<>(lexer.lex(new File(inputFilePath)));

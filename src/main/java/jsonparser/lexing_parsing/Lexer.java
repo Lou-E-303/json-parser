@@ -33,7 +33,7 @@ public class Lexer {
 
     public Token createToken(char c) {
         TokenType tokenType = getTokenType(c);
-        return new Token(tokenType, c);
+        return Token.of(tokenType, c);
     }
 
     private boolean isWhitespace(char c) {
