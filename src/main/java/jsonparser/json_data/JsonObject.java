@@ -30,6 +30,7 @@ public class JsonObject implements Json {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("{");
+
         for (Map.Entry<String, Json> entry : values.entrySet()) {
             sb.append("\"");
             sb.append(entry.getKey());
@@ -37,6 +38,7 @@ public class JsonObject implements Json {
             sb.append(entry.getValue().toString());
             sb.append(",");
         }
+
         if (!values.isEmpty()) {
             sb.deleteCharAt(sb.length() - 1);
         }

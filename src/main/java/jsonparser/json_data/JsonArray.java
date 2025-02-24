@@ -28,13 +28,16 @@ public class JsonArray implements Json {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("[");
+
         for (Json value : values) {
             sb.append(value.toString());
             sb.append(",");
         }
+
         if (!values.isEmpty()) {
             sb.deleteCharAt(sb.length() - 1);
         }
+
         sb.append("]");
         return sb.toString();
     }
