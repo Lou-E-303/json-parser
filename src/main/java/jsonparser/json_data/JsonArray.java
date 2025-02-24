@@ -6,12 +6,8 @@ public class JsonArray implements Json {
     private final ArrayList<Json> values;
     private final JsonType type = JsonType.ARRAY;
 
-    private JsonArray() {
+    public JsonArray() {
         this.values = new ArrayList<>();
-    }
-
-    public static JsonArray from() {
-        return new JsonArray();
     }
 
     public void addValue(Json value) {
