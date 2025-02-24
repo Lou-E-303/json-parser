@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Stack;
 
 public class JsonParser {
-    private JsonFiniteStateMachine stateMachine = JsonFiniteStateMachine.JSON_FINITE_STATE_MACHINE;
+    private final JsonFiniteStateMachine stateMachine = JsonFiniteStateMachine.JSON_FINITE_STATE_MACHINE;
     private final Stack<Json> jsonStack = new Stack<>();
     private final StringBuilder currentString = new StringBuilder();
     private String currentKey = null;
@@ -33,7 +33,7 @@ public class JsonParser {
     }
 
     public void reset() {
-        stateMachine = JsonFiniteStateMachine.JSON_FINITE_STATE_MACHINE;
+        stateMachine.reset();
         currentKey = null;
         currentString.setLength(0);
         jsonStack.clear();

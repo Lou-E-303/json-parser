@@ -86,4 +86,9 @@ public class JsonFiniteStateMachine {
     public State getCurrentState() {
         return this.currentState;
     }
+
+    public void reset() {
+        this.currentState = IDLE;
+        this.stateHistory.clear();
+    }
 }

@@ -2,6 +2,7 @@ import jsonparser.json_data.*;
 import jsonparser.lexing_parsing.JsonParser;
 import jsonparser.lexing_parsing.Lexer;
 import jsonparser.lexing_parsing.Token;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -19,6 +20,11 @@ public class JsonParserTest {
     void init() {
         jsonParser = new JsonParser();
         lexer = new Lexer();
+    }
+
+    @AfterEach
+    void tearDown() {
+        jsonParser.reset();
     }
 
     @Test
