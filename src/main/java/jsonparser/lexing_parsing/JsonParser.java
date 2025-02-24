@@ -50,13 +50,13 @@ public class JsonParser {
     }
 
     private void handleObjectOpener() {
-        JsonObject newObject = JsonObject.from();
+        JsonObject newObject = new JsonObject();
         addJsonToCurrentContext(newObject);
         jsonStack.push(newObject);
     }
 
     private void handleArrayOpener() {
-        JsonArray newArray = JsonArray.from();
+        JsonArray newArray = new JsonArray();
         addJsonToCurrentContext(newArray);
         jsonStack.push(newArray);
     }

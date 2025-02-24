@@ -51,7 +51,7 @@ public class JsonParserTest {
     void givenObjectOpenerAndCloserInputShouldReturnSingleNullObjectEntry() {
         List<Token> inputList = lexer.lex(new File("src/test/resources/pass_brackets.json"));
 
-        JsonObject expectedRootNode = JsonObject.from();
+        JsonObject expectedRootNode = new JsonObject();
         Json actualRootNode = jsonParser.parse(inputList);
 
         assertThat(actualRootNode).isEqualToComparingFieldByFieldRecursively(expectedRootNode);
@@ -61,7 +61,7 @@ public class JsonParserTest {
     void givenArrayOpenerAndCloserInputShouldReturnSingleNullArrayEntry() {
         List<Token> inputList = lexer.lex(new File("src/test/resources/pass_simpleArray.json"));
 
-        JsonArray expectedRootNode = JsonArray.from();
+        JsonArray expectedRootNode = new JsonArray();
         Json actualRootNode = jsonParser.parse(inputList);
 
         assertThat(actualRootNode).isEqualToComparingFieldByFieldRecursively(expectedRootNode);
@@ -72,7 +72,7 @@ public class JsonParserTest {
         List<Token> inputList = lexer.lex(new File("src/test/resources/pass_objectKeyValue.json"));
 
         JsonString valueString = JsonString.from("value");
-        JsonObject expectedRootNode = JsonObject.from();
+        JsonObject expectedRootNode = new JsonObject();
         expectedRootNode.setValue("key", valueString);
 
         Json actualRootNode = jsonParser.parse(inputList);
@@ -84,7 +84,7 @@ public class JsonParserTest {
     void givenObjectContainingMultipleContentEntriesShouldReturnValidObject() {
         List<Token> inputList = lexer.lex(new File("src/test/resources/pass_multipleObjectKeyValues.json"));
 
-        JsonObject expectedRootNode = JsonObject.from();
+        JsonObject expectedRootNode = new JsonObject();
 
         expectedRootNode.setValue("key1", JsonString.from("value1"));
         expectedRootNode.setValue("key2", JsonString.from("value2"));
