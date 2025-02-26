@@ -21,6 +21,14 @@ public class JsonObject implements Json {
     }
 
     @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof JsonObject other) {
+            return this.values.equals(other.values);
+        }
+        return false;
+    }
+
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("{");

@@ -19,6 +19,14 @@ public class JsonArray implements Json {
     }
 
     @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof JsonArray other) {
+            return this.values.equals(other.values);
+        }
+        return false;
+    }
+
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("[");

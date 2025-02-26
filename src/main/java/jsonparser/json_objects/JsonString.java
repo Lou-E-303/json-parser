@@ -12,6 +12,14 @@ public class JsonString implements Json {
     }
 
     @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof JsonString other) {
+            return this.value.equals(other.value);
+        }
+        return false;
+    }
+
+    @Override
     public String toString() {
         return "\"" + value + "\"";
     }
