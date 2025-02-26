@@ -6,7 +6,6 @@ import java.util.Map;
 
 public class JsonObject implements Json {
     private final Map<String, Json> values;
-    private final JsonType type = JsonType.OBJECT;
 
     public JsonObject() {
         this.values = new HashMap<>();
@@ -14,11 +13,6 @@ public class JsonObject implements Json {
 
     public void addValue(String key, Json value) {
         this.values.put(key, value);
-    }
-
-    @Override
-    public JsonType getType() {
-        return type;
     }
 
     @Override

@@ -2,7 +2,6 @@ package jsonparser.json_objects;
 
 public class JsonBoolean implements Json {
     private final boolean value;
-    private final JsonType type = JsonType.BOOLEAN;
 
     public JsonBoolean(boolean value) {
         this.value = value;
@@ -10,11 +9,6 @@ public class JsonBoolean implements Json {
 
     public Boolean getValue() {
         return value;
-    }
-
-    @Override
-    public JsonType getType() {
-        return type;
     }
 
     @Override
