@@ -1,6 +1,6 @@
 package jsonparser;
 
-import jsonparser.json_data.Json;
+import jsonparser.json_objects.Json;
 import jsonparser.lexing_parsing.ArgumentToFileParser;
 import jsonparser.lexing_parsing.JsonParser;
 import jsonparser.lexing_parsing.Lexer;

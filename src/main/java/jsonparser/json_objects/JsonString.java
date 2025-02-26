@@ -1,4 +1,4 @@
-package jsonparser.json_data;
+package jsonparser.json_objects;
 
 public class JsonString implements Json {
     private final String value;

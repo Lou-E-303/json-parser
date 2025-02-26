@@ -1,4 +1,4 @@
-package jsonparser.json_data;
+package jsonparser.json_objects;
 
 import java.util.ArrayList;
 

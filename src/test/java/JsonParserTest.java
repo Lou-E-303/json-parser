@@ -1,4 +1,4 @@
-import jsonparser.json_data.*;
+import jsonparser.json_objects.*;
 import jsonparser.lexing_parsing.JsonParser;
 import jsonparser.lexing_parsing.Lexer;
 import jsonparser.lexing_parsing.Token;
@@ -94,4 +94,16 @@ public class JsonParserTest {
 
         assertThat(actualRootNode).isEqualToComparingFieldByFieldRecursively(expectedRootNode);
     }
+
+//    @Test
+//    void givenObjectContainingBooleanValueShouldReturnValidObject() {
+//        List<Token> inputList = lexer.lex(new File("src/test/resources/pass_objectBooleanValue.json"));
+//
+//        JsonObject expectedRootNode = new JsonObject();
+//        expectedRootNode.addValue("key", new JsonBoolean(true));
+//
+//        Json actualRootNode = jsonParser.parse(inputList);
+//
+//        assertThat(actualRootNode).isEqualToComparingFieldByFieldRecursively(expectedRootNode);
+//    }
 }

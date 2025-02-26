@@ -1,6 +1,6 @@
 package jsonparser.lexing_parsing;
 
-import jsonparser.json_data.*;
+import jsonparser.json_objects.*;
 import jsonparser.state_management.JsonFiniteStateMachine;
 import jsonparser.state_management.State;
 

@@ -1,5 +1,5 @@
-import jsonparser.json_data.JsonArray;
-import jsonparser.json_data.JsonString;
+import jsonparser.json_objects.JsonArray;
+import jsonparser.json_objects.JsonString;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
