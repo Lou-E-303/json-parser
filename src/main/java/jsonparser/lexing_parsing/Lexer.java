@@ -6,6 +6,7 @@ import java.util.List;
 
 public class Lexer {
     private boolean insideString = false;
+    private boolean escapeNext = false;
 
     public List<Token> lex(File inputFile) {
         List<Token> tokens = new ArrayList<>();
@@ -16,8 +17,14 @@ public class Lexer {
                 char character = (char) charAsInt;
                 Token token = createToken(character);
 
-                if (token.type() == TokenType.QUOTE) {
+                if (character == '"' && !escapeNext) {
                     insideString = !insideString;
+                }
+
+                if (insideString && character == '\\' && !escapeNext) {
+                    escapeNext = true;
+                    tokens.add(token);
+                    continue;
                 }
 
                 if (insideString || !isWhitespace(character)) {
