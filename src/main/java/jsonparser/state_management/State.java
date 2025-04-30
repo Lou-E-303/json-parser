@@ -4,7 +4,6 @@ public enum State {
     IDLE,
     OPEN_OBJECT,
     OPEN_ARRAY,
-    OPEN_STRING,
     ARRAY_VALUE,
     OBJECT_KEY,
     OBJECT_VALUE,
