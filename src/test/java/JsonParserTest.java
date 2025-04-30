@@ -95,6 +95,30 @@ public class JsonParserTest {
         assertThat(actualRootNode).isEqualToComparingFieldByFieldRecursively(expectedRootNode);
     }
 
+    @Test
+    void givenObjectWithEscapedQuotesThenReturnCorrectStringValues() {
+        List<Token> inputList = lexer.lex(new File("src/test/resources/pass_escapedQuotes.json"));
+
+        JsonObject expectedRootNode = new JsonObject();
+        expectedRootNode.addValue("key", new JsonString("value\"with\"quotes\""));
+
+        Json actualRootNode = jsonParser.parse(inputList);
+
+        assertThat(actualRootNode).isEqualToComparingFieldByFieldRecursively(expectedRootNode);
+    }
+
+    @Test
+    void givenObjectWithMultipleEscapeSequencesThenReturnProcessedStringValues() {
+        List<Token> inputList = lexer.lex(new File("src/test/resources/pass_multipleEscapeSequences.json"));
+
+        JsonObject expectedRootNode = new JsonObject();
+        expectedRootNode.addValue("special", new JsonString("tab:\tnewline:\nquote:\"backslash:\\"));
+
+        Json actualRootNode = jsonParser.parse(inputList);
+
+        assertThat(actualRootNode).isEqualToComparingFieldByFieldRecursively(expectedRootNode);
+    }
+
 //    @Test
 //    void givenObjectContainingBooleanValueShouldReturnValidObject() {
 //        List<Token> inputList = lexer.lex(new File("src/test/resources/pass_objectBooleanValue.json"));
