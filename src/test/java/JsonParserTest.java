@@ -34,17 +34,17 @@ public class JsonParserTest {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 () -> jsonParser.parse(inputList));
 
-        assertEquals("Error: Provided JSON file is not valid as it is empty.", exception.getMessage());
+        assertEquals("Error: No tokens to process. It is possible that the provided JSON file is empty or invalid.", exception.getMessage());
     }
 
     @Test
     void givenRawTextInputShouldReportInvalidJson() {
         List<Token> inputList = lexer.lex(new File("src/test/resources/fail_invalid.json"));
 
-        IllegalStateException exception = assertThrows(IllegalStateException.class,
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 () -> jsonParser.parse(inputList));
 
-        assertEquals("Error: Invalid JSON. Cannot transition from IDLE with CONTENT.", exception.getMessage());
+        assertEquals("Error: No tokens to process. It is possible that the provided JSON file is empty or invalid.", exception.getMessage());
     }
 
     @Test

@@ -10,12 +10,11 @@ import java.util.Stack;
 public class JsonParser {
     private final JsonFiniteStateMachine stateMachine = JsonFiniteStateMachine.JSON_FINITE_STATE_MACHINE;
     private final Stack<Json> jsonStack = new Stack<>();
-    private final StringBuilder currentString = new StringBuilder();
     private String currentKey = null;
 
     public Json parse(List<Token> tokens) {
         if (tokens.isEmpty()) {
-            throw new IllegalArgumentException("Error: Provided JSON file is not valid as it is empty.");
+            throw new IllegalArgumentException("Error: No tokens to process. It is possible that the provided JSON file is empty or invalid.");
         }
 
         for (Token token : tokens) {
@@ -35,7 +34,6 @@ public class JsonParser {
     public void reset() {
         stateMachine.reset();
         currentKey = null;
-        currentString.setLength(0);
         jsonStack.clear();
     }
 
@@ -43,8 +41,7 @@ public class JsonParser {
         switch (token.type()) {
             case OBJECT_OPENER -> handleObjectOpener();
             case ARRAY_OPENER -> handleArrayOpener();
-            case QUOTE -> handleQuote(previousState);
-            case CONTENT -> currentString.append(token.value());
+            case CONTENT -> handleContentToken(previousState, token);
             case OBJECT_CLOSER, ARRAY_CLOSER -> handleCloser();
         }
     }
@@ -61,17 +58,14 @@ public class JsonParser {
         jsonStack.push(newArray);
     }
 
-    private void handleQuote(State previousState) {
-        if (!currentString.isEmpty()) {
-            String value = currentString.toString();
-            currentString.setLength(0);
+    private void handleContentToken(State previousState, Token token) {
+        String value = token.value().toString();
 
-            if (previousState == State.OBJECT_KEY) {
-                currentKey = value;
-            } else {
-                JsonString jsonString = new JsonString(value);
-                addJsonToCurrentContext(jsonString);
-            }
+        if (previousState == State.OBJECT_KEY) {
+            currentKey = value;
+        } else {
+            JsonString jsonString = new JsonString(value);
+            addJsonToCurrentContext(jsonString);
         }
     }
 
