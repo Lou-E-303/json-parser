@@ -19,14 +19,33 @@ public class Lexer {
 
                 if (insideString) {
                     if (escapeNext) {
-                        stringContent.append(character);
+                        switch (character) {
+                            case 'n' -> stringContent.append('\n');
+                            case 't' -> stringContent.append('\t');
+                            case 'r' -> stringContent.append('\r');
+                            case 'b' -> stringContent.append('\b');
+                            case 'f' -> stringContent.append('\f');
+                            case '"' -> stringContent.append('\"');
+                            case '\\' -> stringContent.append('\\');
+                            case '/' -> stringContent.append('/');
+                            case 'u' -> {
+                                char[] unicode = new char[4];
+                                for (int i = 0; i < 4; i++) {
+                                    int nextChar = reader.read();
+                                    if (nextChar == -1) throw new IOException("Unexpected end of input in Unicode escape.");
+                                    unicode[i] = (char) nextChar;
+                                }
+                                stringContent.append((char) Integer.parseInt(new String(unicode), 16));
+                            }
+                            default -> stringContent.append(character);
+                        }
                         escapeNext = false;
                     } else if (character == '\\') {
                         escapeNext = true;
                     } else if (character == '"') {
                         insideString = false;
                         tokens.add(Token.of(TokenType.CONTENT, stringContent.toString()));
-                        tokens.add(Token.of(TokenType.QUOTE, '"'));
+                        tokens.add(Token.of(TokenType.QUOTE, '\"'));
                         stringContent.setLength(0);
                     } else {
                         stringContent.append(character);
@@ -38,32 +57,23 @@ public class Lexer {
                 if (isWhitespace(character)) {
                     continue;
                 }
-
                 switch (character) {
-                    case '"':
+                    case '"' -> {
                         insideString = true;
                         tokens.add(Token.of(TokenType.QUOTE, '"'));
-                        break;
-                    case '{':
-                        tokens.add(Token.of(TokenType.OBJECT_OPENER, character));
-                        break;
-                    case '}':
-                        tokens.add(Token.of(TokenType.OBJECT_CLOSER, character));
-                        break;
-                    case '[':
-                        tokens.add(Token.of(TokenType.ARRAY_OPENER, character));
-                        break;
-                    case ']':
-                        tokens.add(Token.of(TokenType.ARRAY_CLOSER, character));
-                        break;
-                    case ':':
-                        tokens.add(Token.of(TokenType.COLON, character));
-                        break;
-                    case ',':
-                        tokens.add(Token.of(TokenType.COMMA, character));
-                        break;
-                    default:
-                        break;
+                    }
+                    case '{' -> tokens.add(Token.of(TokenType.OBJECT_OPENER, character));
+                    case '}' -> tokens.add(Token.of(TokenType.OBJECT_CLOSER, character));
+                    case '[' -> tokens.add(Token.of(TokenType.ARRAY_OPENER, character));
+                    case ']' -> tokens.add(Token.of(TokenType.ARRAY_CLOSER, character));
+                    case ':' -> tokens.add(Token.of(TokenType.COLON, character));
+                    case ',' -> tokens.add(Token.of(TokenType.COMMA, character));
+                    case 't' -> {
+                        // TODO here we could read ahead to determine if token is true, same for false etc, similar to unicode handling above
+                    }
+                    default -> {
+                        // Optional default case
+                    }
                 }
             }
         } catch (IOException e) {
