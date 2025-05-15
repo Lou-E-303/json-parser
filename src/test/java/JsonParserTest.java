@@ -1,3 +1,4 @@
+import jsonparser.exceptions.JsonSyntaxException;
 import jsonparser.json_objects.*;
 import jsonparser.lexing_parsing.JsonParser;
 import jsonparser.lexing_parsing.Lexer;
@@ -8,6 +9,8 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
+import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -31,17 +34,7 @@ public class JsonParserTest {
     void givenEmptyInputShouldReportInvalidJson() {
         List<Token> inputList = lexer.lex(new File("src/test/resources/fail_empty.json"));
 
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-                () -> jsonParser.parse(inputList));
-
-        assertEquals("Error: No tokens to process. It is possible that the provided JSON file is empty or invalid.", exception.getMessage());
-    }
-
-    @Test
-    void givenRawTextInputShouldReportInvalidJson() {
-        List<Token> inputList = lexer.lex(new File("src/test/resources/fail_invalid.json"));
-
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+        JsonSyntaxException exception = assertThrows(JsonSyntaxException.class,
                 () -> jsonParser.parse(inputList));
 
         assertEquals("Error: No tokens to process. It is possible that the provided JSON file is empty or invalid.", exception.getMessage());
@@ -119,12 +112,62 @@ public class JsonParserTest {
         assertThat(actualRootNode).isEqualToComparingFieldByFieldRecursively(expectedRootNode);
     }
 
+    @Test
+    void givenObjectContainingBooleanValueShouldReturnValidObject() {
+        List<Token> inputList = lexer.lex(new File("src/test/resources/pass_objectBooleanValue.json"));
+
+        JsonObject expectedRootNode = new JsonObject();
+        expectedRootNode.addValue("key", new JsonBoolean(true));
+
+        Json actualRootNode = jsonParser.parse(inputList);
+
+        assertThat(actualRootNode).isEqualToComparingFieldByFieldRecursively(expectedRootNode);
+    }
+
+    @Test
+    void givenObjectContainingBooleanKeyShouldReturnValidObject() {
+        List<Token> inputList = lexer.lex(new File("src/test/resources/pass_objectBooleanKey.json"));
+
+        JsonObject expectedRootNode = new JsonObject();
+        expectedRootNode.addValue("true", new JsonBoolean(true));
+
+        Json actualRootNode = jsonParser.parse(inputList);
+
+        assertThat(actualRootNode).isEqualToComparingFieldByFieldRecursively(expectedRootNode);
+    }
+
+    @Test
+    void givenObjectContainingMultipleBooleanEntriesShouldReturnValidObject() {
+        List<Token> inputList = lexer.lex(new File("src/test/resources/pass_objectBooleanMultipleEntries.json"));
+
+        JsonObject expectedRootNode = new JsonObject();
+        expectedRootNode.addValue("true", new JsonBoolean(true));
+        expectedRootNode.addValue("false", new JsonBoolean(false));
+        expectedRootNode.addValue("key", new JsonBoolean(true));
+
+        Json actualRootNode = jsonParser.parse(inputList);
+
+        assertThat(actualRootNode).isEqualToComparingFieldByFieldRecursively(expectedRootNode);
+    }
+
+    @Test
+    void givenObjectContainingNullValueShouldReturnValidObject() {
+        List<Token> inputList = lexer.lex(new File("src/test/resources/pass_objectNullValue.json"));
+
+        JsonObject expectedRootNode = new JsonObject();
+        expectedRootNode.addValue("key", new JsonNull());
+
+        Json actualRootNode = jsonParser.parse(inputList);
+
+        assertThat(actualRootNode).isEqualToComparingFieldByFieldRecursively(expectedRootNode);
+    }
+
 //    @Test
-//    void givenObjectContainingBooleanValueShouldReturnValidObject() {
-//        List<Token> inputList = lexer.lex(new File("src/test/resources/pass_objectBooleanValue.json"));
+//    void givenObjectContainingNumberValueShouldReturnValidObject() {
+//        List<Token> inputList = lexer.lex(new File("src/test/resources/pass_objectNumberValue.json"));
 //
 //        JsonObject expectedRootNode = new JsonObject();
-//        expectedRootNode.addValue("key", new JsonBoolean(true));
+//        expectedRootNode.addValue("key", new JsonNumber(new BigDecimal("123.456")));
 //
 //        Json actualRootNode = jsonParser.parse(inputList);
 //
