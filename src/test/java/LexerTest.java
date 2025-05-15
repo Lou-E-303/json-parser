@@ -1,3 +1,4 @@
+import jsonparser.exceptions.JsonSyntaxException;
 import jsonparser.lexing_parsing.TokenType;
 import jsonparser.lexing_parsing.Token;
 import jsonparser.lexing_parsing.Lexer;
@@ -9,6 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class LexerTest {
     private static Lexer lexer;
@@ -82,6 +85,22 @@ public class LexerTest {
         ArrayList<Token> tokens = new ArrayList<>(lexer.lex(new File(inputFilePath)));
 
         assertThat(tokens).isEqualTo(expectedTokens);
+    }
+
+    @Test
+    void givenRawTextInputShouldReportInvalidJson() {
+        JsonSyntaxException exception = assertThrows(JsonSyntaxException.class,
+                () -> lexer.lex(new File("src/test/resources/fail_invalid.json")));
+
+        assertEquals("Error: Invalid literal. Current sequence = [v, a, l]", exception.getMessage());
+    }
+
+    @Test
+    void givenRawTextInputWithNoKnownCharactersShouldReportInvalidJson() {
+        JsonSyntaxException exception = assertThrows(JsonSyntaxException.class,
+                () -> lexer.lex(new File("src/test/resources/fail_NoKnownChars.json")));
+
+        assertEquals("Error: Invalid literal. Current sequence = [v, a, l]", exception.getMessage());
     }
 }
 

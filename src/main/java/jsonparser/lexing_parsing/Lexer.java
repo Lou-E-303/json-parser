@@ -1,8 +1,13 @@
 package jsonparser.lexing_parsing;
 
+import jsonparser.exceptions.JsonSyntaxException;
+
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
+// Responsible for breaking the raw input into tokens and validating the token syntax
 
 public class Lexer {
     private boolean insideString = false;
@@ -32,7 +37,7 @@ public class Lexer {
                                 char[] unicode = new char[4];
                                 for (int i = 0; i < 4; i++) {
                                     int nextChar = reader.read();
-                                    if (nextChar == -1) throw new IOException("Unexpected end of input in Unicode escape.");
+                                    if (nextChar == -1) throw new JsonSyntaxException("Error: Unexpected end of input in Unicode escape.");
                                     unicode[i] = (char) nextChar;
                                 }
                                 stringContent.append((char) Integer.parseInt(new String(unicode), 16));
@@ -69,11 +74,46 @@ public class Lexer {
                     case ':' -> tokens.add(Token.of(TokenType.COLON, character));
                     case ',' -> tokens.add(Token.of(TokenType.COMMA, character));
                     case 't' -> {
-                        // TODO here we could read ahead to determine if token is true, same for false etc, similar to unicode handling above
+                        char[] expected = new char[3];
+                        if (reader.read(expected) != 3 || !(expected[0] == 'r' && expected[1] == 'u' && expected[2] == 'e')) {
+                            throw new JsonSyntaxException("Error: Invalid literal. Current sequence = " + Arrays.toString(expected));
+                        }
+                        tokens.add(Token.of(TokenType.BOOLEAN, true));
                     }
-                    default -> {
-                        // Optional default case
+                    case 'f' -> {
+                        char[] expected = new char[4];
+                        if (reader.read(expected) != 4 || !(expected[0] == 'a' && expected[1] == 'l' && expected[2] == 's' && expected[3] == 'e')) {
+                            throw new JsonSyntaxException("Error: Invalid literal. Current sequence = " + Arrays.toString(expected));
+                        }
+                        tokens.add(Token.of(TokenType.BOOLEAN, false));
                     }
+                    case 'n' -> {
+                        char[] expected = new char[3];
+                        if (reader.read(expected) != 3 || !(expected[0] == 'u' && expected[1] == 'l' && expected[2] == 'l')) {
+                            throw new JsonSyntaxException("Error: Invalid literal. Current sequence = " + Arrays.toString(expected));
+                        }
+                        tokens.add(Token.of(TokenType.NULL, null));
+                    }
+//
+//                    default -> {
+//                        if (Character.isDigit(character) || character == '-') {
+//                            StringBuilder number = new StringBuilder();
+//                            number.append(character);
+//                            while (true) {
+//                                char nextChar = (char) reader.read();
+//                                if (nextChar == -1 || isWhitespace(nextChar) || nextChar == ',' || nextChar == '}' || nextChar == ']') {
+//                                    tokens.add(Token.of(TokenType.NUMBER, number.toString()));
+//                                    if (nextChar != -1) {
+//                                        reader.reset();
+//                                    }
+//                                    break;
+//                                }
+//                                number.append(nextChar);
+//                            }
+//                        } else {
+//                            throw new IOException("Unexpected character: " + character);
+//                        }
+//                    }
                 }
             }
         } catch (IOException e) {
