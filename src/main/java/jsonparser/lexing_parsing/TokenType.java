@@ -8,5 +8,6 @@ public enum TokenType {
     QUOTE,
     COLON,
     COMMA,
+    BOOLEAN,
     CONTENT
 }

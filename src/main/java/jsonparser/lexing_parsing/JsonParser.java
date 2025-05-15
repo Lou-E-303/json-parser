@@ -41,7 +41,7 @@ public class JsonParser {
         switch (token.type()) {
             case OBJECT_OPENER -> handleObjectOpener();
             case ARRAY_OPENER -> handleArrayOpener();
-            case CONTENT -> handleContentToken(previousState, token);
+            case CONTENT -> handleContent(previousState, token);
             case OBJECT_CLOSER, ARRAY_CLOSER -> handleCloser();
         }
     }
@@ -58,7 +58,7 @@ public class JsonParser {
         jsonStack.push(newArray);
     }
 
-    private void handleContentToken(State previousState, Token token) {
+    private void handleContent(State previousState, Token token) {
         String value = token.value().toString();
 
         if (previousState == State.OBJECT_KEY) {
