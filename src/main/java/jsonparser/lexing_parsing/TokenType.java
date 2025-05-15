@@ -9,5 +9,7 @@ public enum TokenType {
     COLON,
     COMMA,
     BOOLEAN,
+    NUMBER,
+    NULL,
     CONTENT
 }
