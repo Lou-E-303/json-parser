@@ -42,6 +42,8 @@ public class JsonParser {
             case OBJECT_OPENER -> handleObjectOpener();
             case ARRAY_OPENER -> handleArrayOpener();
             case CONTENT -> handleContent(previousState, token);
+            case BOOLEAN -> handleBoolean(token);
+            case NULL -> addJsonToCurrentContext(new JsonNull());
             case OBJECT_CLOSER, ARRAY_CLOSER -> handleCloser();
         }
     }
@@ -59,14 +61,19 @@ public class JsonParser {
     }
 
     private void handleContent(State previousState, Token token) {
-        String value = token.value().toString();
+        String content = token.value().toString();
 
         if (previousState == State.OBJECT_KEY) {
-            currentKey = value;
+            currentKey = content;
         } else {
-            JsonString jsonString = new JsonString(value);
+            JsonString jsonString = new JsonString(content);
             addJsonToCurrentContext(jsonString);
         }
+    }
+
+    private void handleBoolean(Token token) {
+        JsonBoolean jsonBoolean = new JsonBoolean(Boolean.parseBoolean(token.value().toString()));
+        addJsonToCurrentContext(jsonBoolean);
     }
 
     private void handleCloser() {
