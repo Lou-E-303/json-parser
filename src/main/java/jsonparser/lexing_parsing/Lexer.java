@@ -98,27 +98,7 @@ public class Lexer {
                     default -> {
                         // Check for valid JSON starting character
                         if (Character.isDigit(character) || character == '-') {
-                            StringBuilder number = new StringBuilder();
-                            number.append(character);
-
-                            // Read the rest of the number
-                            while (true) {
-                                int nextInt = reader.read();
-                                if (nextInt == -1) {
-                                    // Handle end of file
-                                    tokens.add(Token.of(TokenType.NUMBER, number.toString()));
-                                    break;
-                                }
-                                char nextChar = (char) nextInt;
-
-                                // Stop reading when we hit a valid delimiter
-                                if (isWhitespace(nextChar) || nextChar == ',' || nextChar == '}' || nextChar == ']') {
-                                    tokens.add(Token.of(TokenType.NUMBER, number.toString()));
-                                    reader.unread(nextChar);
-                                    break;
-                                }
-                                number.append(nextChar);
-                            }
+                            readAndTokeniseNumber(reader, character, tokens);
                         } else {
                             throw new JsonSyntaxException("Error: invalid starting character '" + character + "'");
                         }
@@ -134,5 +114,31 @@ public class Lexer {
 
     private boolean isWhitespace(char c) {
         return c == ' ' || c == '\n' || c == '\r' || c == '\t';
+    }
+
+    private void readAndTokeniseNumber(PushbackReader reader, Character character, List<Token> tokens) throws IOException {
+        StringBuilder number = new StringBuilder();
+        number.append(character);
+
+        while (true) {
+            int nextInt = reader.read();
+
+            // Handle end of file
+            if (nextInt == -1) {
+                tokens.add(Token.of(TokenType.NUMBER, number.toString()));
+                break;
+            }
+
+            char nextChar = (char) nextInt;
+            boolean charIsAValidDelimiter = isWhitespace(nextChar) || nextChar == ',' || nextChar == '}' || nextChar == ']';
+
+            if (charIsAValidDelimiter) {
+                tokens.add(Token.of(TokenType.NUMBER, number.toString()));
+                reader.unread(nextChar);
+                break;
+            }
+
+            number.append(nextChar);
+        }
     }
 }
