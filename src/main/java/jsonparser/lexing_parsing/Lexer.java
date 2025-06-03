@@ -17,7 +17,7 @@ public class Lexer {
         List<Token> tokens = new ArrayList<>();
         StringBuilder stringContent = new StringBuilder();
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(inputFile))) {
+        try (PushbackReader reader = new PushbackReader(new FileReader(inputFile))) {
             int charAsInt;
             while ((charAsInt = reader.read()) != -1) {
                 char character = (char) charAsInt;
@@ -94,26 +94,35 @@ public class Lexer {
                         }
                         tokens.add(Token.of(TokenType.NULL, null));
                     }
-//
-//                    default -> {
-//                        if (Character.isDigit(character) || character == '-') {
-//                            StringBuilder number = new StringBuilder();
-//                            number.append(character);
-//                            while (true) {
-//                                char nextChar = (char) reader.read();
-//                                if (nextChar == -1 || isWhitespace(nextChar) || nextChar == ',' || nextChar == '}' || nextChar == ']') {
-//                                    tokens.add(Token.of(TokenType.NUMBER, number.toString()));
-//                                    if (nextChar != -1) {
-//                                        reader.reset();
-//                                    }
-//                                    break;
-//                                }
-//                                number.append(nextChar);
-//                            }
-//                        } else {
-//                            throw new IOException("Unexpected character: " + character);
-//                        }
-//                    }
+
+                    default -> {
+                        // Check for valid JSON starting character
+                        if (Character.isDigit(character) || character == '-') {
+                            StringBuilder number = new StringBuilder();
+                            number.append(character);
+
+                            // Read the rest of the number
+                            while (true) {
+                                int nextInt = reader.read();
+                                if (nextInt == -1) {
+                                    // Handle end of file
+                                    tokens.add(Token.of(TokenType.NUMBER, number.toString()));
+                                    break;
+                                }
+                                char nextChar = (char) nextInt;
+
+                                // Stop reading when we hit a valid delimiter
+                                if (isWhitespace(nextChar) || nextChar == ',' || nextChar == '}' || nextChar == ']') {
+                                    tokens.add(Token.of(TokenType.NUMBER, number.toString()));
+                                    reader.unread(nextChar);
+                                    break;
+                                }
+                                number.append(nextChar);
+                            }
+                        } else {
+                            throw new JsonSyntaxException("Error: invalid starting character '" + character + "'");
+                        }
+                    }
                 }
             }
         } catch (IOException e) {

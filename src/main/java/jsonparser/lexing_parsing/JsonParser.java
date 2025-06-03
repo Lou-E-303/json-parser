@@ -1,5 +1,6 @@
 package jsonparser.lexing_parsing;
 
+import jsonparser.exceptions.JsonSyntaxException;
 import jsonparser.json_objects.*;
 import jsonparser.state_management.JsonFiniteStateMachine;
 import jsonparser.state_management.State;
@@ -14,7 +15,7 @@ public class JsonParser {
 
     public Json parse(List<Token> tokens) {
         if (tokens.isEmpty()) {
-            throw new IllegalArgumentException("Error: No tokens to process. It is possible that the provided JSON file is empty or invalid.");
+            throw new JsonSyntaxException("Error: No tokens to process. It is possible that the provided JSON file is empty or invalid.");
         }
 
         for (Token token : tokens) {
