@@ -1,14 +1,14 @@
 package jsonparser.json_objects;
 
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class JsonObject implements Json {
     private final Map<String, Json> values;
 
     public JsonObject() {
-        this.values = new HashMap<>();
+        this.values = new LinkedHashMap<>();  // Changed from HashMap to LinkedHashMap
     }
 
     public void addValue(String key, Json value) {
