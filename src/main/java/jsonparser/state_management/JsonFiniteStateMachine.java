@@ -48,9 +48,9 @@ public class JsonFiniteStateMachine {
         stateTransitionTable.get(AWAITING_VALUE).put(TokenType.QUOTE, OBJECT_VALUE);
         stateTransitionTable.get(AWAITING_VALUE).put(TokenType.OBJECT_OPENER, OPEN_OBJECT);
         stateTransitionTable.get(AWAITING_VALUE).put(TokenType.ARRAY_OPENER, OPEN_ARRAY);
-        stateTransitionTable.get(AWAITING_VALUE).put(TokenType.BOOLEAN, OPEN_OBJECT); // TODO may need to put this for arrays as well
-        stateTransitionTable.get(AWAITING_VALUE).put(TokenType.NULL, OPEN_OBJECT); // TODO may need to put this for arrays as well
-        stateTransitionTable.get(AWAITING_VALUE).put(TokenType.NUMBER, OPEN_OBJECT); // TODO may need to put this for arrays as well
+        stateTransitionTable.get(AWAITING_VALUE).put(TokenType.BOOLEAN, OPEN_OBJECT);
+        stateTransitionTable.get(AWAITING_VALUE).put(TokenType.NULL, OPEN_OBJECT);
+        stateTransitionTable.get(AWAITING_VALUE).put(TokenType.NUMBER, OPEN_OBJECT);
 
         stateTransitionTable.get(OBJECT_VALUE).put(TokenType.QUOTE, OPEN_OBJECT);
         stateTransitionTable.get(OBJECT_VALUE).put(TokenType.CONTENT, OBJECT_VALUE);
@@ -74,7 +74,11 @@ public class JsonFiniteStateMachine {
         boolean nextStateIsAnOpenState = (nextState == OPEN_OBJECT || nextState == OPEN_ARRAY);
 
         if (nextStateIsAnOpenState) {
-            stateHistory.push(currentState);
+            if (currentState == AWAITING_VALUE) {
+                stateHistory.push(OPEN_OBJECT);
+            } else {
+                stateHistory.push(currentState);
+            }
         } else if (nextState == RETURN_TO_PREVIOUS) {
             if (!stateHistory.isEmpty()) {
                 nextState = stateHistory.pop();

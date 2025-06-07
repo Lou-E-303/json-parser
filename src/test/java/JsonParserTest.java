@@ -212,4 +212,19 @@ public class JsonParserTest {
 
         assertThat(actualRootNode).isEqualToComparingFieldByFieldRecursively(expectedRootNode);
     }
+
+    @Test
+    void givenObjectContainingMixedKeysAndValuesShouldReturnValidObject() {
+        List<Token> inputList = lexer.lex(new File("src/test/resources/pass_mixedKeyAndValueInput.json"));
+
+        JsonObject expectedRootNode = new JsonObject();
+        expectedRootNode.addValue("key", new JsonString("value"));
+        expectedRootNode.addValue("key-n", new JsonNumber(new BigDecimal(101)));
+        expectedRootNode.addValue("key-o", new JsonObject());
+        expectedRootNode.addValue("key-l", new JsonArray());
+
+        Json actualRootNode = jsonParser.parse(inputList);
+
+        assertThat(actualRootNode).isEqualToComparingFieldByFieldRecursively(expectedRootNode);
+    }
 }
