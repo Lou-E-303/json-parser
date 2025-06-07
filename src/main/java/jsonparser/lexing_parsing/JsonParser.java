@@ -46,7 +46,7 @@ public class JsonParser {
             case CONTENT -> handleContent(previousState, token);
             case BOOLEAN -> handleBoolean(token);
             case NUMBER -> handleNumber(token);
-            case NULL -> addJsonToCurrentContext(new JsonNull());
+            case NULL -> addJsonToCurrentContext(JsonNull.getInstance());
             case OBJECT_CLOSER, ARRAY_CLOSER -> handleCloser();
         }
     }
