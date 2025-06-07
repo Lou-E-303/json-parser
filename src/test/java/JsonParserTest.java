@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -162,15 +161,39 @@ public class JsonParserTest {
         assertThat(actualRootNode).isEqualToComparingFieldByFieldRecursively(expectedRootNode);
     }
 
-//    @Test
-//    void givenObjectContainingNumberValueShouldReturnValidObject() {
-//        List<Token> inputList = lexer.lex(new File("src/test/resources/pass_objectNumberValue.json"));
-//
-//        JsonObject expectedRootNode = new JsonObject();
-//        expectedRootNode.addValue("key", new JsonNumber(new BigDecimal("123.456")));
-//
-//        Json actualRootNode = jsonParser.parse(inputList);
-//
-//        assertThat(actualRootNode).isEqualToComparingFieldByFieldRecursively(expectedRootNode);
-//    }
+    @Test
+    void givenObjectContainingNumberValueShouldReturnValidObject() {
+        List<Token> inputList = lexer.lex(new File("src/test/resources/pass_objectSingleNumber.json"));
+
+        JsonObject expectedRootNode = new JsonObject();
+        expectedRootNode.addValue("key", new JsonNumber(new BigDecimal("3")));
+
+        Json actualRootNode = jsonParser.parse(inputList);
+
+        assertThat(actualRootNode).isEqualToComparingFieldByFieldRecursively(expectedRootNode);
+    }
+
+    @Test
+    void givenObjectContainingDecimalNumberValueShouldReturnValidObject() {
+        List<Token> inputList = lexer.lex(new File("src/test/resources/pass_objectDecimalNumber.json"));
+
+        JsonObject expectedRootNode = new JsonObject();
+        expectedRootNode.addValue("key", new JsonNumber(new BigDecimal("3.14")));
+
+        Json actualRootNode = jsonParser.parse(inputList);
+
+        assertThat(actualRootNode).isEqualToComparingFieldByFieldRecursively(expectedRootNode);
+    }
+
+    @Test
+    void givenObjectContainingScientificNotationNumberValueShouldReturnValidObject() {
+        List<Token> inputList = lexer.lex(new File("src/test/resources/pass_objectScientificNotation.json"));
+
+        JsonObject expectedRootNode = new JsonObject();
+        expectedRootNode.addValue("key", new JsonNumber(new BigDecimal("123e4")));
+
+        Json actualRootNode = jsonParser.parse(inputList);
+
+        assertThat(actualRootNode).isEqualToComparingFieldByFieldRecursively(expectedRootNode);
+    }
 }
