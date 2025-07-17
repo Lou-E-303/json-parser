@@ -227,4 +227,47 @@ public class JsonParserTest {
 
         assertThat(actualRootNode).isEqualToComparingFieldByFieldRecursively(expectedRootNode);
     }
+
+    @Test
+    void givenObjectContainingNestedObjectsShouldReturnValidObject() {
+        List<Token> inputList = lexer.lex(new File("src/test/resources/pass_nestedObjects.json"));
+
+        JsonObject expectedRootNode = new JsonObject();
+        JsonObject nestedObject = new JsonObject();
+        nestedObject.addValue("nestedKey", new JsonString("nestedValue"));
+        expectedRootNode.addValue("key", nestedObject);
+
+        Json actualRootNode = jsonParser.parse(inputList);
+
+        assertThat(actualRootNode).isEqualToComparingFieldByFieldRecursively(expectedRootNode);
+    }
+
+    @Test
+    void givenObjectContainingManyNestedObjectsShouldReturnValidObject() {
+        List<Token> inputList = lexer.lex(new File("src/test/resources/pass_manyNestedObjects.json"));
+
+        JsonObject expectedRootNode = new JsonObject();
+        JsonObject middle = new JsonObject();
+        JsonObject inner = new JsonObject();
+        JsonObject outer = new JsonObject();
+
+        inner.addValue("key", new JsonString("value"));
+        middle.addValue("inner", inner);
+        outer.addValue("middle", middle);
+        expectedRootNode.addValue("outer", outer);
+
+        Json actualRootNode = jsonParser.parse(inputList);
+
+        assertThat(actualRootNode).isEqualToComparingFieldByFieldRecursively(expectedRootNode);
+    }
+
+    @Test
+    void givenObjectContainingIncorrectlyNestedObjectsShouldReportInvalidJson() {
+        List<Token> inputList = lexer.lex(new File("src/test/resources/fail_incorrectNesting.json"));
+
+        JsonSyntaxException exception = assertThrows(JsonSyntaxException.class,
+                () -> jsonParser.parse(inputList));
+
+        assertEquals("Error: Invalid JSON syntax. Cannot transition from OPEN_OBJECT with OBJECT_OPENER.", exception.getMessage());
+    }
 }

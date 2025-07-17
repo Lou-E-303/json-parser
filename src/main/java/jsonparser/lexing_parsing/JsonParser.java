@@ -15,22 +15,26 @@ public class JsonParser {
     private String currentKey = null;
 
     public Json parse(List<Token> tokens) {
-        if (tokens.isEmpty()) {
-            throw new JsonSyntaxException("Error: No tokens to process. It is possible that the provided JSON file is empty or invalid.");
+        try {
+            if (tokens.isEmpty()) {
+                throw new JsonSyntaxException("Error: No tokens to process. It is possible that the provided JSON file is empty or invalid.");
+            }
+
+            for (Token token : tokens) {
+                State previousState = stateMachine.getCurrentState();
+                stateMachine.nextState(token.type());
+
+                processToken(previousState, token);
+            }
+
+            if (jsonStack.size() != 1) {
+                throw new IllegalStateException("Error: Invalid JSON structure. Unclosed objects or arrays remain.");
+            }
+
+            return jsonStack.pop();
+        } catch (IllegalStateException e) {
+            throw new JsonSyntaxException("Error: Invalid JSON syntax. " + e.getMessage());
         }
-
-        for (Token token : tokens) {
-            State previousState = stateMachine.getCurrentState();
-            stateMachine.nextState(token.type());
-
-            processToken(previousState, token);
-        }
-
-        if (jsonStack.size() != 1) {
-            throw new IllegalStateException("Error: Invalid JSON structure. Unclosed objects or arrays remain.");
-        }
-
-        return jsonStack.pop();
     }
 
     public void reset() {

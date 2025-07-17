@@ -34,7 +34,6 @@ public class JsonFiniteStateMachine {
         stateTransitionTable.get(IDLE).put(TokenType.OBJECT_OPENER, OPEN_OBJECT);
         stateTransitionTable.get(IDLE).put(TokenType.ARRAY_OPENER, OPEN_ARRAY);
 
-        stateTransitionTable.get(OPEN_OBJECT).put(TokenType.OBJECT_OPENER, OPEN_OBJECT);
         stateTransitionTable.get(OPEN_OBJECT).put(TokenType.ARRAY_OPENER, OPEN_ARRAY);
         stateTransitionTable.get(OPEN_OBJECT).put(TokenType.QUOTE, OBJECT_KEY);
         stateTransitionTable.get(OPEN_OBJECT).put(TokenType.OBJECT_CLOSER, RETURN_TO_PREVIOUS);
@@ -54,6 +53,7 @@ public class JsonFiniteStateMachine {
 
         stateTransitionTable.get(OBJECT_VALUE).put(TokenType.QUOTE, OPEN_OBJECT);
         stateTransitionTable.get(OBJECT_VALUE).put(TokenType.CONTENT, OBJECT_VALUE);
+        stateTransitionTable.get(OBJECT_VALUE).put(TokenType.OBJECT_CLOSER, RETURN_TO_PREVIOUS);
 
         stateTransitionTable.get(OPEN_ARRAY).put(TokenType.ARRAY_OPENER, OPEN_ARRAY);
         stateTransitionTable.get(OPEN_ARRAY).put(TokenType.OBJECT_OPENER, OPEN_OBJECT);
@@ -62,13 +62,15 @@ public class JsonFiniteStateMachine {
 
         stateTransitionTable.get(ARRAY_VALUE).put(TokenType.QUOTE, OPEN_ARRAY);
         stateTransitionTable.get(ARRAY_VALUE).put(TokenType.CONTENT, ARRAY_VALUE);
+        stateTransitionTable.get(OBJECT_VALUE).put(TokenType.OBJECT_CLOSER, RETURN_TO_PREVIOUS);
     }
 
     public void nextState(TokenType currentTokenType) {
         State nextState = stateTransitionTable.get(currentState).get(currentTokenType);
 
+//        System.out.println("Current state: " + currentState + "  Current token type: " + currentTokenType); TODO debug, remove
         if (nextState == null) {
-            throw new IllegalStateException("Error: Invalid JSON. Cannot transition from " + currentState + " with " + currentTokenType + ".");
+            throw new IllegalStateException("Cannot transition from " + currentState + " with " + currentTokenType + ".");
         }
 
         boolean nextStateIsAnOpenState = (nextState == OPEN_OBJECT || nextState == OPEN_ARRAY);
@@ -79,7 +81,7 @@ public class JsonFiniteStateMachine {
             } else {
                 stateHistory.push(currentState);
             }
-        } else if (nextState == RETURN_TO_PREVIOUS) {
+        } else if (nextState == RETURN_TO_PREVIOUS) { // Special state that triggers the FSM to pop previous state from the stack.
             if (!stateHistory.isEmpty()) {
                 nextState = stateHistory.pop();
             } else {

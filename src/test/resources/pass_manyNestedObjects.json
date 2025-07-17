@@ -1,0 +1,12 @@
+{
+  "outer":
+  {
+    "middle":
+    {
+      "inner":
+      {
+        "key": "value"
+      }
+    }
+  }
+}

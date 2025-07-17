@@ -1,0 +1,24 @@
+{
+  "topLevel": {
+    "stringKey": "stringValue",
+    "numberKey": 123.45,
+    "booleanKey": true,
+    "nullKey": null,
+    "arrayKey": [
+      "arrayItem",
+      2,
+      false,
+      null,
+      {
+        "deepObject": {
+          "deepString": "deep",
+          "deepNumber": 99
+        }
+      }
+    ],
+    "objectKey": {
+      "nestedString": "nested",
+      "nestedArray": [1, 2, 3]
+    }
+  }
+}
