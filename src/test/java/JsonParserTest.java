@@ -271,9 +271,33 @@ public class JsonParserTest {
         assertEquals("Error: Invalid JSON syntax. Cannot transition from OPEN_OBJECT with OBJECT_OPENER.", exception.getMessage());
     }
 
-        @Test
+    @Test
+    void givenJsonObjectsNestedInArraysShouldReturnValidJson() {
+        List<Token> inputList = lexer.lex(new File("src/test/resources/pass_nestedObjectsInArrays.json"));
+
+        JsonObject deepObject = new JsonObject();
+        deepObject.addValue("deepString", new JsonString("deep"));
+
+        JsonObject arrayElement = new JsonObject();
+        arrayElement.addValue("deepObject", deepObject);
+
+        JsonArray arrayKey = new JsonArray();
+        arrayKey.addValue(arrayElement);
+
+        JsonObject topLevel = new JsonObject();
+        topLevel.addValue("arrayKey", arrayKey);
+
+        JsonObject expectedRootNode = new JsonObject();
+        expectedRootNode.addValue("topLevel", topLevel);
+
+        Json actualRootNode = jsonParser.parse(inputList);
+
+        assertThat(actualRootNode).isEqualToComparingFieldByFieldRecursively(expectedRootNode);
+    }
+
+    @Test
     void givenCompleteJsonWithAllTypesShouldReturnValidJson() {
-        List<Token> inputList = lexer.lex(new File("src/test/resources/pass_completeNested.json"));
+        List<Token> inputList = lexer.lex(new File("src/test/resources/pass_nestedComplete.json"));
 
         JsonObject deepObject = new JsonObject();
         deepObject.addValue("deepString", new JsonString("deep"));

@@ -1,0 +1,11 @@
+{
+  "topLevel": {
+    "arrayKey": [
+      {
+        "deepObject": {
+          "deepString": "deep"
+        }
+      }
+    ]
+  }
+}

@@ -35,6 +35,6 @@ public class JsonFiniteStateMachineTest {
         IllegalStateException exception = assertThrows(IllegalStateException.class,
                 () -> jsonFiniteStateMachine.nextState(TokenType.CONTENT));
 
-        assertEquals("Error: Invalid JSON. Cannot transition from IDLE with CONTENT.", exception.getMessage());
+        assertEquals("Cannot transition from IDLE with CONTENT.", exception.getMessage());
     }
 }

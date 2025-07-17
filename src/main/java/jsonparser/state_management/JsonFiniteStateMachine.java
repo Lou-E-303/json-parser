@@ -84,7 +84,9 @@ public class JsonFiniteStateMachine {
     public void nextState(TokenType currentTokenType) {
         State nextState = stateTransitionTable.get(currentState).get(currentTokenType);
 
-        System.out.println("Current state: " + currentState + "  Current token type: " + currentTokenType); // TODO debug, remove
+        // TODO debug
+        System.out.println("Current state: " + currentState + "  Current token type: " + currentTokenType);
+        // TODO debug
 
         if (nextState == null) {
             throw new IllegalStateException("Cannot transition from " + currentState + " with " + currentTokenType + ".");
