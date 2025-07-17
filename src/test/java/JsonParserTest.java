@@ -270,4 +270,46 @@ public class JsonParserTest {
 
         assertEquals("Error: Invalid JSON syntax. Cannot transition from OPEN_OBJECT with OBJECT_OPENER.", exception.getMessage());
     }
+
+        @Test
+    void givenCompleteJsonWithAllTypesShouldReturnValidJson() {
+        List<Token> inputList = lexer.lex(new File("src/test/resources/pass_completeNested.json"));
+
+        JsonObject deepObject = new JsonObject();
+        deepObject.addValue("deepString", new JsonString("deep"));
+        deepObject.addValue("deepNumber", new JsonNumber(new BigDecimal(99)));
+
+        JsonObject arrayObject = new JsonObject();
+        arrayObject.addValue("deepObject", deepObject);
+
+        JsonArray arrayKey = new JsonArray();
+        arrayKey.addValue(new JsonString("arrayItem"));
+        arrayKey.addValue(new JsonNumber(new BigDecimal(2)));
+        arrayKey.addValue(new JsonBoolean(false));
+        arrayKey.addValue(JsonNull.getInstance());
+        arrayKey.addValue(arrayObject);
+
+        JsonObject objectKey = new JsonObject();
+        objectKey.addValue("nestedString", new JsonString("nested"));
+        JsonArray nestedArray = new JsonArray();
+        nestedArray.addValue(new JsonNumber(new BigDecimal(1)));
+        nestedArray.addValue(new JsonNumber(new BigDecimal(2)));
+        nestedArray.addValue(new JsonNumber(new BigDecimal(3)));
+        objectKey.addValue("nestedArray", nestedArray);
+
+        JsonObject topLevel = new JsonObject();
+        topLevel.addValue("stringKey", new JsonString("stringValue"));
+        topLevel.addValue("numberKey", new JsonNumber(new BigDecimal("123.45")));
+        topLevel.addValue("booleanKey", new JsonBoolean(true));
+        topLevel.addValue("nullKey", JsonNull.getInstance());
+        topLevel.addValue("arrayKey", arrayKey);
+        topLevel.addValue("objectKey", objectKey);
+
+        JsonObject expectedRootNode = new JsonObject();
+        expectedRootNode.addValue("topLevel", topLevel);
+
+        Json actualRootNode = jsonParser.parse(inputList);
+
+        assertThat(actualRootNode).isEqualToComparingFieldByFieldRecursively(expectedRootNode);
+    }
 }

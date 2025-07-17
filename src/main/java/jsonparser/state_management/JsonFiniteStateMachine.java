@@ -34,41 +34,58 @@ public class JsonFiniteStateMachine {
         stateTransitionTable.get(IDLE).put(TokenType.OBJECT_OPENER, OPEN_OBJECT);
         stateTransitionTable.get(IDLE).put(TokenType.ARRAY_OPENER, OPEN_ARRAY);
 
-        stateTransitionTable.get(OPEN_OBJECT).put(TokenType.ARRAY_OPENER, OPEN_ARRAY);
-        stateTransitionTable.get(OPEN_OBJECT).put(TokenType.QUOTE, OBJECT_KEY);
-        stateTransitionTable.get(OPEN_OBJECT).put(TokenType.OBJECT_CLOSER, RETURN_TO_PREVIOUS);
-        stateTransitionTable.get(OPEN_OBJECT).put(TokenType.COMMA, OPEN_OBJECT);
-
-        stateTransitionTable.get(OBJECT_KEY).put(TokenType.QUOTE, AWAITING_COLON);
-        stateTransitionTable.get(OBJECT_KEY).put(TokenType.CONTENT, OBJECT_KEY);
-
         stateTransitionTable.get(AWAITING_COLON).put(TokenType.COLON, AWAITING_VALUE);
 
         stateTransitionTable.get(AWAITING_VALUE).put(TokenType.QUOTE, OBJECT_VALUE);
         stateTransitionTable.get(AWAITING_VALUE).put(TokenType.OBJECT_OPENER, OPEN_OBJECT);
         stateTransitionTable.get(AWAITING_VALUE).put(TokenType.ARRAY_OPENER, OPEN_ARRAY);
-        stateTransitionTable.get(AWAITING_VALUE).put(TokenType.BOOLEAN, OPEN_OBJECT);
-        stateTransitionTable.get(AWAITING_VALUE).put(TokenType.NULL, OPEN_OBJECT);
-        stateTransitionTable.get(AWAITING_VALUE).put(TokenType.NUMBER, OPEN_OBJECT);
+        stateTransitionTable.get(AWAITING_VALUE).put(TokenType.BOOLEAN, VALUE_PARSED_IN_OBJECT);
+        stateTransitionTable.get(AWAITING_VALUE).put(TokenType.NULL, VALUE_PARSED_IN_OBJECT);
+        stateTransitionTable.get(AWAITING_VALUE).put(TokenType.NUMBER, VALUE_PARSED_IN_OBJECT);
 
-        stateTransitionTable.get(OBJECT_VALUE).put(TokenType.QUOTE, OPEN_OBJECT);
+        stateTransitionTable.get(OPEN_OBJECT).put(TokenType.ARRAY_OPENER, OPEN_ARRAY);
+        stateTransitionTable.get(OPEN_OBJECT).put(TokenType.QUOTE, OBJECT_KEY);
+        stateTransitionTable.get(OPEN_OBJECT).put(TokenType.OBJECT_CLOSER, RETURN_TO_PREVIOUS);
+        stateTransitionTable.get(OPEN_OBJECT).put(TokenType.ARRAY_CLOSER, RETURN_TO_PREVIOUS);
+        stateTransitionTable.get(OPEN_OBJECT).put(TokenType.COMMA, OPEN_OBJECT);
+
+        stateTransitionTable.get(OBJECT_KEY).put(TokenType.QUOTE, AWAITING_COLON);
+        stateTransitionTable.get(OBJECT_KEY).put(TokenType.CONTENT, OBJECT_KEY);
+
+        stateTransitionTable.get(OBJECT_VALUE).put(TokenType.QUOTE, VALUE_PARSED_IN_OBJECT);
         stateTransitionTable.get(OBJECT_VALUE).put(TokenType.CONTENT, OBJECT_VALUE);
         stateTransitionTable.get(OBJECT_VALUE).put(TokenType.OBJECT_CLOSER, RETURN_TO_PREVIOUS);
 
-        stateTransitionTable.get(OPEN_ARRAY).put(TokenType.ARRAY_OPENER, OPEN_ARRAY);
         stateTransitionTable.get(OPEN_ARRAY).put(TokenType.OBJECT_OPENER, OPEN_OBJECT);
         stateTransitionTable.get(OPEN_ARRAY).put(TokenType.QUOTE, ARRAY_VALUE);
+        stateTransitionTable.get(OPEN_ARRAY).put(TokenType.OBJECT_CLOSER, RETURN_TO_PREVIOUS);
         stateTransitionTable.get(OPEN_ARRAY).put(TokenType.ARRAY_CLOSER, RETURN_TO_PREVIOUS);
+        stateTransitionTable.get(OPEN_ARRAY).put(TokenType.BOOLEAN, VALUE_PARSED_IN_ARRAY);
+        stateTransitionTable.get(OPEN_ARRAY).put(TokenType.NULL, VALUE_PARSED_IN_ARRAY);
+        stateTransitionTable.get(OPEN_ARRAY).put(TokenType.NUMBER, VALUE_PARSED_IN_ARRAY);
+        stateTransitionTable.get(OPEN_ARRAY).put(TokenType.COMMA, OPEN_ARRAY);
 
-        stateTransitionTable.get(ARRAY_VALUE).put(TokenType.QUOTE, OPEN_ARRAY);
+        stateTransitionTable.get(ARRAY_VALUE).put(TokenType.QUOTE, VALUE_PARSED_IN_ARRAY);
         stateTransitionTable.get(ARRAY_VALUE).put(TokenType.CONTENT, ARRAY_VALUE);
-        stateTransitionTable.get(OBJECT_VALUE).put(TokenType.OBJECT_CLOSER, RETURN_TO_PREVIOUS);
+        stateTransitionTable.get(ARRAY_VALUE).put(TokenType.ARRAY_CLOSER, RETURN_TO_PREVIOUS);
+        stateTransitionTable.get(ARRAY_VALUE).put(TokenType.NUMBER, VALUE_PARSED_IN_ARRAY);
+        stateTransitionTable.get(ARRAY_VALUE).put(TokenType.BOOLEAN, VALUE_PARSED_IN_ARRAY);
+        stateTransitionTable.get(ARRAY_VALUE).put(TokenType.NULL, VALUE_PARSED_IN_ARRAY);
+        stateTransitionTable.get(ARRAY_VALUE).put(TokenType.OBJECT_OPENER, OPEN_OBJECT);
+        stateTransitionTable.get(ARRAY_VALUE).put(TokenType.ARRAY_OPENER, OPEN_ARRAY);
+
+        stateTransitionTable.get(VALUE_PARSED_IN_OBJECT).put(TokenType.COMMA, OPEN_OBJECT);
+        stateTransitionTable.get(VALUE_PARSED_IN_OBJECT).put(TokenType.OBJECT_CLOSER, RETURN_TO_PREVIOUS);
+
+        stateTransitionTable.get(VALUE_PARSED_IN_ARRAY).put(TokenType.COMMA, OPEN_ARRAY);
+        stateTransitionTable.get(VALUE_PARSED_IN_ARRAY).put(TokenType.ARRAY_CLOSER, RETURN_TO_PREVIOUS);
     }
 
     public void nextState(TokenType currentTokenType) {
         State nextState = stateTransitionTable.get(currentState).get(currentTokenType);
 
-//        System.out.println("Current state: " + currentState + "  Current token type: " + currentTokenType); TODO debug, remove
+        System.out.println("Current state: " + currentState + "  Current token type: " + currentTokenType); // TODO debug, remove
+
         if (nextState == null) {
             throw new IllegalStateException("Cannot transition from " + currentState + " with " + currentTokenType + ".");
         }
@@ -77,7 +94,10 @@ public class JsonFiniteStateMachine {
 
         if (nextStateIsAnOpenState) {
             if (currentState == AWAITING_VALUE) {
-                stateHistory.push(OPEN_OBJECT);
+                // Determine whether we’re parsing an array value or object value
+                stateHistory.push(VALUE_PARSED_IN_OBJECT); // Return here after value completes
+            } else if (currentState == OPEN_ARRAY) {
+                stateHistory.push(OPEN_ARRAY);
             } else {
                 stateHistory.push(currentState);
             }

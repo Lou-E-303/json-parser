@@ -15,6 +15,13 @@ public class JsonParser {
     private String currentKey = null;
 
     public Json parse(List<Token> tokens) {
+
+        // TODO debug
+        for (Token token : tokens) {
+            System.out.println(token.type() + " " + token.value());
+        }
+        // TODO debug
+
         try {
             if (tokens.isEmpty()) {
                 throw new JsonSyntaxException("Error: No tokens to process. It is possible that the provided JSON file is empty or invalid.");
