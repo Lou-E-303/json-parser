@@ -76,17 +76,19 @@ public class JsonFiniteStateMachine {
 
         stateTransitionTable.get(VALUE_PARSED_IN_OBJECT).put(TokenType.COMMA, OPEN_OBJECT);
         stateTransitionTable.get(VALUE_PARSED_IN_OBJECT).put(TokenType.OBJECT_CLOSER, RETURN_TO_PREVIOUS);
+        stateTransitionTable.get(VALUE_PARSED_IN_OBJECT).put(TokenType.ARRAY_CLOSER, RETURN_TO_PREVIOUS);
 
         stateTransitionTable.get(VALUE_PARSED_IN_ARRAY).put(TokenType.COMMA, OPEN_ARRAY);
         stateTransitionTable.get(VALUE_PARSED_IN_ARRAY).put(TokenType.ARRAY_CLOSER, RETURN_TO_PREVIOUS);
+        stateTransitionTable.get(VALUE_PARSED_IN_ARRAY).put(TokenType.OBJECT_CLOSER, RETURN_TO_PREVIOUS);
     }
 
     public void nextState(TokenType currentTokenType) {
         State nextState = stateTransitionTable.get(currentState).get(currentTokenType);
 
-        // TODO debug
-        System.out.println("Current state: " + currentState + "  Current token type: " + currentTokenType);
-        // TODO debug
+//        // TODO debug
+//        System.out.println(currentState + " " + currentTokenType);
+//        // TODO debug
 
         if (nextState == null) {
             throw new IllegalStateException("Cannot transition from " + currentState + " with " + currentTokenType + ".");
@@ -96,22 +98,41 @@ public class JsonFiniteStateMachine {
 
         if (nextStateIsAnOpenState) {
             if (currentState == AWAITING_VALUE) {
-                // Determine whether we’re parsing an array value or object value
-                stateHistory.push(VALUE_PARSED_IN_OBJECT); // Return here after value completes
+                // We need to determine the correct return state based on the context
+                // Look at the state history to see if we're in an array or object context
+                State contextState = determineContextState();
+                System.out.println("DEBUG: determineContextState() returned: " + contextState);
+                System.out.println("DEBUG: Current state history: " + stateHistory);
+                stateHistory.push(contextState);
             } else if (currentState == OPEN_ARRAY) {
-                stateHistory.push(OPEN_ARRAY);
-            } else {
-                stateHistory.push(currentState);
+                stateHistory.push(VALUE_PARSED_IN_ARRAY);
             }
+            // Remove the "else" case - we shouldn't push currentState for every transition to OPEN_OBJECT
         } else if (nextState == RETURN_TO_PREVIOUS) { // Special state that triggers the FSM to pop previous state from the stack.
             if (!stateHistory.isEmpty()) {
                 nextState = stateHistory.pop();
+                System.out.println("DEBUG: Popped from stack: " + nextState);
+                System.out.println("DEBUG: Remaining state history: " + stateHistory);
             } else {
                 nextState = IDLE;
             }
         }
 
         currentState = nextState;
+    }
+
+    private State determineContextState() {
+        // Look through the state history to determine if we're in an array or object context
+        for (int i = stateHistory.size() - 1; i >= 0; i--) {
+            State state = stateHistory.get(i);
+            if (state == OPEN_ARRAY || state == VALUE_PARSED_IN_ARRAY) {
+                return VALUE_PARSED_IN_ARRAY;
+            } else if (state == OPEN_OBJECT || state == VALUE_PARSED_IN_OBJECT) {
+                return VALUE_PARSED_IN_OBJECT;
+            }
+        }
+        // Default to object context if we can't determine
+        return VALUE_PARSED_IN_OBJECT;
     }
 
     public State getCurrentState() {

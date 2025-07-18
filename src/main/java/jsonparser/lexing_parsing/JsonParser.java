@@ -16,11 +16,11 @@ public class JsonParser {
 
     public Json parse(List<Token> tokens) {
 
-        // TODO debug
-        for (Token token : tokens) {
-            System.out.println(token.type() + " " + token.value());
-        }
-        // TODO debug
+//        // TODO debug
+//        for (Token token : tokens) {
+//            System.out.println(token.type() + " " + token.value());
+//        }
+//        // TODO debug
 
         try {
             if (tokens.isEmpty()) {
