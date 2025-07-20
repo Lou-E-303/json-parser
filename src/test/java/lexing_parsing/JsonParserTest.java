@@ -324,7 +324,7 @@ class JsonParserTest {
 
     static Stream<Arguments> stringAsNumberInputs() {
         return Stream.of(
-                Arguments.of("src/test/resources/pass_decimalNumber.json", new BigDecimal("3")),
+                Arguments.of("src/test/resources/pass_objectSingleNumber.json", new BigDecimal("3")),
                 Arguments.of("src/test/resources/pass_objectDecimalNumber.json", new BigDecimal("3.14")),
                 Arguments.of("src/test/resources/pass_objectScientificNotation.json", new BigDecimal("123e4"))
         );
