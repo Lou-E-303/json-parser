@@ -1,19 +1,25 @@
+package lexing_parsing;
+
 import jsonparser.exceptions.JsonSyntaxException;
 import jsonparser.lexing_parsing.TokenType;
 import jsonparser.lexing_parsing.Token;
 import jsonparser.lexing_parsing.JsonLexer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class JsonLexerTest {
+class JsonLexerTest {
     private static JsonLexer lexer;
 
     Token someKey = Token.of(TokenType.CONTENT, "someKey");
@@ -103,22 +109,26 @@ public class JsonLexerTest {
 
     @Test
     void givenRawTextInputShouldReportInvalidJson() {
+        File invalid = new File("src/test/resources/fail_invalid.json");
+
         JsonSyntaxException exception = assertThrows(JsonSyntaxException.class,
-                () -> lexer.lex(new File("src/test/resources/fail_invalid.json")));
+                () -> lexer.lex(invalid));
 
         assertEquals("Error: invalid starting character 'I'", exception.getMessage());
     }
 
     @Test
     void givenRawTextInputWithNoKnownCharactersShouldReportInvalidJson() {
+        File invalid = new File("src/test/resources/fail_NoKnownChars.json");
+
         JsonSyntaxException exception = assertThrows(JsonSyntaxException.class,
-                () -> lexer.lex(new File("src/test/resources/fail_NoKnownChars.json")));
+                () -> lexer.lex(invalid));
 
         assertEquals("Error: invalid starting character 'i'", exception.getMessage());
     }
 
     @Test
-    void givenRawNumberInputShouldReportValidJson() {
+    void givenRawNumberInputShouldProduceCorrectTokens() {
         String inputFilePath = "src/test/resources/pass_singleNumber.json";
 
         ArrayList<Token> expectedTokens = new ArrayList<>(List.of(theNumberThree));
@@ -128,7 +138,7 @@ public class JsonLexerTest {
     }
 
     @Test
-    void givenLongRawNumberInputShouldReportValidJson() {
+    void givenLongRawNumberInputShouldProduceCorrectTokens() {
         String inputFilePath = "src/test/resources/pass_longNumber.json";
 
         ArrayList<Token> expectedTokens = new ArrayList<>(List.of(oneTwoThreeFour));
@@ -137,44 +147,22 @@ public class JsonLexerTest {
         assertThat(tokens).isEqualTo(expectedTokens);
     }
 
-    @Test
-    void givenDecimalNumberInputShouldReportValidJson() {
-        String inputFilePath = "src/test/resources/pass_decimalNumber.json";
-
-        ArrayList<Token> expectedTokens = new ArrayList<>(List.of(Token.of(TokenType.NUMBER, "3.14")));
+    @ParameterizedTest
+    @MethodSource("numberAsStringInputs")
+    void givenIncreasinglyComplexNumbersAsStringsShouldProduceCorrectTokens(String inputFilePath, Token inputToken) {
+        ArrayList<Token> expectedTokens = new ArrayList<>(List.of(inputToken));
         ArrayList<Token> tokens = new ArrayList<>(lexer.lex(new File(inputFilePath)));
 
         assertThat(tokens).isEqualTo(expectedTokens);
     }
 
-    @Test
-    void givenNegativeNumberInputShouldReportValidJson() {
-        String inputFilePath = "src/test/resources/pass_negativeNumber.json";
-
-        ArrayList<Token> expectedTokens = new ArrayList<>(List.of(Token.of(TokenType.NUMBER, "-42")));
-        ArrayList<Token> tokens = new ArrayList<>(lexer.lex(new File(inputFilePath)));
-
-        assertThat(tokens).isEqualTo(expectedTokens);
-    }
-
-    @Test
-    void givenScientificNotationNumberInputShouldReportValidJson() {
-        String inputFilePath = "src/test/resources/pass_scientificNotation.json";
-
-        ArrayList<Token> expectedTokens = new ArrayList<>(List.of(Token.of(TokenType.NUMBER, "123e4")));
-        ArrayList<Token> tokens = new ArrayList<>(lexer.lex(new File(inputFilePath)));
-
-        assertThat(tokens).isEqualTo(expectedTokens);
-    }
-
-    @Test
-    void givenComplicatedNumberInputShouldReportValidJson() {
-        String inputFilePath = "src/test/resources/pass_complicatedNumber.json";
-
-        ArrayList<Token> expectedTokens = new ArrayList<>(List.of(Token.of(TokenType.NUMBER, "-123.456e10")));
-        ArrayList<Token> tokens = new ArrayList<>(lexer.lex(new File(inputFilePath)));
-
-        assertThat(tokens).isEqualTo(expectedTokens);
+    static Stream<Arguments> numberAsStringInputs() {
+        return Stream.of(
+                Arguments.of("src/test/resources/pass_decimalNumber.json", Token.of(TokenType.NUMBER, "3.14")),
+                Arguments.of("src/test/resources/pass_negativeNumber.json", Token.of(TokenType.NUMBER, "-42")),
+                Arguments.of("src/test/resources/pass_scientificNotation.json", Token.of(TokenType.NUMBER, "123e4")),
+                Arguments.of("src/test/resources/pass_complicatedNumber.json", Token.of(TokenType.NUMBER, "-123.456e10"))
+        );
     }
 }
 

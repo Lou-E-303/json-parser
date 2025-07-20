@@ -1,3 +1,5 @@
+package state_management;
+
 import jsonparser.lexing_parsing.TokenType;
 import jsonparser.state_management.JsonFiniteStateMachine;
 import org.junit.jupiter.api.BeforeEach;
@@ -7,7 +9,7 @@ import static jsonparser.state_management.State.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class JsonFiniteStateMachineTest {
+class JsonFiniteStateMachineTest {
     JsonFiniteStateMachine jsonFiniteStateMachine;
 
     @BeforeEach
@@ -16,7 +18,7 @@ public class JsonFiniteStateMachineTest {
     }
 
     @Test
-    public void givenNextStateIsCalledThenTransitionToCorrectState() {
+    void givenNextStateIsCalledThenTransitionToCorrectState() {
         jsonFiniteStateMachine.nextState(TokenType.OBJECT_OPENER);
         assertEquals(OPEN_OBJECT, jsonFiniteStateMachine.getCurrentState());
 
@@ -25,7 +27,7 @@ public class JsonFiniteStateMachineTest {
     }
 
     @Test
-    public void givenInvalidStateTransitionThenThrowException() {
+    void givenInvalidStateTransitionThenThrowException() {
         IllegalStateException exception = assertThrows(IllegalStateException.class,
                 () -> jsonFiniteStateMachine.nextState(TokenType.CONTENT));
 

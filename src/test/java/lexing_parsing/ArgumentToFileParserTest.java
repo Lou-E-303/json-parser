@@ -1,3 +1,5 @@
+package lexing_parsing;
+
 import jsonparser.lexing_parsing.ArgumentToFileParser;
 import org.junit.jupiter.api.Test;
 
@@ -6,7 +8,7 @@ import java.io.File;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ArgumentToFileParserTest {
+class ArgumentToFileParserTest {
     @Test
     void givenArgsOfLengthNotOneThenThrowIllegalArgumentException() {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,

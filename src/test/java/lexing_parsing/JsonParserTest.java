@@ -1,3 +1,5 @@
+package lexing_parsing;
+
 import jsonparser.exceptions.JsonSyntaxException;
 import jsonparser.json_objects.*;
 import jsonparser.lexing_parsing.JsonParser;
@@ -6,15 +8,20 @@ import jsonparser.lexing_parsing.Token;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class JsonParserTest {
+class JsonParserTest {
     private static JsonParser jsonParser;
     private static JsonLexer lexer;
 
@@ -162,42 +169,6 @@ public class JsonParserTest {
     }
 
     @Test
-    void givenObjectContainingNumberValueShouldReturnValidObject() {
-        List<Token> inputList = lexer.lex(new File("src/test/resources/pass_objectSingleNumber.json"));
-
-        JsonObject expectedRootNode = new JsonObject();
-        expectedRootNode.addValue("key", new JsonNumber(new BigDecimal("3")));
-
-        Json actualRootNode = jsonParser.parse(inputList);
-
-        assertThat(actualRootNode).isEqualToComparingFieldByFieldRecursively(expectedRootNode);
-    }
-
-    @Test
-    void givenObjectContainingDecimalNumberValueShouldReturnValidObject() {
-        List<Token> inputList = lexer.lex(new File("src/test/resources/pass_objectDecimalNumber.json"));
-
-        JsonObject expectedRootNode = new JsonObject();
-        expectedRootNode.addValue("key", new JsonNumber(new BigDecimal("3.14")));
-
-        Json actualRootNode = jsonParser.parse(inputList);
-
-        assertThat(actualRootNode).isEqualToComparingFieldByFieldRecursively(expectedRootNode);
-    }
-
-    @Test
-    void givenObjectContainingScientificNotationNumberValueShouldReturnValidObject() {
-        List<Token> inputList = lexer.lex(new File("src/test/resources/pass_objectScientificNotation.json"));
-
-        JsonObject expectedRootNode = new JsonObject();
-        expectedRootNode.addValue("key", new JsonNumber(new BigDecimal("123e4")));
-
-        Json actualRootNode = jsonParser.parse(inputList);
-
-        assertThat(actualRootNode).isEqualToComparingFieldByFieldRecursively(expectedRootNode);
-    }
-
-    @Test
     void givenObjectContainingMixedValuesShouldReturnValidObject() {
         List<Token> inputList = lexer.lex(new File("src/test/resources/pass_mixedValueInput.json"));
 
@@ -336,5 +307,26 @@ public class JsonParserTest {
         Json actualRootNode = jsonParser.parse(inputList);
 
         assertThat(actualRootNode).isEqualToComparingFieldByFieldRecursively(expectedRootNode);
+    }
+
+    @ParameterizedTest
+    @MethodSource("stringAsNumberInputs")
+    void givenIncreasinglyComplexNumbersShouldReportValidJson(String inputFilePath, BigDecimal expectedNumber) {
+        List<Token> inputList = lexer.lex(new File(inputFilePath));
+
+        JsonObject expectedRootNode = new JsonObject();
+        expectedRootNode.addValue("key", new JsonNumber(expectedNumber));
+
+        Json actualRootNode = jsonParser.parse(inputList);
+
+        assertThat(actualRootNode).isEqualToComparingFieldByFieldRecursively(expectedRootNode);
+    }
+
+    static Stream<Arguments> stringAsNumberInputs() {
+        return Stream.of(
+                Arguments.of("src/test/resources/pass_decimalNumber.json", new BigDecimal("3")),
+                Arguments.of("src/test/resources/pass_objectDecimalNumber.json", new BigDecimal("3.14")),
+                Arguments.of("src/test/resources/pass_objectScientificNotation.json", new BigDecimal("123e4"))
+        );
     }
 }
