@@ -20,6 +20,11 @@ public class JsonString implements Json {
     }
 
     @Override
+    public int hashCode() {
+        return value.hashCode();
+    }
+
+    @Override
     public String toString() {
         return "\"" + value + "\"";
     }

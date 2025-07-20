@@ -27,6 +27,11 @@ public class JsonArray implements Json {
     }
 
     @Override
+    public int hashCode() {
+        return values.hashCode();
+    }
+
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("[");

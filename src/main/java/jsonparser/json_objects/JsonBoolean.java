@@ -20,6 +20,11 @@ public class JsonBoolean implements Json {
     }
 
     @Override
+    public int hashCode() {
+        return Boolean.hashCode(value);
+    }
+
+    @Override
     public String toString() {
         return String.valueOf(value);
     }

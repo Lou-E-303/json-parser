@@ -2,25 +2,20 @@ package jsonparser.state_management;
 
 import jsonparser.lexing_parsing.TokenType;
 
-import java.util.EnumMap;
-import java.util.Map;
-import java.util.Stack;
+import java.util.*;
 
 import static jsonparser.state_management.State.*;
 
 public class JsonFiniteStateMachine {
     public static final JsonFiniteStateMachine JSON_FINITE_STATE_MACHINE = new JsonFiniteStateMachine();
 
-    private final Stack<State> stateHistory;
+    private final Deque<State> stateHistory; // Use a double-ended queue as stack for performance
     private State currentState;
     private EnumMap<State, Map<TokenType, State>> stateTransitionTable;
 
     private JsonFiniteStateMachine() {
-        if (JSON_FINITE_STATE_MACHINE != null) {
-            throw new IllegalStateException("Error: Cannot instantiate state machine. Singleton instance already exists.");
-        }
         this.currentState = IDLE;
-        this.stateHistory = new Stack<>();
+        this.stateHistory = new ArrayDeque<>();
         initialiseStateTransitionTable();
     }
 
@@ -121,7 +116,7 @@ public class JsonFiniteStateMachine {
     private State determineContextState() {
         // Look through the state history to determine if we're in an array or object context
         for (int i = stateHistory.size() - 1; i >= 0; i--) {
-            State state = stateHistory.get(i);
+            State state = new ArrayList<>(stateHistory).get(i);
             if (state == OPEN_ARRAY || state == VALUE_PARSED_IN_ARRAY) {
                 return VALUE_PARSED_IN_ARRAY;
             } else if (state == OPEN_OBJECT || state == VALUE_PARSED_IN_OBJECT) {

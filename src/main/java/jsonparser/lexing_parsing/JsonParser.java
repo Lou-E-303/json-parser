@@ -6,12 +6,13 @@ import jsonparser.state_management.JsonFiniteStateMachine;
 import jsonparser.state_management.State;
 
 import java.math.BigDecimal;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.List;
-import java.util.Stack;
 
 public class JsonParser {
-    private final JsonFiniteStateMachine stateMachine = JsonFiniteStateMachine.JSON_FINITE_STATE_MACHINE;
-    private final Stack<Json> jsonStack = new Stack<>();
+    private static final JsonFiniteStateMachine stateMachine = JsonFiniteStateMachine.JSON_FINITE_STATE_MACHINE;
+    private static final Deque<Json> jsonStack = new ArrayDeque<>();
     private String currentKey = null;
 
     public Json parse(List<Token> tokens) {
@@ -52,6 +53,9 @@ public class JsonParser {
             case NUMBER -> handleNumber(token);
             case NULL -> addJsonToCurrentContext(JsonNull.getInstance());
             case OBJECT_CLOSER, ARRAY_CLOSER -> handleCloser();
+            default -> {
+                // Do nothing for COLON, COMMA which don't need to be added to the JSON structure
+            }
         }
     }
 

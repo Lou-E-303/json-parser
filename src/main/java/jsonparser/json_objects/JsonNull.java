@@ -2,7 +2,7 @@ package jsonparser.json_objects;
 
 public class JsonNull implements Json {
     private static final JsonNull INSTANCE = new JsonNull();
-    private final String value = "null";
+    private static final String value = "null";
 
     private JsonNull() {
     }
@@ -18,6 +18,11 @@ public class JsonNull implements Json {
     @Override
     public boolean equals(Object obj) {
         return obj instanceof JsonNull;
+    }
+
+    @Override
+    public int hashCode() {
+        return value.hashCode();
     }
 
     @Override
