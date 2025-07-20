@@ -1,7 +1,7 @@
 import jsonparser.exceptions.JsonSyntaxException;
 import jsonparser.lexing_parsing.TokenType;
 import jsonparser.lexing_parsing.Token;
-import jsonparser.lexing_parsing.Lexer;
+import jsonparser.lexing_parsing.JsonLexer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -13,8 +13,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class LexerTest {
-    private static Lexer lexer;
+public class JsonLexerTest {
+    private static JsonLexer lexer;
 
     Token someKey = Token.of(TokenType.CONTENT, "someKey");
     Token someWhitespaceValue = Token.of(TokenType.CONTENT, "Some value");
@@ -33,7 +33,7 @@ public class LexerTest {
 
     @BeforeEach
     void init() {
-        lexer = new Lexer();
+        lexer = new JsonLexer();
     }
 
     @Test

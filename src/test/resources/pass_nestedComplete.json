@@ -18,7 +18,7 @@
     ],
     "objectKey": {
       "nestedString": "nested",
-      "nestedArray": [1, 2, 3]
+      "nestedArray": [1, 2, 3e4, "five"]
     }
   }
 }

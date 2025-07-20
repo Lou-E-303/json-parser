@@ -9,7 +9,7 @@ import java.util.List;
 
 // Responsible for breaking the raw input into tokens and validating the token syntax
 
-public class Lexer {
+public class JsonLexer {
     private boolean insideString = false;
     private boolean escapeNext = false;
 

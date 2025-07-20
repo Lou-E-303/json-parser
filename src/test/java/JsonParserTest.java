@@ -1,7 +1,7 @@
 import jsonparser.exceptions.JsonSyntaxException;
 import jsonparser.json_objects.*;
 import jsonparser.lexing_parsing.JsonParser;
-import jsonparser.lexing_parsing.Lexer;
+import jsonparser.lexing_parsing.JsonLexer;
 import jsonparser.lexing_parsing.Token;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,12 +16,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class JsonParserTest {
     private static JsonParser jsonParser;
-    private static Lexer lexer;
+    private static JsonLexer lexer;
 
     @BeforeEach
     void init() {
         jsonParser = new JsonParser();
-        lexer = new Lexer();
+        lexer = new JsonLexer();
     }
 
     @AfterEach
@@ -318,7 +318,8 @@ public class JsonParserTest {
         JsonArray nestedArray = new JsonArray();
         nestedArray.addValue(new JsonNumber(new BigDecimal(1)));
         nestedArray.addValue(new JsonNumber(new BigDecimal(2)));
-        nestedArray.addValue(new JsonNumber(new BigDecimal(3)));
+        nestedArray.addValue(new JsonNumber(new BigDecimal("3e4")));
+        nestedArray.addValue(new JsonString("five"));
         objectKey.addValue("nestedArray", nestedArray);
 
         JsonObject topLevel = new JsonObject();

@@ -27,7 +27,8 @@ public class JsonFiniteStateMachine {
     private void initialiseStateTransitionTable() {
         this.stateTransitionTable = new EnumMap<>(State.class);
 
-        for (State state : values()) {
+        // Initialize the state transition table with empty maps for each state
+        for (State state : State.values()) {
             stateTransitionTable.put(state, new EnumMap<>(TokenType.class));
         }
 
@@ -101,8 +102,8 @@ public class JsonFiniteStateMachine {
                 // We need to determine the correct return state based on the context
                 // Look at the state history to see if we're in an array or object context
                 State contextState = determineContextState();
-                System.out.println("DEBUG: determineContextState() returned: " + contextState);
-                System.out.println("DEBUG: Current state history: " + stateHistory);
+                System.out.println("DEBUG: determineContextState() returned: " + contextState); // TODO remove
+                System.out.println("DEBUG: Current state history: " + stateHistory); // TODO remove
                 stateHistory.push(contextState);
             } else if (currentState == OPEN_ARRAY) {
                 stateHistory.push(VALUE_PARSED_IN_ARRAY);
@@ -111,8 +112,8 @@ public class JsonFiniteStateMachine {
         } else if (nextState == RETURN_TO_PREVIOUS) { // Special state that triggers the FSM to pop previous state from the stack.
             if (!stateHistory.isEmpty()) {
                 nextState = stateHistory.pop();
-                System.out.println("DEBUG: Popped from stack: " + nextState);
-                System.out.println("DEBUG: Remaining state history: " + stateHistory);
+                System.out.println("DEBUG: Popped from stack: " + nextState); // TODO remove
+                System.out.println("DEBUG: Remaining state history: " + stateHistory); // TODO remove
             } else {
                 nextState = IDLE;
             }
