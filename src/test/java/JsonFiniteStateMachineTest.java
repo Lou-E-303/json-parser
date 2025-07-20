@@ -20,14 +20,8 @@ public class JsonFiniteStateMachineTest {
         jsonFiniteStateMachine.nextState(TokenType.OBJECT_OPENER);
         assertEquals(OPEN_OBJECT, jsonFiniteStateMachine.getCurrentState());
 
-        jsonFiniteStateMachine.nextState(TokenType.QUOTE);
-        assertEquals(OBJECT_KEY, jsonFiniteStateMachine.getCurrentState());
-
-        jsonFiniteStateMachine.nextState(TokenType.QUOTE);
-        assertEquals(AWAITING_COLON, jsonFiniteStateMachine.getCurrentState());
-
-        jsonFiniteStateMachine.nextState(TokenType.COLON);
-        assertEquals(AWAITING_VALUE, jsonFiniteStateMachine.getCurrentState());
+        jsonFiniteStateMachine.nextState(TokenType.ARRAY_OPENER);
+        assertEquals(OPEN_ARRAY, jsonFiniteStateMachine.getCurrentState());
     }
 
     @Test

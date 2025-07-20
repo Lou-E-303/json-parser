@@ -50,7 +50,6 @@ public class JsonLexer {
                     } else if (character == '"') {
                         insideString = false;
                         tokens.add(Token.of(TokenType.CONTENT, stringContent.toString()));
-                        tokens.add(Token.of(TokenType.QUOTE, '\"'));
                         stringContent.setLength(0);
                     } else {
                         stringContent.append(character);
@@ -63,10 +62,7 @@ public class JsonLexer {
                     continue;
                 }
                 switch (character) {
-                    case '"' -> {
-                        insideString = true;
-                        tokens.add(Token.of(TokenType.QUOTE, '"'));
-                    }
+                    case '"' -> insideString = true;
                     case '{' -> tokens.add(Token.of(TokenType.OBJECT_OPENER, character));
                     case '}' -> tokens.add(Token.of(TokenType.OBJECT_CLOSER, character));
                     case '[' -> tokens.add(Token.of(TokenType.ARRAY_OPENER, character));

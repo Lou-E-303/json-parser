@@ -26,10 +26,12 @@ public class JsonLexerTest {
     Token closedBrace = Token.of(TokenType.OBJECT_CLOSER, '}');
     Token openBracket = Token.of(TokenType.ARRAY_OPENER, '[');
     Token closedBracket = Token.of(TokenType.ARRAY_CLOSER, ']');
-    Token quote = Token.of(TokenType.QUOTE, '"');
-
     Token theNumberThree = Token.of(TokenType.NUMBER, 3);
     Token oneTwoThreeFour = Token.of(TokenType.NUMBER, 1234);
+    Token truthy = Token.of(TokenType.BOOLEAN, "true");
+    Token falsy = Token.of(TokenType.BOOLEAN, "false");
+    Token nully = Token.of(TokenType.NULL, "null");
+    Token comma = Token.of(TokenType.COMMA, ',');
 
     @BeforeEach
     void init() {
@@ -39,9 +41,18 @@ public class JsonLexerTest {
     @Test
     void givenInputOfValidTokensThenReturnTokenList() {
         String inputFilePath = "src/test/resources/lexer_validTokens.json";
-        Token quote = Token.of(TokenType.QUOTE, '"');
 
-        ArrayList<Token> expectedTokens = new ArrayList<>(List.of(openBrace, closedBrace, openBracket, closedBracket, quote));
+        ArrayList<Token> expectedTokens = new ArrayList<>(
+                List.of(openBrace,
+                        key, colon,
+                            openBracket,
+                                someKey, comma,
+                                theNumberThree, comma,
+                                truthy, comma,
+                                falsy, comma,
+                                nully,
+                            closedBracket,
+                        closedBrace));
         ArrayList<Token> tokens = new ArrayList<>(lexer.lex(new File(inputFilePath)));
 
         assertThat(tokens).isEqualTo(expectedTokens);
@@ -63,9 +74,9 @@ public class JsonLexerTest {
 
         ArrayList<Token> expectedTokens = new ArrayList<>(List.of(
                 openBrace,
-                quote, someKey, quote,
+                someKey,
                 colon,
-                quote, someWhitespaceValue, quote,
+                someWhitespaceValue,
                 closedBrace
         ));
         ArrayList<Token> tokens = new ArrayList<>(lexer.lex(new File(inputFilePath)));
@@ -79,9 +90,9 @@ public class JsonLexerTest {
 
         ArrayList<Token> expectedTokens = new ArrayList<>(List.of(
                 openBrace,
-                quote, key, quote,
+                key,
                 colon,
-                quote, valueWithEscapedQuotes, quote,
+                valueWithEscapedQuotes,
                 closedBrace
         ));
 

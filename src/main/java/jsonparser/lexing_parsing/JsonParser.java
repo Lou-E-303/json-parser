@@ -15,23 +15,16 @@ public class JsonParser {
     private String currentKey = null;
 
     public Json parse(List<Token> tokens) {
-
-//        // TODO debug
-//        for (Token token : tokens) {
-//            System.out.println(token.type() + " " + token.value());
-//        }
-//        // TODO debug
-
         try {
             if (tokens.isEmpty()) {
                 throw new JsonSyntaxException("Error: No tokens to process. It is possible that the provided JSON file is empty or invalid.");
             }
 
             for (Token token : tokens) {
-                State previousState = stateMachine.getCurrentState();
                 stateMachine.nextState(token.type());
+                State currentState = stateMachine.getCurrentState();
 
-                processToken(previousState, token);
+                processToken(currentState, token);
             }
 
             if (jsonStack.size() != 1) {
@@ -50,11 +43,11 @@ public class JsonParser {
         jsonStack.clear();
     }
 
-    private void processToken(State previousState, Token token) {
+    private void processToken(State currentState, Token token) {
         switch (token.type()) {
             case OBJECT_OPENER -> handleObjectOpener();
             case ARRAY_OPENER -> handleArrayOpener();
-            case CONTENT -> handleContent(previousState, token);
+            case CONTENT -> handleContent(currentState, token);
             case BOOLEAN -> handleBoolean(token);
             case NUMBER -> handleNumber(token);
             case NULL -> addJsonToCurrentContext(JsonNull.getInstance());
@@ -74,10 +67,10 @@ public class JsonParser {
         jsonStack.push(newArray);
     }
 
-    private void handleContent(State previousState, Token token) {
+    private void handleContent(State currentState, Token token) {
         String content = token.value().toString();
 
-        if (previousState == State.OBJECT_KEY) {
+        if (currentState == State.OBJECT_KEY) {
             currentKey = content;
         } else {
             JsonString jsonString = new JsonString(content);

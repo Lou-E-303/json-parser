@@ -1,1 +1,10 @@
-{}[]"
+{
+    "key":
+ [
+   "someKey",
+   3,
+   true,
+   false,
+   null
+ ]
+}

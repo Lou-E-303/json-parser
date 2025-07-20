@@ -5,7 +5,6 @@ public enum TokenType {
     OBJECT_CLOSER,
     ARRAY_OPENER,
     ARRAY_CLOSER,
-    QUOTE,
     COLON,
     COMMA,
     BOOLEAN,
