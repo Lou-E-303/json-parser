@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-// Responsible for breaking the raw input into tokens and validating the token syntax
+// Responsible for breaking the raw input into tokens and validating token syntax
 
 public class JsonLexer {
     private boolean insideString = false;
@@ -50,6 +50,29 @@ public class JsonLexer {
         }
     }
 
+    private static void handleEscapeCharacters(char character, StringBuilder stringContent, PushbackReader reader) throws IOException {
+        switch (character) {
+            case 'n' -> stringContent.append('\n');
+            case 't' -> stringContent.append('\t');
+            case 'r' -> stringContent.append('\r');
+            case 'b' -> stringContent.append('\b');
+            case 'f' -> stringContent.append('\f');
+            case '"' -> stringContent.append('\"');
+            case '\\' -> stringContent.append('\\');
+            case '/' -> stringContent.append('/');
+            case 'u' -> {
+                char[] unicode = new char[4];
+                for (int i = 0; i < 4; i++) {
+                    int nextChar = reader.read();
+                    if (nextChar == -1) throw new JsonSyntaxException("Error: Unexpected end of input in Unicode escape.");
+                    unicode[i] = (char) nextChar;
+                }
+                stringContent.append((char) Integer.parseInt(new String(unicode), 16));
+            }
+            default -> stringContent.append(character);
+        }
+    }
+
     private void tokeniseCharacters(char character, List<Token> tokens, PushbackReader reader) throws IOException {
         switch (character) {
             case '"' -> insideString = true;
@@ -80,48 +103,6 @@ public class JsonLexer {
         }
     }
 
-    private static void handleBoolean(Boolean value, List<Token> tokens, PushbackReader reader) throws IOException {
-        String expectedWord = Boolean.TRUE.equals(value) ? "true" : "false";
-
-        char[] expected = new char[expectedWord.length() - 1];
-        if (reader.read(expected) != expected.length) {
-            throw new JsonSyntaxException("Error: Invalid literal. Current sequence = " + Arrays.toString(expected));
-        }
-        for (int i = 1; i < expectedWord.length(); i++) {
-            if (expected[i - 1] != expectedWord.charAt(i)) {
-                throw new JsonSyntaxException("Error: Invalid literal. Current sequence = " + Arrays.toString(expected));
-            }
-        }
-        tokens.add(Token.of(TokenType.BOOLEAN, value));
-    }
-
-    private static void handleEscapeCharacters(char character, StringBuilder stringContent, PushbackReader reader) throws IOException {
-        switch (character) {
-            case 'n' -> stringContent.append('\n');
-            case 't' -> stringContent.append('\t');
-            case 'r' -> stringContent.append('\r');
-            case 'b' -> stringContent.append('\b');
-            case 'f' -> stringContent.append('\f');
-            case '"' -> stringContent.append('\"');
-            case '\\' -> stringContent.append('\\');
-            case '/' -> stringContent.append('/');
-            case 'u' -> {
-                char[] unicode = new char[4];
-                for (int i = 0; i < 4; i++) {
-                    int nextChar = reader.read();
-                    if (nextChar == -1) throw new JsonSyntaxException("Error: Unexpected end of input in Unicode escape.");
-                    unicode[i] = (char) nextChar;
-                }
-                stringContent.append((char) Integer.parseInt(new String(unicode), 16));
-            }
-            default -> stringContent.append(character);
-        }
-    }
-
-    private boolean isWhitespace(char c) {
-        return c == ' ' || c == '\n' || c == '\r' || c == '\t';
-    }
-
     private void readAndTokeniseNumber(PushbackReader reader, Character character, List<Token> tokens) throws IOException {
         StringBuilder number = new StringBuilder();
         number.append(character);
@@ -143,5 +124,24 @@ public class JsonLexer {
 
             number.append(nextChar);
         }
+    }
+
+    private boolean isWhitespace(char c) {
+        return c == ' ' || c == '\n' || c == '\r' || c == '\t';
+    }
+
+    private static void handleBoolean(Boolean value, List<Token> tokens, PushbackReader reader) throws IOException {
+        String expectedWord = Boolean.TRUE.equals(value) ? "true" : "false";
+
+        char[] expected = new char[expectedWord.length() - 1];
+        if (reader.read(expected) != expected.length) {
+            throw new JsonSyntaxException("Error: Invalid literal. Current sequence = " + Arrays.toString(expected));
+        }
+        for (int i = 1; i < expectedWord.length(); i++) {
+            if (expected[i - 1] != expectedWord.charAt(i)) {
+                throw new JsonSyntaxException("Error: Invalid literal. Current sequence = " + Arrays.toString(expected));
+            }
+        }
+        tokens.add(Token.of(TokenType.BOOLEAN, value));
     }
 }
