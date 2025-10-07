@@ -1,5 +1,6 @@
 package jsonparser.lexing_parsing;
 
+import jsonparser.exceptions.JsonReadException;
 import jsonparser.exceptions.JsonSyntaxException;
 
 import java.io.*;
@@ -13,7 +14,7 @@ public class JsonLexer {
     private boolean insideString = false;
     private boolean escapeNext = false;
 
-    public List<Token> lex(File inputFile) {
+    public List<Token> lex(File inputFile) throws JsonReadException {
         List<Token> tokens = new ArrayList<>();
         StringBuilder stringContent = new StringBuilder();
 
@@ -29,7 +30,7 @@ public class JsonLexer {
                 }
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new JsonReadException("Error: Failed to read provided file. " + e.getMessage());
         }
 
         return tokens;
