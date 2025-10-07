@@ -29,7 +29,7 @@ public class JsonParser {
             }
 
             if (jsonStack.size() != 1) {
-                throw new IllegalStateException("Error: Invalid JSON structure. Unclosed objects or arrays remain.");
+                throw new JsonSyntaxException("Error: Invalid JSON structure. Unclosed objects or arrays remain.");
             }
 
             return jsonStack.pop();
@@ -106,13 +106,13 @@ public class JsonParser {
         if (!jsonStack.isEmpty()) {
             Json currentContext = jsonStack.peek();
 
-            if (currentContext instanceof JsonObject) {
+            if (currentContext instanceof JsonObject object) {
                 if (currentKey != null) {
-                    ((JsonObject) currentContext).addValue(currentKey, json);
+                    object.addValue(currentKey, json);
                     currentKey = null;
                 }
-            } else if (currentContext instanceof JsonArray) {
-                ((JsonArray) currentContext).addValue(json);
+            } else if (currentContext instanceof JsonArray array) {
+                array.addValue(json);
             }
         } else {
             jsonStack.push(json);

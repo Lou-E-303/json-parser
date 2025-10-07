@@ -94,14 +94,11 @@ public class JsonFiniteStateMachine {
 
         if (nextStateIsAnOpenState) {
             if (currentState == AWAITING_VALUE) {
-                // We need to determine the correct return state based on the context
-                // Look at the state history to see if we're in an array or object context
-                State contextState = determineContextState();
+                State contextState = determineContextState(); // Determine if we're in an object or array context
                 stateHistory.push(contextState);
             } else if (currentState == OPEN_ARRAY) {
                 stateHistory.push(VALUE_PARSED_IN_ARRAY);
             }
-            // Remove the "else" case - we shouldn't push currentState for every transition to OPEN_OBJECT
         } else if (nextState == RETURN_TO_PREVIOUS) { // Special state that triggers the FSM to pop previous state from the stack.
             if (!stateHistory.isEmpty()) {
                 nextState = stateHistory.pop();
@@ -114,7 +111,6 @@ public class JsonFiniteStateMachine {
     }
 
     private State determineContextState() {
-        // Look through the state history to determine if we're in an array or object context
         for (int i = stateHistory.size() - 1; i >= 0; i--) {
             State state = new ArrayList<>(stateHistory).get(i);
             if (state == OPEN_ARRAY || state == VALUE_PARSED_IN_ARRAY) {
