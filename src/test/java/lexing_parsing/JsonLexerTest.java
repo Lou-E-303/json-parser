@@ -109,26 +109,6 @@ class JsonLexerTest {
     }
 
     @Test
-    void givenRawTextInputShouldReportInvalidJson() {
-        File invalid = new File("src/test/resources/fail_invalid.json");
-
-        JsonSyntaxException exception = assertThrows(JsonSyntaxException.class,
-                () -> lexer.lex(invalid));
-
-        assertEquals("Error: invalid starting character 'I'", exception.getMessage());
-    }
-
-    @Test
-    void givenRawTextInputWithNoKnownCharactersShouldReportInvalidJson() {
-        File invalid = new File("src/test/resources/fail_NoKnownChars.json");
-
-        JsonSyntaxException exception = assertThrows(JsonSyntaxException.class,
-                () -> lexer.lex(invalid));
-
-        assertEquals("Error: invalid starting character 'i'", exception.getMessage());
-    }
-
-    @Test
     void givenRawNumberInputShouldProduceCorrectTokens() throws JsonReadException {
         String inputFilePath = "src/test/resources/pass_singleNumber.json";
 
@@ -163,6 +143,26 @@ class JsonLexerTest {
                 Arguments.of("src/test/resources/pass_negativeNumber.json", Token.of(TokenType.NUMBER, "-42")),
                 Arguments.of("src/test/resources/pass_scientificNotation.json", Token.of(TokenType.NUMBER, "123e4")),
                 Arguments.of("src/test/resources/pass_complicatedNumber.json", Token.of(TokenType.NUMBER, "-123.456e10"))
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("invalidNumberInputs")
+    void givenInvalidNumberFormatsShouldReportInvalidJson(String inputFilePath, String expectedMessage) {
+        File invalid = new File(inputFilePath);
+
+        JsonSyntaxException exception = assertThrows(JsonSyntaxException.class,
+                () -> lexer.lex(invalid));
+
+        assertEquals(expectedMessage, exception.getMessage());
+    }
+
+    static Stream<Arguments> invalidNumberInputs() {
+        return Stream.of(
+                Arguments.of("src/test/resources/fail_numberWithLeadingZero.json", "Error: Numbers cannot have leading zeros."),
+                Arguments.of("src/test/resources/fail_negativeNumberWithLeadingZero.json", "Error: Numbers cannot have leading zeros."),
+                Arguments.of("src/test/resources/fail_NoKnownChars.json", "Error: invalid starting character 'i'"),
+                Arguments.of("src/test/resources/fail_invalid.json", "Error: invalid starting character 'I'")
         );
     }
 }

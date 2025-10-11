@@ -26,7 +26,7 @@ public class JsonLexer {
                 if (insideString) {
                     handleString(character, stringContent, reader, tokens); // If inside a string, handle escape characters and quotes explicitly
                 } else if (!isWhitespace(character)) {
-                    tokeniseCharacters(character, tokens, reader); // Ignoring whitespace outside of strings, create appropriate tokens
+                    tokeniseCharacter(character, tokens, reader); // Ignoring whitespace outside of strings, create appropriate tokens
                 }
             }
         } catch (IOException e) {
@@ -76,7 +76,7 @@ public class JsonLexer {
         stringContent.append((char) Integer.parseInt(new String(unicode), 16));
     }
 
-    private void tokeniseCharacters(char character, List<Token> tokens, PushbackReader reader) throws IOException {
+    private void tokeniseCharacter(char character, List<Token> tokens, PushbackReader reader) throws IOException {
         switch (character) {
             case '"' -> insideString = true;
             case '{' -> tokens.add(Token.of(TokenType.OBJECT_OPENER, character));
@@ -143,6 +143,10 @@ public class JsonLexer {
             }
 
             number.append(nextChar);
+        }
+
+        if (number.indexOf("0") == number.indexOf("-") + 1) {
+            throw new JsonSyntaxException("Error: Numbers cannot have leading zeros.");
         }
     }
 
