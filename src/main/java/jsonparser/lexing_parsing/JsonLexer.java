@@ -145,8 +145,21 @@ public class JsonLexer {
             number.append(nextChar);
         }
 
-        if (number.indexOf("0") == number.indexOf("-") + 1) {
-            throw new JsonSyntaxException("Error: Numbers cannot have leading zeros.");
+        disallowLeadingZeros(number);
+    }
+
+    private static void disallowLeadingZeros(StringBuilder number) {
+        if (number.charAt(0) == '0' && number.length() > 1) {
+            char next = number.charAt(1);
+            if (next != '.' && next != 'e' && next != 'E') {
+                throw new JsonSyntaxException("Error: Numbers cannot have leading zeros.");
+            }
+        }
+        if (number.length() > 2 && number.charAt(0) == '-' && number.charAt(1) == '0') {
+            char next = number.charAt(2);
+            if (next != '.' && next != 'e' && next != 'E') {
+                throw new JsonSyntaxException("Error: Numbers cannot have leading zeros.");
+            }
         }
     }
 
