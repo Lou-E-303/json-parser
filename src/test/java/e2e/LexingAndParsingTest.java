@@ -1,0 +1,45 @@
+package e2e;
+
+import jsonparser.lexing_parsing.JsonLexer;
+import jsonparser.lexing_parsing.JsonParser;
+import jsonparser.lexing_parsing.Token;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import java.io.File;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+class LexingAndParsingTest {
+    private static JsonParser jsonParser;
+    private static JsonLexer lexer;
+
+    @BeforeEach
+    void init() {
+        jsonParser = new JsonParser();
+        lexer = new JsonLexer();
+    }
+
+    @AfterEach
+    void tearDown() {
+        jsonParser.reset();
+    }
+
+    @Test
+    void givenSetOfJsonInputsWhichShouldFailThenReportInvalidJson() {
+        File dir = new File("src/test/resources/");
+        File[] failFiles = dir.listFiles((d, name) -> name.startsWith("fail") && name.endsWith(".json"));
+
+        assertNotNull(failFiles, "No fail files found in test resources.");
+
+        for (File file : failFiles) {
+            assertThrows(Throwable.class, () -> {
+                List<Token> inputList = lexer.lex(file);
+                jsonParser.parse(inputList);
+            }, "Expected Exception for file: " + file.getName());
+        }
+    }
+}
