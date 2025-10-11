@@ -109,6 +109,17 @@ class JsonLexerTest {
     }
 
     @Test
+    void givenInvalidEscapeCharacterThenReportInvalidJson() {
+        String inputFilePath = "src/test/resources/fail_invalidEscapeCharacter.json";
+        File invalid = new File(inputFilePath);
+
+        JsonSyntaxException exception = assertThrows(JsonSyntaxException.class,
+                () -> lexer.lex(invalid));
+
+        assertEquals("Error: Invalid escape character '\\x'", exception.getMessage());
+    }
+
+    @Test
     void givenRawNumberInputShouldProduceCorrectTokens() throws JsonReadException {
         String inputFilePath = "src/test/resources/pass_singleNumber.json";
 

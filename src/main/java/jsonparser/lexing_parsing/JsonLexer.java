@@ -62,7 +62,7 @@ public class JsonLexer {
             case '\\' -> stringContent.append('\\');
             case '/' -> stringContent.append('/');
             case 'u' -> handleUnicodeEscape(reader, stringContent); // Parse Unicode escape sequence as hex number and append
-            default -> stringContent.append(character);
+            default -> throw new JsonSyntaxException("Error: Invalid escape character '\\" + character + "'");
         }
     }
 
