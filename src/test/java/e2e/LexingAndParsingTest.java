@@ -10,8 +10,7 @@ import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 class LexingAndParsingTest {
     private static JsonParser jsonParser;
@@ -40,6 +39,21 @@ class LexingAndParsingTest {
                 List<Token> inputList = lexer.lex(file);
                 jsonParser.parse(inputList);
             }, "Expected Exception for file: " + file.getName());
+        }
+    }
+
+    @Test
+    void givenSetOfJsonInputsWhichShouldPassThenReportValidJson() {
+        File dir = new File("src/test/resources/");
+        File[] passFiles = dir.listFiles((d, name) -> name.startsWith("pass") && name.endsWith(".json"));
+
+        assertNotNull(passFiles, "No pass files found in test resources.");
+
+        for (File file : passFiles) {
+            assertDoesNotThrow(() -> {
+                List<Token> inputList = lexer.lex(file);
+                jsonParser.parse(inputList);
+            });
         }
     }
 }

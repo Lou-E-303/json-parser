@@ -170,6 +170,17 @@ class JsonParserTest {
     }
 
     @Test
+    void givenJsonContainingRawNumberShouldReturnValidObject() throws JsonReadException {
+        List<Token> inputList = lexer.lex(new File("src/test/resources/pass_complicatedNumber.json"));
+
+        JsonNumber expectedRootNode = new JsonNumber(new BigDecimal("-123.456e10"));
+
+        Json actualRootNode = jsonParser.parse(inputList);
+
+        assertThat(actualRootNode).isEqualToComparingFieldByFieldRecursively(expectedRootNode);
+    }
+
+    @Test
     void givenObjectContainingMixedValuesShouldReturnValidObject() throws JsonReadException {
         List<Token> inputList = lexer.lex(new File("src/test/resources/pass_mixedValueInput.json"));
 
@@ -240,7 +251,7 @@ class JsonParserTest {
         JsonSyntaxException exception = assertThrows(JsonSyntaxException.class,
                 () -> jsonParser.parse(inputList));
 
-        assertEquals("Error: Invalid JSON syntax. Cannot transition from OPEN_OBJECT with OBJECT_OPENER.", exception.getMessage());
+        assertEquals("Error: Invalid JSON syntax. Cannot transition from IDLE with OBJECT_CLOSER.", exception.getMessage());
     }
 
     @Test

@@ -135,6 +135,7 @@ public class JsonLexer {
             boolean nextCharIsAValidDelimiter = !endOfFile && (isWhitespace(nextChar) || nextChar == ',' || nextChar == '}' || nextChar == ']');
 
             if (endOfFile || nextCharIsAValidDelimiter) {
+                disallowLeadingZeros(number);
                 tokens.add(Token.of(TokenType.NUMBER, number.toString()));
                 if (nextCharIsAValidDelimiter) {
                     reader.unread(nextChar);
@@ -144,8 +145,6 @@ public class JsonLexer {
 
             number.append(nextChar);
         }
-
-        disallowLeadingZeros(number);
     }
 
     private static void disallowLeadingZeros(StringBuilder number) {
