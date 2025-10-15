@@ -16,6 +16,8 @@ public class JsonParser {
     private String currentKey = null;
 
     public Json parse(List<Token> tokens) {
+        reset();
+
         try {
             if (tokens.isEmpty()) {
                 throw new JsonSyntaxException("Error: No tokens to process. It is possible that the provided JSON file is empty or invalid.");
@@ -36,12 +38,6 @@ public class JsonParser {
         } catch (IllegalStateException e) {
             throw new JsonSyntaxException("Error: Invalid JSON syntax. " + e.getMessage());
         }
-    }
-
-    public void reset() {
-        stateMachine.reset();
-        currentKey = null;
-        jsonStack.clear();
     }
 
     private void processToken(State currentState, Token token) {
@@ -117,5 +113,11 @@ public class JsonParser {
         } else {
             jsonStack.push(json);
         }
+    }
+
+    public void reset() {
+        stateMachine.reset();
+        currentKey = null;
+        jsonStack.clear();
     }
 }

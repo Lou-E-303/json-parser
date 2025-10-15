@@ -33,6 +33,7 @@ public class JsonLexer {
             throw new JsonReadException("Error: Failed to read provided file. " + e.getMessage());
         }
 
+        reset();
         return tokens;
     }
 
@@ -164,5 +165,10 @@ public class JsonLexer {
 
     private boolean isWhitespace(char c) {
         return c == ' ' || c == '\n' || c == '\r' || c == '\t';
+    }
+
+    private void reset() {
+        insideString = false;
+        escapeNext = false;
     }
 }
