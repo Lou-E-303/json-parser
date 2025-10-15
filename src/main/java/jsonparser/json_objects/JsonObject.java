@@ -8,7 +8,7 @@ public class JsonObject implements Json {
     private final Map<String, Json> values;
 
     public JsonObject() {
-        this.values = new LinkedHashMap<>();  // Changed from HashMap to LinkedHashMap
+        this.values = new LinkedHashMap<>();
     }
 
     public void addValue(String key, Json value) {
