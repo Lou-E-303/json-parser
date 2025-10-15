@@ -30,4 +30,16 @@ class JsonPrettyPrinterTest {
         String expected = "{}";
         assertEquals(expected, printer.getFormattedJsonString(input, 0));
     }
+
+    @Test
+    void givenSimpleJsonWithSingleIndentedValueThenReturnCorrectString() throws JsonReadException {
+        File file = new File("src/test/resources/pass_boolean.json");
+        Json input = parser.parse(lexer.lex(file));
+        String expected = """
+                {
+                  "key": true
+                }""";
+
+        assertEquals(expected, printer.getFormattedJsonString(input, 0));
+    }
 }
