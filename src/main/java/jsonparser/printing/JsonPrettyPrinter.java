@@ -24,6 +24,7 @@ public class JsonPrettyPrinter {
     private String formatJson(Json json, int currentIndentLevel) {
         switch (json) {
             case JsonObject object : handleJsonObject(object, currentIndentLevel); break;
+            case JsonArray array   : handleJsonArray(array, currentIndentLevel); break;
             case JsonString str    : handleJsonPrimitive(str); break;
             case JsonNumber number : handleJsonPrimitive(number); break;
             case JsonBoolean bool  : handleJsonPrimitive(bool); break;
@@ -41,11 +42,23 @@ public class JsonPrettyPrinter {
         Map<String, Json> topLevelValues = object.getValue();
         for (Map.Entry<String, Json> entry : topLevelValues.entrySet()) {
             output.append("\n");
-            output.append(INDENT);
+            output.append(INDENT.repeat(currentIndentLevel + 1));
             output.append("\"").append(entry.getKey()).append("\": ");
             formatJson(entry.getValue(), currentIndentLevel);
+            output.append("\n");
         }
-        output.append("\n}");
+        output.append("}");
+    }
+
+    private void handleJsonArray(JsonArray array, int currentIndentLevel) {
+        output.append("[");
+        for (Json element : array.getValue()) {
+            output.append("\n");
+            output.append(INDENT.repeat(currentIndentLevel + 1));
+            formatJson(element, currentIndentLevel + 1);
+            output.append("\n");
+        }
+        output.append(INDENT.repeat(currentIndentLevel)).append("]");
     }
 
     private void handleJsonPrimitive(Json primitive) {
