@@ -1,12 +1,14 @@
 package jsonparser.lexing_parsing;
 
-import jsonparser.exceptions.JsonReadException;
-import jsonparser.exceptions.JsonSyntaxException;
+import jsonparser.error_handling.JsonReadException;
+import jsonparser.error_handling.JsonSyntaxException;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static jsonparser.error_handling.ErrorConstants.*;
 
 // Responsible for breaking the raw input into tokens and validating token syntax
 
@@ -30,7 +32,7 @@ public class JsonLexer {
                 }
             }
         } catch (IOException e) {
-            throw new JsonReadException("Error: Failed to read provided file. " + e.getMessage());
+            throw new JsonReadException(LEXER_FAILED_TO_READ_FILE.getMessage() + e.getMessage());
         }
 
         reset();
@@ -63,7 +65,7 @@ public class JsonLexer {
             case '\\' -> stringContent.append('\\');
             case '/' -> stringContent.append('/');
             case 'u' -> handleUnicodeEscape(reader, stringContent); // Parse Unicode escape sequence as hex number and append
-            default -> throw new JsonSyntaxException("Error: Invalid escape character '\\" + character + "'");
+            default -> throw new JsonSyntaxException(LEXER_INVALID_ESCAPE_CHARACTER.getMessage() + character + "'");
         }
     }
 
@@ -71,7 +73,7 @@ public class JsonLexer {
         char[] unicode = new char[4];
         for (int i = 0; i < 4; i++) {
             int nextChar = reader.read();
-            if (nextChar == -1) throw new JsonSyntaxException("Error: Unexpected end of input in Unicode escape.");
+            if (nextChar == -1) throw new JsonSyntaxException(LEXER_UNEXPECTED_END_OF_UNICODE.getMessage());
             unicode[i] = (char) nextChar;
         }
         stringContent.append((char) Integer.parseInt(new String(unicode), 16));
@@ -95,7 +97,7 @@ public class JsonLexer {
                 if (Character.isDigit(character) || character == '-') {
                     tokeniseNumber(reader, character, tokens); // Read number until delimiter or EOF and then add token
                 } else {
-                    throw new JsonSyntaxException("Error: invalid starting character '" + character + "'");
+                    throw new JsonSyntaxException(LEXER_INVALID_STARTING_CHARACTER.getMessage() + character + "'");
                 }
             }
         }
@@ -106,11 +108,11 @@ public class JsonLexer {
 
         char[] expected = new char[expectedWord.length() - 1];
         if (reader.read(expected) != expected.length) {
-            throw new JsonSyntaxException("Error: Invalid literal. Current sequence = " + Arrays.toString(expected));
+            throw new JsonSyntaxException(LEXER_INVALID_LITERAL.getMessage() + Arrays.toString(expected));
         }
         for (int i = 1; i < expectedWord.length(); i++) {
             if (expected[i - 1] != expectedWord.charAt(i)) {
-                throw new JsonSyntaxException("Error: Invalid literal. Current sequence = " + Arrays.toString(expected));
+                throw new JsonSyntaxException(LEXER_INVALID_LITERAL.getMessage() + Arrays.toString(expected));
             }
         }
         tokens.add(Token.of(TokenType.BOOLEAN, value));
@@ -119,7 +121,7 @@ public class JsonLexer {
     private static void handlePossibleNullLiteral(List<Token> tokens, PushbackReader reader) throws IOException {
         char[] expected = new char[3];
         if (reader.read(expected) != 3 || !(expected[0] == 'u' && expected[1] == 'l' && expected[2] == 'l')) {
-            throw new JsonSyntaxException("Error: Invalid literal. Current sequence = " + Arrays.toString(expected));
+            throw new JsonSyntaxException(LEXER_INVALID_LITERAL.getMessage() + Arrays.toString(expected));
         }
         tokens.add(Token.of(TokenType.NULL, null));
     }
@@ -152,13 +154,13 @@ public class JsonLexer {
         if (number.charAt(0) == '0' && number.length() > 1) {
             char next = number.charAt(1);
             if (next != '.' && next != 'e' && next != 'E') {
-                throw new JsonSyntaxException("Error: Numbers cannot have leading zeros.");
+                throw new JsonSyntaxException(LEXER_NO_LEADING_ZEROS.getMessage());
             }
         }
         if (number.length() > 2 && number.charAt(0) == '-' && number.charAt(1) == '0') {
             char next = number.charAt(2);
             if (next != '.' && next != 'e' && next != 'E') {
-                throw new JsonSyntaxException("Error: Numbers cannot have leading zeros.");
+                throw new JsonSyntaxException(LEXER_NO_LEADING_ZEROS.getMessage());
             }
         }
     }

@@ -1,6 +1,6 @@
 package jsonparser.lexing_parsing;
 
-import jsonparser.exceptions.JsonSyntaxException;
+import jsonparser.error_handling.JsonSyntaxException;
 import jsonparser.json_objects.*;
 import jsonparser.state_management.JsonFiniteStateMachine;
 import jsonparser.state_management.State;
@@ -9,6 +9,8 @@ import java.math.BigDecimal;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.List;
+
+import static jsonparser.error_handling.ErrorConstants.*;
 
 public class JsonParser {
     private static final JsonFiniteStateMachine stateMachine = JsonFiniteStateMachine.JSON_FINITE_STATE_MACHINE;
@@ -20,7 +22,7 @@ public class JsonParser {
 
         try {
             if (tokens.isEmpty()) {
-                throw new JsonSyntaxException("Error: No tokens to process. It is possible that the provided JSON file is empty or invalid.");
+                throw new JsonSyntaxException(PARSER_NO_TOKENS.getMessage());
             }
 
             for (Token token : tokens) {
@@ -31,12 +33,12 @@ public class JsonParser {
             }
 
             if (jsonStack.size() != 1) {
-                throw new JsonSyntaxException("Error: Invalid JSON structure. Unclosed objects or arrays remain.");
+                throw new JsonSyntaxException(PARSER_INVALID_JSON_STRUCTURE.getMessage());
             }
 
             return jsonStack.pop();
         } catch (IllegalStateException e) {
-            throw new JsonSyntaxException("Error: Invalid JSON syntax. " + e.getMessage());
+            throw new JsonSyntaxException(PARSER_INVALID_JSON_SYNTAX.getMessage() + e.getMessage());
         }
     }
 

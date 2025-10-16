@@ -1,7 +1,7 @@
 package lexing_parsing;
 
-import jsonparser.exceptions.JsonReadException;
-import jsonparser.exceptions.JsonSyntaxException;
+import jsonparser.error_handling.JsonReadException;
+import jsonparser.error_handling.JsonSyntaxException;
 import jsonparser.lexing_parsing.TokenType;
 import jsonparser.lexing_parsing.Token;
 import jsonparser.lexing_parsing.JsonLexer;

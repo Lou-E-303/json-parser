@@ -1,6 +1,6 @@
 package printing;
 
-import jsonparser.exceptions.JsonReadException;
+import jsonparser.error_handling.JsonReadException;
 import jsonparser.json_objects.Json;
 import jsonparser.lexing_parsing.JsonLexer;
 import jsonparser.lexing_parsing.JsonParser;

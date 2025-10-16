@@ -1,4 +1,4 @@
-package jsonparser.exceptions;
+package jsonparser.error_handling;
 
 public class JsonSyntaxException extends RuntimeException {
     public JsonSyntaxException(String message) {
