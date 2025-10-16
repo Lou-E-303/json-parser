@@ -182,7 +182,7 @@ class JsonParserTest {
 
     @Test
     void givenObjectContainingMixedValuesShouldReturnValidObject() throws JsonReadException {
-        List<Token> inputList = lexer.lex(new File("src/test/resources/pass_mixedValueInput.json"));
+        List<Token> inputList = lexer.lex(new File("src/test/resources/pass_mixedValueObject.json"));
 
         JsonObject expectedRootNode = new JsonObject();
         expectedRootNode.addValue("key1", new JsonBoolean(true));

@@ -2,6 +2,8 @@ package jsonparser.printing;
 
 import jsonparser.json_objects.*;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -25,7 +27,7 @@ public class JsonPrettyPrinter {
         switch (json) {
             case JsonObject object : handleJsonObject(object, currentIndentLevel); break;
             case JsonArray array   : handleJsonArray(array, currentIndentLevel); break;
-            case JsonString str    : handleJsonPrimitive(str); break;
+            case JsonString str    : handleJsonString(str); break;
             case JsonNumber number : handleJsonPrimitive(number); break;
             case JsonBoolean bool  : handleJsonPrimitive(bool); break;
             case JsonNull jnull    : handleJsonPrimitive(jnull); break;
@@ -39,26 +41,51 @@ public class JsonPrettyPrinter {
 
     private void handleJsonObject(JsonObject object, int currentIndentLevel) {
         output.append("{");
+
         Map<String, Json> topLevelValues = object.getValue();
         for (Map.Entry<String, Json> entry : topLevelValues.entrySet()) {
             output.append("\n");
             output.append(INDENT.repeat(currentIndentLevel + 1));
             output.append("\"").append(entry.getKey()).append("\": ");
-            formatJson(entry.getValue(), currentIndentLevel);
-            output.append("\n");
+            formatJson(entry.getValue(), currentIndentLevel + 1);
+            if (!entry.equals(topLevelValues.entrySet().toArray()[topLevelValues.size() - 1])) {
+                output.append(",");
+            } else {
+                output.append("\n").append(INDENT.repeat(currentIndentLevel));
+            }
         }
         output.append("}");
     }
 
     private void handleJsonArray(JsonArray array, int currentIndentLevel) {
+        ArrayList<Json> elements = array.getValue();
+
+        if (elements.isEmpty()) {
+            output.append("[]");
+            return;
+        }
+
         output.append("[");
-        for (Json element : array.getValue()) {
+
+        Iterator<Json> iterator = elements.iterator(); // Use iterator to check for last element
+        while (iterator.hasNext()) {
+            Json element = iterator.next();
             output.append("\n");
             output.append(INDENT.repeat(currentIndentLevel + 1));
             formatJson(element, currentIndentLevel + 1);
-            output.append("\n");
+
+            if (iterator.hasNext()) {
+                output.append(",");
+            }
         }
-        output.append(INDENT.repeat(currentIndentLevel)).append("]");
+
+        output.append("\n");
+        output.append(INDENT.repeat(currentIndentLevel));
+        output.append("]");
+    }
+
+    private void handleJsonString(JsonString string) {
+        output.append("\"").append(string.getValue()).append("\"");
     }
 
     private void handleJsonPrimitive(Json primitive) {
