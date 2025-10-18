@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 public class JsonPrettyPrinter {
     private static final String INDENT = "  ";
     private final Logger logger = Logger.getLogger(getClass().getName());
-    private StringBuilder output = new StringBuilder();
+    private final StringBuilder output = new StringBuilder();
 
     public void print(Json json) {
         logger.info(getFormattedJsonString(json, 0));
@@ -23,20 +23,18 @@ public class JsonPrettyPrinter {
         return output.toString();
     }
 
-    private String formatJson(Json json, int currentIndentLevel) {
+    private void formatJson(Json json, int currentIndentLevel) {
         switch (json) {
             case JsonObject object : handleJsonObject(object, currentIndentLevel); break;
             case JsonArray array   : handleJsonArray(array, currentIndentLevel); break;
             case JsonString str    : handleJsonString(str); break;
-            case JsonNumber number : handleJsonPrimitive(number); break;
+            case JsonNumber number : handleJsonNumber(number); break;
             case JsonBoolean bool  : handleJsonPrimitive(bool); break;
             case JsonNull jnull    : handleJsonPrimitive(jnull); break;
 
             default:
                 throw new IllegalStateException("Unexpected Json type " + json);
         }
-
-        return output.toString();
     }
 
     private void handleJsonObject(JsonObject object, int currentIndentLevel) {
@@ -46,7 +44,8 @@ public class JsonPrettyPrinter {
         for (Map.Entry<String, Json> entry : topLevelValues.entrySet()) {
             output.append("\n");
             output.append(INDENT.repeat(currentIndentLevel + 1));
-            output.append("\"").append(entry.getKey()).append("\": ");
+            appendEscapedString(entry.getKey());
+            output.append(": ");
             formatJson(entry.getValue(), currentIndentLevel + 1);
             if (!entry.equals(topLevelValues.entrySet().toArray()[topLevelValues.size() - 1])) {
                 output.append(",");
@@ -55,6 +54,23 @@ public class JsonPrettyPrinter {
             }
         }
         output.append("}");
+    }
+
+    private void appendEscapedString(String value) {
+        output.append("\"");
+        for (char c : value.toCharArray()) {
+            switch (c) {
+                case '"'  -> output.append("\\\"");
+                case '\\' -> output.append("\\\\");
+                case '\b' -> output.append("\\b");
+                case '\f' -> output.append("\\f");
+                case '\n' -> output.append("\\n");
+                case '\r' -> output.append("\\r");
+                case '\t' -> output.append("\\t");
+                default   -> output.append(c);
+            }
+        }
+        output.append("\"");
     }
 
     private void handleJsonArray(JsonArray array, int currentIndentLevel) {
@@ -85,10 +101,15 @@ public class JsonPrettyPrinter {
     }
 
     private void handleJsonString(JsonString string) {
-        output.append("\"").append(string.getValue()).append("\"");
+        String value = string.getValue();
+        appendEscapedString(value);
+    }
+
+    private void handleJsonNumber(JsonNumber number) {
+        output.append(number);
     }
 
     private void handleJsonPrimitive(Json primitive) {
-        output.append(primitive.getValue());
+        output.append(primitive);
     }
 }

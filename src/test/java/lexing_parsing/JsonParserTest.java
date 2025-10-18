@@ -173,7 +173,7 @@ class JsonParserTest {
     void givenJsonContainingRawNumberShouldReturnValidObject() throws JsonReadException {
         List<Token> inputList = lexer.lex(new File("src/test/resources/pass_complicatedNumber.json"));
 
-        JsonNumber expectedRootNode = new JsonNumber(new BigDecimal("-123.456e10"));
+        JsonNumber expectedRootNode = new JsonNumber(new BigDecimal("-123.456e10"), "-123.456e10");
 
         Json actualRootNode = jsonParser.parse(inputList);
 
@@ -189,7 +189,7 @@ class JsonParserTest {
         expectedRootNode.addValue("key2", new JsonBoolean(false));
         expectedRootNode.addValue("key3", JsonNull.getInstance());
         expectedRootNode.addValue("key4", new JsonString("value"));
-        expectedRootNode.addValue("key5", new JsonNumber(new BigDecimal(101)));
+        expectedRootNode.addValue("key5", new JsonNumber(new BigDecimal(101), "101"));
 
         Json actualRootNode = jsonParser.parse(inputList);
 
@@ -202,7 +202,7 @@ class JsonParserTest {
 
         JsonObject expectedRootNode = new JsonObject();
         expectedRootNode.addValue("key", new JsonString("value"));
-        expectedRootNode.addValue("key-n", new JsonNumber(new BigDecimal(101)));
+        expectedRootNode.addValue("key-n", new JsonNumber(new BigDecimal(101), "101"));
         expectedRootNode.addValue("key-o", new JsonObject());
         expectedRootNode.addValue("key-l", new JsonArray());
 
@@ -284,14 +284,14 @@ class JsonParserTest {
 
         JsonObject deepObject = new JsonObject();
         deepObject.addValue("deepString", new JsonString("deep"));
-        deepObject.addValue("deepNumber", new JsonNumber(new BigDecimal(99)));
+        deepObject.addValue("deepNumber", new JsonNumber(new BigDecimal(99), "99"));
 
         JsonObject arrayObject = new JsonObject();
         arrayObject.addValue("deepObject", deepObject);
 
         JsonArray arrayKey = new JsonArray();
         arrayKey.addValue(new JsonString("arrayItem"));
-        arrayKey.addValue(new JsonNumber(new BigDecimal(2)));
+        arrayKey.addValue(new JsonNumber(new BigDecimal(2), "2"));
         arrayKey.addValue(new JsonBoolean(false));
         arrayKey.addValue(JsonNull.getInstance());
         arrayKey.addValue(arrayObject);
@@ -299,15 +299,15 @@ class JsonParserTest {
         JsonObject objectKey = new JsonObject();
         objectKey.addValue("nestedString", new JsonString("nested"));
         JsonArray nestedArray = new JsonArray();
-        nestedArray.addValue(new JsonNumber(new BigDecimal(1)));
-        nestedArray.addValue(new JsonNumber(new BigDecimal(2)));
-        nestedArray.addValue(new JsonNumber(new BigDecimal("3e4")));
+        nestedArray.addValue(new JsonNumber(new BigDecimal(1), "1"));
+        nestedArray.addValue(new JsonNumber(new BigDecimal(2), "2"));
+        nestedArray.addValue(new JsonNumber(new BigDecimal("3e4"), "3e4"));
         nestedArray.addValue(new JsonString("five"));
         objectKey.addValue("nestedArray", nestedArray);
 
         JsonObject topLevel = new JsonObject();
         topLevel.addValue("stringKey", new JsonString("stringValue"));
-        topLevel.addValue("numberKey", new JsonNumber(new BigDecimal("123.45")));
+        topLevel.addValue("numberKey", new JsonNumber(new BigDecimal("123.45") , "123.45"));
         topLevel.addValue("booleanKey", new JsonBoolean(true));
         topLevel.addValue("nullKey", JsonNull.getInstance());
         topLevel.addValue("arrayKey", arrayKey);
@@ -327,7 +327,7 @@ class JsonParserTest {
         List<Token> inputList = lexer.lex(new File(inputFilePath));
 
         JsonObject expectedRootNode = new JsonObject();
-        expectedRootNode.addValue("key", new JsonNumber(expectedNumber));
+        expectedRootNode.addValue("key", new JsonNumber(expectedNumber, expectedNumber.toString()));
 
         Json actualRootNode = jsonParser.parse(inputList);
 

@@ -86,7 +86,8 @@ public class JsonParser {
     }
 
     private void handleNumber(Token token) {
-        JsonNumber jsonNumber = new JsonNumber(new BigDecimal(token.value().toString()));
+        String originalRepresentation = token.value().toString();
+        JsonNumber jsonNumber = new JsonNumber(new BigDecimal(token.value().toString()), originalRepresentation);
         addJsonToCurrentContext(jsonNumber);
     }
 
