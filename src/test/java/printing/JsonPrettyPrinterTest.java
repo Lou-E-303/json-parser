@@ -26,14 +26,14 @@ class JsonPrettyPrinterTest {
 
     @Test
     void givenSimpleJsonObjectWithoutIndentationThenReturnCorrectString() throws JsonReadException {
-        Json input = parser.parse(lexer.lex(new File("src/test/resources/pass_brackets.json")));
+        Json input = parser.parse(lexer.lexFromFile(new File("src/test/resources/pass_brackets.json")));
         String expected = "{}";
         assertEquals(expected, printer.getFormattedJsonString(input, 0));
     }
 
     @Test
     void givenSimpleJsonArrayWithoutIndentationThenReturnCorrectString() throws JsonReadException {
-        Json input = parser.parse(lexer.lex(new File("src/test/resources/pass_simpleArray.json")));
+        Json input = parser.parse(lexer.lexFromFile(new File("src/test/resources/pass_simpleArray.json")));
         String expected = "[]";
         assertEquals(expected, printer.getFormattedJsonString(input, 0));
     }
@@ -41,7 +41,7 @@ class JsonPrettyPrinterTest {
     @Test
     void givenSimpleJsonObjectWithSingleIndentedValueThenReturnCorrectString() throws JsonReadException {
         File file = new File("src/test/resources/pass_boolean.json");
-        Json input = parser.parse(lexer.lex(file));
+        Json input = parser.parse(lexer.lexFromFile(file));
         String expected = """
                 {
                   "key": true
@@ -53,7 +53,7 @@ class JsonPrettyPrinterTest {
     @Test
     void givenSimpleJsonArrayWithSingleIndentedValueThenReturnCorrectString() throws JsonReadException {
         File file = new File("src/test/resources/pass_singleValueArray.json");
-        Json input = parser.parse(lexer.lex(file));
+        Json input = parser.parse(lexer.lexFromFile(file));
         String expected = """
                 [
                   3
@@ -65,7 +65,7 @@ class JsonPrettyPrinterTest {
     @Test
     void givenJsonObjectWithMultipleIndentedValuesThenReturnCorrectString() throws JsonReadException {
         File file = new File("src/test/resources/pass_mixedValueObject.json");
-        Json input = parser.parse(lexer.lex(file));
+        Json input = parser.parse(lexer.lexFromFile(file));
         String expected = """
                 {
                   "key1": true,
@@ -81,7 +81,7 @@ class JsonPrettyPrinterTest {
     @Test
     void givenJsonArrayWithMultipleIndentedValuesThenReturnCorrectString() throws JsonReadException {
         File file = new File("src/test/resources/pass_mixedValueArray.json");
-        Json input = parser.parse(lexer.lex(file));
+        Json input = parser.parse(lexer.lexFromFile(file));
         String expected = """
                 [
                   true,
@@ -97,7 +97,7 @@ class JsonPrettyPrinterTest {
     @Test
     void givenMixedJsonObjectAndArrayThenReturnCorrectString() throws JsonReadException {
         File file = new File("src/test/resources/pass_mixedObjectAndArray.json");
-        Json input = parser.parse(lexer.lex(file));
+        Json input = parser.parse(lexer.lexFromFile(file));
         String expected = """
                 {
                   "key1": true,
@@ -119,7 +119,7 @@ class JsonPrettyPrinterTest {
     @Test
     void givenComplexArrayThenReturnCorrectlyFormattedString() throws JsonReadException {
         File file = new File("src/test/resources/pass_complexArray.json");
-        Json input = parser.parse(lexer.lex(file));
+        Json input = parser.parse(lexer.lexFromFile(file));
         String expected = """
             [
               "JSON Test Pattern pass1",

@@ -36,7 +36,7 @@ class LexingAndParsingTest {
 
         for (File file : failFiles) {
             assertThrows(Throwable.class, () -> {
-                List<Token> inputList = lexer.lex(file);
+                List<Token> inputList = lexer.lexFromFile(file);
                 jsonParser.parse(inputList);
             }, "Expected Exception for file: " + file.getName());
         }
@@ -51,7 +51,7 @@ class LexingAndParsingTest {
 
         for (File file : passFiles) {
             assertDoesNotThrow(() -> {
-                List<Token> inputList = lexer.lex(file);
+                List<Token> inputList = lexer.lexFromFile(file);
                 jsonParser.parse(inputList);
             });
         }

@@ -16,11 +16,26 @@ public class JsonLexer {
     private boolean insideString = false;
     private boolean escapeNext = false;
 
-    public List<Token> lex(File inputFile) throws JsonReadException {
+    public List<Token> lexFromFile(File inputFile) throws JsonReadException {
+        StringBuilder fileContent = new StringBuilder();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(inputFile))) {
+            int charAsInt;
+            while ((charAsInt = reader.read()) != -1) {
+                fileContent.append((char) charAsInt);
+            }
+        } catch (IOException e) {
+            throw new JsonReadException(LEXER_FAILED_TO_READ_FILE.getMessage() + e.getMessage()); // TODO is JsonReadException appropriate here?
+        }
+
+        return lexFromString(fileContent.toString());
+    }
+
+    public List<Token> lexFromString(String input) {
         List<Token> tokens = new ArrayList<>();
         StringBuilder stringContent = new StringBuilder();
 
-        try (PushbackReader reader = new PushbackReader(new FileReader(inputFile))) {
+        try (PushbackReader reader = new PushbackReader(new StringReader(input))) {
             int charAsInt;
             while ((charAsInt = reader.read()) != -1) {
                 char character = (char) charAsInt;
@@ -32,7 +47,8 @@ public class JsonLexer {
                 }
             }
         } catch (IOException e) {
-            throw new JsonReadException(LEXER_FAILED_TO_READ_FILE.getMessage() + e.getMessage());
+            // TODO define own exception here
+            throw new RuntimeException("Unexpected IO error during string lexing", e);
         }
 
         reset();

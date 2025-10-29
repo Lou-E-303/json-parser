@@ -46,7 +46,7 @@ class JsonLexerTest {
     }
 
     @Test
-    void givenInputOfValidTokensThenReturnTokenList() throws JsonReadException {
+    void givenFileInputOfValidTokensThenReturnTokenList() throws JsonReadException {
         String inputFilePath = "src/test/resources/lexer_validTokens.json";
 
         ArrayList<Token> expectedTokens = new ArrayList<>(
@@ -60,23 +60,79 @@ class JsonLexerTest {
                                 nully,
                             closedBracket,
                         closedBrace));
-        ArrayList<Token> tokens = new ArrayList<>(lexer.lex(new File(inputFilePath)));
+        ArrayList<Token> tokens = new ArrayList<>(lexer.lexFromFile(new File(inputFilePath)));
 
         assertThat(tokens).isEqualTo(expectedTokens);
     }
 
     @Test
-    void givenEmptyInputThenReturnEmptyList() throws JsonReadException {
+    void givenSimpleJsonStringShouldProduceCorrectTokens() {
+        String input = "{\"key\":\"value\"}";
+
+        ArrayList<Token> expectedTokens = new ArrayList<>(List.of(
+                openBrace,
+                key,
+                colon,
+                Token.of(TokenType.CONTENT, "value"),
+                closedBrace
+        ));
+        ArrayList<Token> tokens = new ArrayList<>(lexer.lexFromString(input));
+
+        assertThat(tokens).isEqualTo(expectedTokens);
+    }
+
+    @Test
+    void givenEmptyStringShouldReturnEmptyList() {
+        String input = "";
+
+        ArrayList<Token> expectedTokens = new ArrayList<>();
+        ArrayList<Token> tokens = new ArrayList<>(lexer.lexFromString(input));
+
+        assertThat(tokens).isEqualTo(expectedTokens);
+    }
+
+    @Test
+    void givenNumberStringShouldProduceCorrectToken() {
+        String input = "42";
+
+        ArrayList<Token> expectedTokens = new ArrayList<>(List.of(
+                Token.of(TokenType.NUMBER, "42")
+        ));
+        ArrayList<Token> tokens = new ArrayList<>(lexer.lexFromString(input));
+
+        assertThat(tokens).isEqualTo(expectedTokens);
+    }
+
+    @Test
+    void givenBooleanAndNullStringShouldProduceCorrectTokens() {
+        String input = "[true,false,null]";
+
+        ArrayList<Token> expectedTokens = new ArrayList<>(List.of(
+                openBracket,
+                truthy,
+                comma,
+                falsy,
+                comma,
+                nully,
+                closedBracket
+        ));
+        ArrayList<Token> tokens = new ArrayList<>(lexer.lexFromString(input));
+
+        assertThat(tokens).isEqualTo(expectedTokens);
+    }
+
+    @Test
+    void givenEmptyFileInputThenReturnEmptyList() throws JsonReadException {
         String inputFilePath = "src/test/resources/fail_empty.json";
 
         ArrayList<Token> expectedTokens = new ArrayList<>(List.of());
-        ArrayList<Token> tokens = new ArrayList<>(lexer.lex(new File(inputFilePath)));
+        ArrayList<Token> tokens = new ArrayList<>(lexer.lexFromFile(new File(inputFilePath)));
 
         assertThat(tokens).isEqualTo(expectedTokens);
     }
 
     @Test
-    void givenInputWithWhitespaceInsideAndOutsideQuotesThenReturnCorrectTokens() throws JsonReadException {
+    void givenFileInputWithWhitespaceInsideAndOutsideQuotesThenReturnCorrectTokens() throws JsonReadException {
         String inputFilePath = "src/test/resources/pass_mixedWhitespace.json";
 
         ArrayList<Token> expectedTokens = new ArrayList<>(List.of(
@@ -86,13 +142,13 @@ class JsonLexerTest {
                 someWhitespaceValue,
                 closedBrace
         ));
-        ArrayList<Token> tokens = new ArrayList<>(lexer.lex(new File(inputFilePath)));
+        ArrayList<Token> tokens = new ArrayList<>(lexer.lexFromFile(new File(inputFilePath)));
 
         assertThat(tokens).isEqualTo(expectedTokens);
     }
 
     @Test
-    void givenInputWithEscapedQuotesThenReturnCorrectTokens() throws JsonReadException {
+    void givenFileInputWithEscapedQuotesThenReturnCorrectTokens() throws JsonReadException {
         String inputFilePath = "src/test/resources/lexer_escapedQuotes.json";
 
         ArrayList<Token> expectedTokens = new ArrayList<>(List.of(
@@ -103,7 +159,7 @@ class JsonLexerTest {
                 closedBrace
         ));
 
-        ArrayList<Token> tokens = new ArrayList<>(lexer.lex(new File(inputFilePath)));
+        ArrayList<Token> tokens = new ArrayList<>(lexer.lexFromFile(new File(inputFilePath)));
 
         assertThat(tokens).isEqualTo(expectedTokens);
     }
@@ -114,7 +170,7 @@ class JsonLexerTest {
         File invalid = new File(inputFilePath);
 
         JsonSyntaxException exception = assertThrows(JsonSyntaxException.class,
-                () -> lexer.lex(invalid));
+                () -> lexer.lexFromFile(invalid));
 
         assertEquals("Error: Invalid escape character '\\x'", exception.getMessage());
     }
@@ -124,7 +180,7 @@ class JsonLexerTest {
         String inputFilePath = "src/test/resources/pass_singleNumber.json";
 
         ArrayList<Token> expectedTokens = new ArrayList<>(List.of(theNumberThree));
-        ArrayList<Token> tokens = new ArrayList<>(lexer.lex(new File(inputFilePath)));
+        ArrayList<Token> tokens = new ArrayList<>(lexer.lexFromFile(new File(inputFilePath)));
 
         assertThat(tokens).isEqualTo(expectedTokens);
     }
@@ -134,7 +190,7 @@ class JsonLexerTest {
         String inputFilePath = "src/test/resources/pass_longNumber.json";
 
         ArrayList<Token> expectedTokens = new ArrayList<>(List.of(oneTwoThreeFour));
-        ArrayList<Token> tokens = new ArrayList<>(lexer.lex(new File(inputFilePath)));
+        ArrayList<Token> tokens = new ArrayList<>(lexer.lexFromFile(new File(inputFilePath)));
 
         assertThat(tokens).isEqualTo(expectedTokens);
     }
@@ -143,7 +199,7 @@ class JsonLexerTest {
     @MethodSource("numberAsStringInputs")
     void givenIncreasinglyComplexNumbersAsStringsShouldProduceCorrectTokens(String inputFilePath, Token inputToken) throws JsonReadException {
         ArrayList<Token> expectedTokens = new ArrayList<>(List.of(inputToken));
-        ArrayList<Token> tokens = new ArrayList<>(lexer.lex(new File(inputFilePath)));
+        ArrayList<Token> tokens = new ArrayList<>(lexer.lexFromFile(new File(inputFilePath)));
 
         assertThat(tokens).isEqualTo(expectedTokens);
     }
@@ -163,7 +219,7 @@ class JsonLexerTest {
         File invalid = new File(inputFilePath);
 
         JsonSyntaxException exception = assertThrows(JsonSyntaxException.class,
-                () -> lexer.lex(invalid));
+                () -> lexer.lexFromFile(invalid));
 
         assertEquals(expectedMessage, exception.getMessage());
     }
