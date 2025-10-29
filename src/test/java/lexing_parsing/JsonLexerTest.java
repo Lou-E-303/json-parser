@@ -35,9 +35,9 @@ class JsonLexerTest {
     Token closedBracket = Token.of(TokenType.ARRAY_CLOSER, ']');
     Token theNumberThree = Token.of(TokenType.NUMBER, 3);
     Token oneTwoThreeFour = Token.of(TokenType.NUMBER, 1234);
-    Token truthy = Token.of(TokenType.BOOLEAN, "true");
-    Token falsy = Token.of(TokenType.BOOLEAN, "false");
-    Token nully = Token.of(TokenType.NULL, "null");
+    Token truth = Token.of(TokenType.BOOLEAN, "true");
+    Token falsehood = Token.of(TokenType.BOOLEAN, "false");
+    Token anull = Token.of(TokenType.NULL, "null");
     Token comma = Token.of(TokenType.COMMA, ',');
 
     @BeforeEach
@@ -55,9 +55,9 @@ class JsonLexerTest {
                             openBracket,
                                 someKey, comma,
                                 theNumberThree, comma,
-                                truthy, comma,
-                                falsy, comma,
-                                nully,
+                        truth, comma,
+                        falsehood, comma,
+                        anull,
                             closedBracket,
                         closedBrace));
         ArrayList<Token> tokens = new ArrayList<>(lexer.lexFromFile(new File(inputFilePath)));
@@ -109,11 +109,11 @@ class JsonLexerTest {
 
         ArrayList<Token> expectedTokens = new ArrayList<>(List.of(
                 openBracket,
-                truthy,
+                truth,
                 comma,
-                falsy,
+                falsehood,
                 comma,
-                nully,
+                anull,
                 closedBracket
         ));
         ArrayList<Token> tokens = new ArrayList<>(lexer.lexFromString(input));
