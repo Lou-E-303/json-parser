@@ -1,7 +1,7 @@
 package json_objects;
 
-import jsonparser.json_objects.JsonArray;
-import jsonparser.json_objects.JsonString;
+import jsonjar.json_objects.JsonArray;
+import jsonjar.json_objects.JsonString;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

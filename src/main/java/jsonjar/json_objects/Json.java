@@ -1,4 +1,4 @@
-package jsonparser.json_objects;
+package jsonjar.json_objects;
 
 public interface Json {
     Object getValue();

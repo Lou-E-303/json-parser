@@ -1,10 +1,10 @@
 package printing;
 
-import jsonparser.error_handling.JsonReadException;
-import jsonparser.json_objects.Json;
-import jsonparser.lexing_parsing.JsonLexer;
-import jsonparser.lexing_parsing.JsonParser;
-import jsonparser.printing.JsonPrettyPrinter;
+import jsonjar.error_handling.JsonReadException;
+import jsonjar.json_objects.Json;
+import jsonjar.lexing_parsing.JsonLexer;
+import jsonjar.lexing_parsing.JsonParser;
+import jsonjar.printing.JsonPrettyPrinter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

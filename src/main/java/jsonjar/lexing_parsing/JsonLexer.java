@@ -1,14 +1,14 @@
-package jsonparser.lexing_parsing;
+package jsonjar.lexing_parsing;
 
-import jsonparser.error_handling.JsonReadException;
-import jsonparser.error_handling.JsonSyntaxException;
+import jsonjar.error_handling.JsonReadException;
+import jsonjar.error_handling.JsonSyntaxException;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static jsonparser.error_handling.ErrorConstants.*;
+import static jsonjar.error_handling.ErrorConstants.*;
 
 // Responsible for breaking the raw input into tokens and validating token syntax
 

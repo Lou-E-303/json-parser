@@ -1,11 +1,11 @@
 package lexing_parsing;
 
-import jsonparser.error_handling.JsonReadException;
-import jsonparser.error_handling.JsonSyntaxException;
-import jsonparser.json_objects.*;
-import jsonparser.lexing_parsing.JsonParser;
-import jsonparser.lexing_parsing.JsonLexer;
-import jsonparser.lexing_parsing.Token;
+import jsonjar.error_handling.JsonReadException;
+import jsonjar.error_handling.JsonSyntaxException;
+import jsonjar.json_objects.*;
+import jsonjar.lexing_parsing.JsonParser;
+import jsonjar.lexing_parsing.JsonLexer;
+import jsonjar.lexing_parsing.Token;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

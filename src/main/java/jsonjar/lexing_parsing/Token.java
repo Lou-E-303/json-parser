@@ -1,4 +1,4 @@
-package jsonparser.lexing_parsing;
+package jsonjar.lexing_parsing;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

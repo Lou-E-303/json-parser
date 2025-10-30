@@ -1,4 +1,4 @@
-package jsonparser.error_handling;
+package jsonjar.error_handling;
 
 import java.io.IOException;
 

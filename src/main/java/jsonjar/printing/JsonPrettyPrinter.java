@@ -1,6 +1,6 @@
-package jsonparser.printing;
+package jsonjar.printing;
 
-import jsonparser.json_objects.*;
+import jsonjar.json_objects.*;
 
 import java.util.ArrayList;
 import java.util.Iterator;

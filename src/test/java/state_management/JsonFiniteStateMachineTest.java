@@ -1,11 +1,11 @@
 package state_management;
 
-import jsonparser.lexing_parsing.TokenType;
-import jsonparser.state_management.JsonFiniteStateMachine;
+import jsonjar.lexing_parsing.TokenType;
+import jsonjar.state_management.JsonFiniteStateMachine;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static jsonparser.state_management.State.*;
+import static jsonjar.state_management.State.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 

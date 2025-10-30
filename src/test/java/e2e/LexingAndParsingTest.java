@@ -1,8 +1,8 @@
 package e2e;
 
-import jsonparser.lexing_parsing.JsonLexer;
-import jsonparser.lexing_parsing.JsonParser;
-import jsonparser.lexing_parsing.Token;
+import jsonjar.lexing_parsing.JsonLexer;
+import jsonjar.lexing_parsing.JsonParser;
+import jsonjar.lexing_parsing.Token;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

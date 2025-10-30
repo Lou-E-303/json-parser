@@ -1,10 +1,10 @@
 package lexing_parsing;
 
-import jsonparser.error_handling.JsonReadException;
-import jsonparser.error_handling.JsonSyntaxException;
-import jsonparser.lexing_parsing.TokenType;
-import jsonparser.lexing_parsing.Token;
-import jsonparser.lexing_parsing.JsonLexer;
+import jsonjar.error_handling.JsonReadException;
+import jsonjar.error_handling.JsonSyntaxException;
+import jsonjar.lexing_parsing.TokenType;
+import jsonjar.lexing_parsing.Token;
+import jsonjar.lexing_parsing.JsonLexer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;

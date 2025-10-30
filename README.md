@@ -1,6 +1,4 @@
-# Intro
-
-This is a JSON parser. As of right now, it's a work-in-progress and won't be fully-featured if cloned. I also might've just left it in a completely broken state!
+**JsonJar: A finite-state machine JSON parser for Java**
 
 # How it works
 

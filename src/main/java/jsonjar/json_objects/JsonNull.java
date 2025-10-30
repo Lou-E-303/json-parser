@@ -1,4 +1,4 @@
-package jsonparser.json_objects;
+package jsonjar.json_objects;
 
 public class JsonNull implements Json {
     private static final JsonNull INSTANCE = new JsonNull();

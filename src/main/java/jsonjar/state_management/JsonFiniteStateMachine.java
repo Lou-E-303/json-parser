@@ -1,10 +1,10 @@
-package jsonparser.state_management;
+package jsonjar.state_management;
 
-import jsonparser.lexing_parsing.TokenType;
+import jsonjar.lexing_parsing.TokenType;
 
 import java.util.*;
 
-import static jsonparser.state_management.State.*;
+import static jsonjar.state_management.State.*;
 
 public class JsonFiniteStateMachine {
     public static final JsonFiniteStateMachine JSON_FINITE_STATE_MACHINE = new JsonFiniteStateMachine();

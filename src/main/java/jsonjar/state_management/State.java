@@ -1,4 +1,4 @@
-package jsonparser.state_management;
+package jsonjar.state_management;
 
 public enum State {
     IDLE,

@@ -1,4 +1,4 @@
-package jsonparser.error_handling;
+package jsonjar.error_handling;
 
 public enum ErrorConstants {
     LEXER_FAILED_TO_READ_FILE("Error: Failed to read provided file. "),

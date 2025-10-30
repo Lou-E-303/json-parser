@@ -1,16 +1,16 @@
-package jsonparser.lexing_parsing;
+package jsonjar.lexing_parsing;
 
-import jsonparser.error_handling.JsonSyntaxException;
-import jsonparser.json_objects.*;
-import jsonparser.state_management.JsonFiniteStateMachine;
-import jsonparser.state_management.State;
+import jsonjar.error_handling.JsonSyntaxException;
+import jsonjar.json_objects.*;
+import jsonjar.state_management.JsonFiniteStateMachine;
+import jsonjar.state_management.State;
 
 import java.math.BigDecimal;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.List;
 
-import static jsonparser.error_handling.ErrorConstants.*;
+import static jsonjar.error_handling.ErrorConstants.*;
 
 public class JsonParser {
     private static final JsonFiniteStateMachine stateMachine = JsonFiniteStateMachine.JSON_FINITE_STATE_MACHINE;
