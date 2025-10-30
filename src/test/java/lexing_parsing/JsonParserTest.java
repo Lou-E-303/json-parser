@@ -1,6 +1,5 @@
 package lexing_parsing;
 
-import jsonjar.error_handling.JsonReadException;
 import jsonjar.error_handling.JsonSyntaxException;
 import jsonjar.json_objects.*;
 import jsonjar.lexing_parsing.JsonParser;
@@ -16,6 +15,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Stream;
@@ -38,7 +38,7 @@ class JsonParserTest {
     }
 
     @Test
-    void givenEmptyInputShouldReportInvalidJson() throws JsonReadException {
+    void givenEmptyInputShouldReportInvalidJson() throws IOException {
         List<Token> inputList = lexer.lexFromFile(new File("src/test/resources/fail_empty.json"));
 
         JsonSyntaxException exception = assertThrows(JsonSyntaxException.class,
@@ -48,7 +48,7 @@ class JsonParserTest {
     }
 
     @Test
-    void givenObjectOpenerAndCloserInputShouldReturnSingleNullObjectEntry() throws JsonReadException {
+    void givenObjectOpenerAndCloserInputShouldReturnSingleNullObjectEntry() throws IOException {
         List<Token> inputList = lexer.lexFromFile(new File("src/test/resources/pass_brackets.json"));
 
         JsonObject expectedRootNode = new JsonObject();
@@ -58,7 +58,7 @@ class JsonParserTest {
     }
 
     @Test
-    void givenArrayOpenerAndCloserInputShouldReturnSingleNullArrayEntry() throws JsonReadException {
+    void givenArrayOpenerAndCloserInputShouldReturnSingleNullArrayEntry() throws IOException {
         List<Token> inputList = lexer.lexFromFile(new File("src/test/resources/pass_simpleArray.json"));
 
         JsonArray expectedRootNode = new JsonArray();
@@ -68,7 +68,7 @@ class JsonParserTest {
     }
 
     @Test
-    void givenObjectContainingContentShouldReturnValidObject() throws JsonReadException {
+    void givenObjectContainingContentShouldReturnValidObject() throws IOException {
         List<Token> inputList = lexer.lexFromFile(new File("src/test/resources/pass_objectKeyValue.json"));
 
         JsonString valueString = new JsonString("value");
@@ -81,7 +81,7 @@ class JsonParserTest {
     }
 
     @Test
-    void givenObjectContainingMultipleContentEntriesShouldReturnValidObject() throws JsonReadException {
+    void givenObjectContainingMultipleContentEntriesShouldReturnValidObject() throws IOException {
         List<Token> inputList = lexer.lexFromFile(new File("src/test/resources/pass_multipleObjectKeyValues.json"));
 
         JsonObject expectedRootNode = new JsonObject();
@@ -96,7 +96,7 @@ class JsonParserTest {
     }
 
     @Test
-    void givenObjectWithEscapedQuotesThenReturnCorrectStringValues() throws JsonReadException {
+    void givenObjectWithEscapedQuotesThenReturnCorrectStringValues() throws IOException {
         List<Token> inputList = lexer.lexFromFile(new File("src/test/resources/pass_escapedQuotes.json"));
 
         JsonObject expectedRootNode = new JsonObject();
@@ -108,7 +108,7 @@ class JsonParserTest {
     }
 
     @Test
-    void givenObjectWithMultipleEscapeSequencesThenReturnProcessedStringValues() throws JsonReadException {
+    void givenObjectWithMultipleEscapeSequencesThenReturnProcessedStringValues() throws IOException {
         List<Token> inputList = lexer.lexFromFile(new File("src/test/resources/pass_multipleEscapeSequences.json"));
 
         JsonObject expectedRootNode = new JsonObject();
@@ -120,7 +120,7 @@ class JsonParserTest {
     }
 
     @Test
-    void givenObjectContainingBooleanValueShouldReturnValidObject() throws JsonReadException {
+    void givenObjectContainingBooleanValueShouldReturnValidObject() throws IOException {
         List<Token> inputList = lexer.lexFromFile(new File("src/test/resources/pass_objectBooleanValue.json"));
 
         JsonObject expectedRootNode = new JsonObject();
@@ -132,7 +132,7 @@ class JsonParserTest {
     }
 
     @Test
-    void givenObjectContainingBooleanKeyShouldReturnValidObject() throws JsonReadException {
+    void givenObjectContainingBooleanKeyShouldReturnValidObject() throws IOException {
         List<Token> inputList = lexer.lexFromFile(new File("src/test/resources/pass_objectBooleanKey.json"));
 
         JsonObject expectedRootNode = new JsonObject();
@@ -144,7 +144,7 @@ class JsonParserTest {
     }
 
     @Test
-    void givenObjectContainingMultipleBooleanEntriesShouldReturnValidObject() throws JsonReadException {
+    void givenObjectContainingMultipleBooleanEntriesShouldReturnValidObject() throws IOException {
         List<Token> inputList = lexer.lexFromFile(new File("src/test/resources/pass_objectBooleanMultipleEntries.json"));
 
         JsonObject expectedRootNode = new JsonObject();
@@ -158,7 +158,7 @@ class JsonParserTest {
     }
 
     @Test
-    void givenObjectContainingNullValueShouldReturnValidObject() throws JsonReadException {
+    void givenObjectContainingNullValueShouldReturnValidObject() throws IOException {
         List<Token> inputList = lexer.lexFromFile(new File("src/test/resources/pass_objectNullValue.json"));
 
         JsonObject expectedRootNode = new JsonObject();
@@ -170,7 +170,7 @@ class JsonParserTest {
     }
 
     @Test
-    void givenJsonContainingRawNumberShouldReturnValidObject() throws JsonReadException {
+    void givenJsonContainingRawNumberShouldReturnValidObject() throws IOException {
         List<Token> inputList = lexer.lexFromFile(new File("src/test/resources/pass_complicatedNumber.json"));
 
         JsonNumber expectedRootNode = new JsonNumber(new BigDecimal("-123.456e10"), "-123.456e10");
@@ -181,7 +181,7 @@ class JsonParserTest {
     }
 
     @Test
-    void givenObjectContainingMixedValuesShouldReturnValidObject() throws JsonReadException {
+    void givenObjectContainingMixedValuesShouldReturnValidObject() throws IOException {
         List<Token> inputList = lexer.lexFromFile(new File("src/test/resources/pass_mixedValueObject.json"));
 
         JsonObject expectedRootNode = new JsonObject();
@@ -197,7 +197,7 @@ class JsonParserTest {
     }
 
     @Test
-    void givenObjectContainingMixedKeysAndValuesShouldReturnValidObject() throws JsonReadException {
+    void givenObjectContainingMixedKeysAndValuesShouldReturnValidObject() throws IOException {
         List<Token> inputList = lexer.lexFromFile(new File("src/test/resources/pass_mixedKeyAndValueInput.json"));
 
         JsonObject expectedRootNode = new JsonObject();
@@ -212,7 +212,7 @@ class JsonParserTest {
     }
 
     @Test
-    void givenObjectContainingNestedObjectsShouldReturnValidObject() throws JsonReadException {
+    void givenObjectContainingNestedObjectsShouldReturnValidObject() throws IOException {
         List<Token> inputList = lexer.lexFromFile(new File("src/test/resources/pass_nestedObjects.json"));
 
         JsonObject expectedRootNode = new JsonObject();
@@ -226,7 +226,7 @@ class JsonParserTest {
     }
 
     @Test
-    void givenObjectContainingManyNestedObjectsShouldReturnValidObject() throws JsonReadException {
+    void givenObjectContainingManyNestedObjectsShouldReturnValidObject() throws IOException {
         List<Token> inputList = lexer.lexFromFile(new File("src/test/resources/pass_manyNestedObjects.json"));
 
         JsonObject expectedRootNode = new JsonObject();
@@ -245,7 +245,7 @@ class JsonParserTest {
     }
 
     @Test
-    void givenObjectContainingIncorrectlyNestedObjectsShouldReportInvalidJson() throws JsonReadException {
+    void givenObjectContainingIncorrectlyNestedObjectsShouldReportInvalidJson() throws IOException {
         List<Token> inputList = lexer.lexFromFile(new File("src/test/resources/fail_incorrectNesting.json"));
 
         JsonSyntaxException exception = assertThrows(JsonSyntaxException.class,
@@ -255,7 +255,7 @@ class JsonParserTest {
     }
 
     @Test
-    void givenJsonObjectsNestedInArraysShouldReturnValidJson() throws JsonReadException {
+    void givenJsonObjectsNestedInArraysShouldReturnValidJson() throws IOException {
         List<Token> inputList = lexer.lexFromFile(new File("src/test/resources/pass_nestedObjectsInArrays.json"));
 
         JsonObject deepObject = new JsonObject();
@@ -279,7 +279,7 @@ class JsonParserTest {
     }
 
     @Test
-    void givenCompleteJsonWithAllTypesShouldReturnValidJson() throws JsonReadException {
+    void givenCompleteJsonWithAllTypesShouldReturnValidJson() throws IOException {
         List<Token> inputList = lexer.lexFromFile(new File("src/test/resources/pass_nestedComplete.json"));
 
         JsonObject deepObject = new JsonObject();
@@ -323,7 +323,7 @@ class JsonParserTest {
 
     @ParameterizedTest
     @MethodSource("stringAsNumberInputs")
-    void givenIncreasinglyComplexNumbersShouldReportValidJson(String inputFilePath, BigDecimal expectedNumber) throws JsonReadException {
+    void givenIncreasinglyComplexNumbersShouldReportValidJson(String inputFilePath, BigDecimal expectedNumber) throws IOException {
         List<Token> inputList = lexer.lexFromFile(new File(inputFilePath));
 
         JsonObject expectedRootNode = new JsonObject();

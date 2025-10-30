@@ -1,6 +1,5 @@
 package printing;
 
-import jsonjar.error_handling.JsonReadException;
 import jsonjar.json_objects.Json;
 import jsonjar.lexing_parsing.JsonLexer;
 import jsonjar.lexing_parsing.JsonParser;
@@ -9,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
+import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -25,21 +25,21 @@ class JsonPrettyPrinterTest {
     }
 
     @Test
-    void givenSimpleJsonObjectWithoutIndentationThenReturnCorrectString() throws JsonReadException {
+    void givenSimpleJsonObjectWithoutIndentationThenReturnCorrectString() throws IOException {
         Json input = parser.parse(lexer.lexFromFile(new File("src/test/resources/pass_brackets.json")));
         String expected = "{}";
         assertEquals(expected, printer.getFormattedJsonString(input, 0));
     }
 
     @Test
-    void givenSimpleJsonArrayWithoutIndentationThenReturnCorrectString() throws JsonReadException {
+    void givenSimpleJsonArrayWithoutIndentationThenReturnCorrectString() throws IOException {
         Json input = parser.parse(lexer.lexFromFile(new File("src/test/resources/pass_simpleArray.json")));
         String expected = "[]";
         assertEquals(expected, printer.getFormattedJsonString(input, 0));
     }
 
     @Test
-    void givenSimpleJsonObjectWithSingleIndentedValueThenReturnCorrectString() throws JsonReadException {
+    void givenSimpleJsonObjectWithSingleIndentedValueThenReturnCorrectString() throws IOException {
         File file = new File("src/test/resources/pass_boolean.json");
         Json input = parser.parse(lexer.lexFromFile(file));
         String expected = """
@@ -51,7 +51,7 @@ class JsonPrettyPrinterTest {
     }
 
     @Test
-    void givenSimpleJsonArrayWithSingleIndentedValueThenReturnCorrectString() throws JsonReadException {
+    void givenSimpleJsonArrayWithSingleIndentedValueThenReturnCorrectString() throws IOException {
         File file = new File("src/test/resources/pass_singleValueArray.json");
         Json input = parser.parse(lexer.lexFromFile(file));
         String expected = """
@@ -63,7 +63,7 @@ class JsonPrettyPrinterTest {
     }
 
     @Test
-    void givenJsonObjectWithMultipleIndentedValuesThenReturnCorrectString() throws JsonReadException {
+    void givenJsonObjectWithMultipleIndentedValuesThenReturnCorrectString() throws IOException {
         File file = new File("src/test/resources/pass_mixedValueObject.json");
         Json input = parser.parse(lexer.lexFromFile(file));
         String expected = """
@@ -79,7 +79,7 @@ class JsonPrettyPrinterTest {
     }
 
     @Test
-    void givenJsonArrayWithMultipleIndentedValuesThenReturnCorrectString() throws JsonReadException {
+    void givenJsonArrayWithMultipleIndentedValuesThenReturnCorrectString() throws IOException {
         File file = new File("src/test/resources/pass_mixedValueArray.json");
         Json input = parser.parse(lexer.lexFromFile(file));
         String expected = """
@@ -95,7 +95,7 @@ class JsonPrettyPrinterTest {
     }
 
     @Test
-    void givenMixedJsonObjectAndArrayThenReturnCorrectString() throws JsonReadException {
+    void givenMixedJsonObjectAndArrayThenReturnCorrectString() throws IOException {
         File file = new File("src/test/resources/pass_mixedObjectAndArray.json");
         Json input = parser.parse(lexer.lexFromFile(file));
         String expected = """
@@ -117,7 +117,7 @@ class JsonPrettyPrinterTest {
     }
 
     @Test
-    void givenComplexArrayThenReturnCorrectlyFormattedString() throws JsonReadException {
+    void givenComplexArrayThenReturnCorrectlyFormattedString() throws IOException {
         File file = new File("src/test/resources/pass_complexArray.json");
         Json input = parser.parse(lexer.lexFromFile(file));
         String expected = """

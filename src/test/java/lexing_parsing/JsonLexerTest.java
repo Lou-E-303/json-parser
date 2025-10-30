@@ -1,6 +1,5 @@
 package lexing_parsing;
 
-import jsonjar.error_handling.JsonReadException;
 import jsonjar.error_handling.JsonSyntaxException;
 import jsonjar.lexing_parsing.TokenType;
 import jsonjar.lexing_parsing.Token;
@@ -12,6 +11,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
@@ -46,7 +46,7 @@ class JsonLexerTest {
     }
 
     @Test
-    void givenFileInputOfValidTokensThenReturnTokenList() throws JsonReadException {
+    void givenFileInputOfValidTokensThenReturnTokenList() throws IOException {
         String inputFilePath = "src/test/resources/lexer_validTokens.json";
 
         ArrayList<Token> expectedTokens = new ArrayList<>(
@@ -122,7 +122,7 @@ class JsonLexerTest {
     }
 
     @Test
-    void givenEmptyFileInputThenReturnEmptyList() throws JsonReadException {
+    void givenEmptyFileInputThenReturnEmptyList() throws IOException {
         String inputFilePath = "src/test/resources/fail_empty.json";
 
         ArrayList<Token> expectedTokens = new ArrayList<>(List.of());
@@ -132,7 +132,7 @@ class JsonLexerTest {
     }
 
     @Test
-    void givenFileInputWithWhitespaceInsideAndOutsideQuotesThenReturnCorrectTokens() throws JsonReadException {
+    void givenFileInputWithWhitespaceInsideAndOutsideQuotesThenReturnCorrectTokens() throws IOException {
         String inputFilePath = "src/test/resources/pass_mixedWhitespace.json";
 
         ArrayList<Token> expectedTokens = new ArrayList<>(List.of(
@@ -148,7 +148,7 @@ class JsonLexerTest {
     }
 
     @Test
-    void givenFileInputWithEscapedQuotesThenReturnCorrectTokens() throws JsonReadException {
+    void givenFileInputWithEscapedQuotesThenReturnCorrectTokens() throws IOException {
         String inputFilePath = "src/test/resources/lexer_escapedQuotes.json";
 
         ArrayList<Token> expectedTokens = new ArrayList<>(List.of(
@@ -176,7 +176,7 @@ class JsonLexerTest {
     }
 
     @Test
-    void givenRawNumberInputShouldProduceCorrectTokens() throws JsonReadException {
+    void givenRawNumberInputShouldProduceCorrectTokens() throws IOException {
         String inputFilePath = "src/test/resources/pass_singleNumber.json";
 
         ArrayList<Token> expectedTokens = new ArrayList<>(List.of(theNumberThree));
@@ -186,7 +186,7 @@ class JsonLexerTest {
     }
 
     @Test
-    void givenLongRawNumberInputShouldProduceCorrectTokens() throws JsonReadException {
+    void givenLongRawNumberInputShouldProduceCorrectTokens() throws IOException {
         String inputFilePath = "src/test/resources/pass_longNumber.json";
 
         ArrayList<Token> expectedTokens = new ArrayList<>(List.of(oneTwoThreeFour));
@@ -197,7 +197,7 @@ class JsonLexerTest {
 
     @ParameterizedTest
     @MethodSource("numberAsStringInputs")
-    void givenIncreasinglyComplexNumbersAsStringsShouldProduceCorrectTokens(String inputFilePath, Token inputToken) throws JsonReadException {
+    void givenIncreasinglyComplexNumbersAsStringsShouldProduceCorrectTokens(String inputFilePath, Token inputToken) throws IOException {
         ArrayList<Token> expectedTokens = new ArrayList<>(List.of(inputToken));
         ArrayList<Token> tokens = new ArrayList<>(lexer.lexFromFile(new File(inputFilePath)));
 

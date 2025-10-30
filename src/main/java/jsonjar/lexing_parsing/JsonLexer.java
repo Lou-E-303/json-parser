@@ -1,6 +1,5 @@
 package jsonjar.lexing_parsing;
 
-import jsonjar.error_handling.JsonReadException;
 import jsonjar.error_handling.JsonSyntaxException;
 
 import java.io.*;
@@ -16,7 +15,7 @@ public class JsonLexer {
     private boolean insideString = false;
     private boolean escapeNext = false;
 
-    public List<Token> lexFromFile(File inputFile) throws JsonReadException {
+    public List<Token> lexFromFile(File inputFile) throws IOException {
         StringBuilder fileContent = new StringBuilder();
 
         try (BufferedReader reader = new BufferedReader(new FileReader(inputFile))) {
@@ -24,8 +23,6 @@ public class JsonLexer {
             while ((charAsInt = reader.read()) != -1) {
                 fileContent.append((char) charAsInt);
             }
-        } catch (IOException e) {
-            throw new JsonReadException(LEXER_FAILED_TO_READ_FILE.getMessage() + e.getMessage()); // TODO is JsonReadException appropriate here?
         }
 
         return lexFromString(fileContent.toString());
