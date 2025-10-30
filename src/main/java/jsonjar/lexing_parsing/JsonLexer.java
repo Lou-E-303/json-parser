@@ -28,7 +28,7 @@ public class JsonLexer {
         return lexFromString(fileContent.toString());
     }
 
-    public List<Token> lexFromString(String input) {
+    public List<Token> lexFromString(String input) throws IOException {
         List<Token> tokens = new ArrayList<>();
         StringBuilder stringContent = new StringBuilder();
 
@@ -43,11 +43,7 @@ public class JsonLexer {
                     tokeniseCharacter(character, tokens, reader); // Ignoring whitespace outside of strings, create appropriate tokens
                 }
             }
-        } catch (IOException e) {
-            // TODO define own exception here
-            throw new RuntimeException("Unexpected IO error during string lexing", e);
         }
-
         reset();
         return tokens;
     }
