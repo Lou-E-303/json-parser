@@ -1,10 +1,7 @@
-package lexing_parsing;
+package jsonjar.lexing_parsing;
 
 import jsonjar.error_handling.JsonSyntaxException;
 import jsonjar.json_objects.*;
-import jsonjar.lexing_parsing.JsonParser;
-import jsonjar.lexing_parsing.JsonLexer;
-import jsonjar.lexing_parsing.Token;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -48,11 +45,17 @@ class JsonParserTest {
     }
 
     @Test
-    void givenObjectOpenerAndCloserInputShouldReturnSingleNullObjectEntry() throws IOException {
-        List<Token> inputList = lexer.lexFromFile(new File("src/test/resources/pass_brackets.json"));
-
+    void givenSimpleFileInputJsonShouldReturnValidJson() throws IOException {
         JsonObject expectedRootNode = new JsonObject();
-        Json actualRootNode = jsonParser.parse(inputList);
+        Json actualRootNode = jsonParser.parseFromFile(new File("src/test/resources/pass_brackets.json"));
+
+        assertThat(actualRootNode).isEqualToComparingFieldByFieldRecursively(expectedRootNode);
+    }
+
+    @Test
+    void givenSimpleStringInputJsonShouldReturnValidJson() throws IOException {
+        JsonObject expectedRootNode = new JsonObject();
+        Json actualRootNode = jsonParser.parseFromString("{}");
 
         assertThat(actualRootNode).isEqualToComparingFieldByFieldRecursively(expectedRootNode);
     }
@@ -81,16 +84,32 @@ class JsonParserTest {
     }
 
     @Test
-    void givenObjectContainingMultipleContentEntriesShouldReturnValidObject() throws IOException {
-        List<Token> inputList = lexer.lexFromFile(new File("src/test/resources/pass_multipleObjectKeyValues.json"));
-
+    void givenObjectContainingMultipleContentEntriesAsFileInputShouldReturnValidJson() throws IOException {
         JsonObject expectedRootNode = new JsonObject();
 
         expectedRootNode.addValue("key1", new JsonString("value1"));
         expectedRootNode.addValue("key2", new JsonString("value2"));
         expectedRootNode.addValue("key3", new JsonString("value3"));
 
-        Json actualRootNode = jsonParser.parse(inputList);
+        Json actualRootNode = jsonParser.parseFromFile(new File("src/test/resources/pass_multipleObjectKeyValues.json"));
+
+        assertThat(actualRootNode).isEqualToComparingFieldByFieldRecursively(expectedRootNode);
+    }
+
+    @Test
+    void givenObjectContainingMultipleContentEntriesAsStringInputShouldReturnValidJson() throws IOException {
+        JsonObject expectedRootNode = new JsonObject();
+
+        expectedRootNode.addValue("key1", new JsonString("value1"));
+        expectedRootNode.addValue("key2", new JsonString("value2"));
+        expectedRootNode.addValue("key3", new JsonString("value3"));
+
+        Json actualRootNode = jsonParser.parseFromString("""
+                {
+                  "key1": "value1",
+                  "key2": "value2",
+                  "key3": "value3"
+                }""");
 
         assertThat(actualRootNode).isEqualToComparingFieldByFieldRecursively(expectedRootNode);
     }
@@ -226,9 +245,7 @@ class JsonParserTest {
     }
 
     @Test
-    void givenObjectContainingManyNestedObjectsShouldReturnValidObject() throws IOException {
-        List<Token> inputList = lexer.lexFromFile(new File("src/test/resources/pass_manyNestedObjects.json"));
-
+    void givenObjectContainingManyNestedObjectsAsFileInputShouldReturnValidObject() throws IOException {
         JsonObject expectedRootNode = new JsonObject();
         JsonObject middle = new JsonObject();
         JsonObject inner = new JsonObject();
@@ -239,7 +256,37 @@ class JsonParserTest {
         outer.addValue("middle", middle);
         expectedRootNode.addValue("outer", outer);
 
-        Json actualRootNode = jsonParser.parse(inputList);
+        Json actualRootNode = jsonParser.parseFromFile(new File("src/test/resources/pass_manyNestedObjects.json"));
+
+        assertThat(actualRootNode).isEqualToComparingFieldByFieldRecursively(expectedRootNode);
+    }
+
+    @Test
+    void givenObjectContainingManyNestedObjectsAsStringInputShouldReturnValidObject() throws IOException {
+        JsonObject expectedRootNode = new JsonObject();
+        JsonObject middle = new JsonObject();
+        JsonObject inner = new JsonObject();
+        JsonObject outer = new JsonObject();
+
+        inner.addValue("key", new JsonString("value"));
+        middle.addValue("inner", inner);
+        outer.addValue("middle", middle);
+        expectedRootNode.addValue("outer", outer);
+
+        Json actualRootNode = jsonParser.parseFromString("""
+                {
+                  "outer":
+                  {
+                    "middle":
+                    {
+                      "inner":
+                      {
+                        "key": "value"
+                      }
+                    }
+                  }
+                }
+                """);
 
         assertThat(actualRootNode).isEqualToComparingFieldByFieldRecursively(expectedRootNode);
     }

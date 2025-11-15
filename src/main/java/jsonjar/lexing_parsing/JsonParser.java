@@ -5,6 +5,8 @@ import jsonjar.json_objects.*;
 import jsonjar.state_management.JsonFiniteStateMachine;
 import jsonjar.state_management.State;
 
+import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -15,9 +17,20 @@ import static jsonjar.error_handling.ErrorConstants.*;
 public class JsonParser {
     private static final JsonFiniteStateMachine stateMachine = JsonFiniteStateMachine.JSON_FINITE_STATE_MACHINE;
     private static final Deque<Json> jsonStack = new ArrayDeque<>();
+    private static final JsonLexer lexer = new JsonLexer();
     private String currentKey = null;
 
-    public Json parse(List<Token> tokens) {
+    public Json parseFromFile(File file) throws IOException {
+        List<Token> tokens = lexer.lexFromFile(file);
+        return parse(tokens);
+    }
+
+    public Json parseFromString(String input) throws IOException {
+        List<Token> tokens = lexer.lexFromString(input);
+        return parse(tokens);
+    }
+
+    Json parse(List<Token> tokens) {
         reset();
 
         try {
@@ -122,5 +135,6 @@ public class JsonParser {
         stateMachine.reset();
         currentKey = null;
         jsonStack.clear();
+        lexer.reset();
     }
 }

@@ -1,9 +1,6 @@
-package lexing_parsing;
+package jsonjar.lexing_parsing;
 
 import jsonjar.error_handling.JsonSyntaxException;
-import jsonjar.lexing_parsing.TokenType;
-import jsonjar.lexing_parsing.Token;
-import jsonjar.lexing_parsing.JsonLexer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -66,7 +63,7 @@ class JsonLexerTest {
     }
 
     @Test
-    void givenSimpleJsonStringShouldProduceCorrectTokens() {
+    void givenSimpleJsonStringShouldProduceCorrectTokens() throws IOException {
         String input = "{\"key\":\"value\"}";
 
         ArrayList<Token> expectedTokens = new ArrayList<>(List.of(
@@ -82,7 +79,7 @@ class JsonLexerTest {
     }
 
     @Test
-    void givenEmptyStringShouldReturnEmptyList() {
+    void givenEmptyStringShouldReturnEmptyList() throws IOException {
         String input = "";
 
         ArrayList<Token> expectedTokens = new ArrayList<>();
@@ -92,7 +89,7 @@ class JsonLexerTest {
     }
 
     @Test
-    void givenNumberStringShouldProduceCorrectToken() {
+    void givenNumberStringShouldProduceCorrectToken() throws IOException {
         String input = "42";
 
         ArrayList<Token> expectedTokens = new ArrayList<>(List.of(
@@ -104,7 +101,7 @@ class JsonLexerTest {
     }
 
     @Test
-    void givenBooleanAndNullStringShouldProduceCorrectTokens() {
+    void givenBooleanAndNullStringShouldProduceCorrectTokens() throws IOException {
         String input = "[true,false,null]";
 
         ArrayList<Token> expectedTokens = new ArrayList<>(List.of(

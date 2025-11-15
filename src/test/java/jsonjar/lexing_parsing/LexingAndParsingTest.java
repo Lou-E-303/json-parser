@@ -1,25 +1,19 @@
-package e2e;
+package jsonjar.lexing_parsing;
 
-import jsonjar.lexing_parsing.JsonLexer;
-import jsonjar.lexing_parsing.JsonParser;
-import jsonjar.lexing_parsing.Token;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class LexingAndParsingTest {
     private static JsonParser jsonParser;
-    private static JsonLexer lexer;
 
     @BeforeEach
     void init() {
         jsonParser = new JsonParser();
-        lexer = new JsonLexer();
     }
 
     @AfterEach
@@ -35,10 +29,7 @@ class LexingAndParsingTest {
         assertNotNull(failFiles, "No fail files found in test resources.");
 
         for (File file : failFiles) {
-            assertThrows(Throwable.class, () -> {
-                List<Token> inputList = lexer.lexFromFile(file);
-                jsonParser.parse(inputList);
-            }, "Expected Exception for file: " + file.getName());
+            assertThrows(Throwable.class, () -> jsonParser.parseFromFile(file), "Expected Exception for file: " + file.getName());
         }
     }
 
@@ -51,8 +42,7 @@ class LexingAndParsingTest {
 
         for (File file : passFiles) {
             assertDoesNotThrow(() -> {
-                List<Token> inputList = lexer.lexFromFile(file);
-                jsonParser.parse(inputList);
+                jsonParser.parseFromFile(file);
             });
         }
     }

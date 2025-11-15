@@ -6,9 +6,13 @@ import jsonjar.lexing_parsing.JsonParser;
 import jsonjar.printing.JsonPrettyPrinter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -25,101 +29,9 @@ class JsonPrettyPrinterTest {
     }
 
     @Test
-    void givenSimpleJsonObjectWithoutIndentationThenReturnCorrectString() throws IOException {
-        Json input = parser.parse(lexer.lexFromFile(new File("src/test/resources/pass_brackets.json")));
-        String expected = "{}";
-        assertEquals(expected, printer.getFormattedJsonString(input, 0));
-    }
-
-    @Test
-    void givenSimpleJsonArrayWithoutIndentationThenReturnCorrectString() throws IOException {
-        Json input = parser.parse(lexer.lexFromFile(new File("src/test/resources/pass_simpleArray.json")));
-        String expected = "[]";
-        assertEquals(expected, printer.getFormattedJsonString(input, 0));
-    }
-
-    @Test
-    void givenSimpleJsonObjectWithSingleIndentedValueThenReturnCorrectString() throws IOException {
-        File file = new File("src/test/resources/pass_boolean.json");
-        Json input = parser.parse(lexer.lexFromFile(file));
-        String expected = """
-                {
-                  "key": true
-                }""";
-
-        assertEquals(expected, printer.getFormattedJsonString(input, 0));
-    }
-
-    @Test
-    void givenSimpleJsonArrayWithSingleIndentedValueThenReturnCorrectString() throws IOException {
-        File file = new File("src/test/resources/pass_singleValueArray.json");
-        Json input = parser.parse(lexer.lexFromFile(file));
-        String expected = """
-                [
-                  3
-                ]""";
-
-        assertEquals(expected, printer.getFormattedJsonString(input, 0));
-    }
-
-    @Test
-    void givenJsonObjectWithMultipleIndentedValuesThenReturnCorrectString() throws IOException {
-        File file = new File("src/test/resources/pass_mixedValueObject.json");
-        Json input = parser.parse(lexer.lexFromFile(file));
-        String expected = """
-                {
-                  "key1": true,
-                  "key2": false,
-                  "key3": null,
-                  "key4": "value",
-                  "key5": 101
-                }""";
-
-        assertEquals(expected, printer.getFormattedJsonString(input, 0));
-    }
-
-    @Test
-    void givenJsonArrayWithMultipleIndentedValuesThenReturnCorrectString() throws IOException {
-        File file = new File("src/test/resources/pass_mixedValueArray.json");
-        Json input = parser.parse(lexer.lexFromFile(file));
-        String expected = """
-                [
-                  true,
-                  false,
-                  null,
-                  "value",
-                  101
-                ]""";
-
-        assertEquals(expected, printer.getFormattedJsonString(input, 0));
-    }
-
-    @Test
-    void givenMixedJsonObjectAndArrayThenReturnCorrectString() throws IOException {
-        File file = new File("src/test/resources/pass_mixedObjectAndArray.json");
-        Json input = parser.parse(lexer.lexFromFile(file));
-        String expected = """
-                {
-                  "key1": true,
-                  "key2": [
-                    false,
-                    null,
-                    "value",
-                    101
-                  ],
-                  "key3": {
-                    "nestedKey1": "nestedValue1",
-                    "nestedKey2": 202
-                  }
-                }""";
-
-        assertEquals(expected, printer.getFormattedJsonString(input, 0));
-    }
-
-    @Test
-    void givenComplexArrayThenReturnCorrectlyFormattedString() throws IOException {
+    void givenVeryComplexArrayThenReturnCorrectlyFormattedString() throws IOException {
         File file = new File("src/test/resources/pass_complexArray.json");
-        Json input = parser.parse(lexer.lexFromFile(file));
+        Json input = parser.parseFromFile(file);
         String expected = """
             [
               "JSON Test Pattern pass1",
@@ -198,5 +110,65 @@ class JsonPrettyPrinterTest {
             ]""";
 
         assertEquals(expected, printer.getFormattedJsonString(input, 0));
+    }
+
+    @ParameterizedTest
+    @MethodSource("expectedPrettyPrinterOutputs")
+    void givenIncreasinglyComplexIndentationShouldPrintCorrectly(String inputFilePath, String expectedPrinterOutput) throws IOException {
+        Json input = parser.parseFromFile(new File(inputFilePath));
+        assertEquals(expectedPrinterOutput, printer.getFormattedJsonString(input, 0));
+    }
+
+    static Stream<Arguments> expectedPrettyPrinterOutputs() {
+        return Stream.of(
+                Arguments.of("src/test/resources/pass_boolean.json", """
+            {
+              "key": true
+            }"""),
+
+                Arguments.of("src/test/resources/pass_brackets.json", """
+            {}"""),
+
+                Arguments.of("src/test/resources/pass_simpleArray.json", """
+            []"""),
+
+                Arguments.of("src/test/resources/pass_singleValueArray.json", """
+            [
+              3
+            ]"""),
+
+                Arguments.of("src/test/resources/pass_mixedValueObject.json", """
+            {
+              "key1": true,
+              "key2": false,
+              "key3": null,
+              "key4": "value",
+              "key5": 101
+            }"""),
+
+                Arguments.of("src/test/resources/pass_mixedValueArray.json", """
+            [
+              true,
+              false,
+              null,
+              "value",
+              101
+            ]"""),
+
+                Arguments.of("src/test/resources/pass_mixedObjectAndArray.json", """
+            {
+              "key1": true,
+              "key2": [
+                false,
+                null,
+                "value",
+                101
+              ],
+              "key3": {
+                "nestedKey1": "nestedValue1",
+                "nestedKey2": 202
+              }
+            }""")
+        );
     }
 }

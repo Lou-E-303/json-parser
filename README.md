@@ -1,5 +1,4 @@
-**JsonJar: A finite-state machine JSON parser for Java**
-
+# JsonJar: A finite state machine JSON parser implementation for Java
 # How it works
 
 - [JsonLexer](https://github.com/Lou-E-303/json-parser/blob/master/src/main/java/jsonparser/lexing_parsing/JsonLexer.java)
@@ -15,11 +14,9 @@ From there, you can see the main logical flow of the parser, which parses lexica
 3. The finite state machine manages the parse state transitions.
 
 Everything else in this repo is utility built to support these three components.
-
 # Run
 
 - Coming soon!
-
 # Links
 
 Link to challenge [here](https://codingchallenges.fyi/challenges/challenge-json-parser/) with thanks to John Crickett.

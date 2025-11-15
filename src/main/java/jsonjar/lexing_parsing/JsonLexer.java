@@ -15,7 +15,7 @@ public class JsonLexer {
     private boolean insideString = false;
     private boolean escapeNext = false;
 
-    public List<Token> lexFromFile(File inputFile) throws IOException {
+    List<Token> lexFromFile(File inputFile) throws IOException {
         StringBuilder fileContent = new StringBuilder();
 
         try (BufferedReader reader = new BufferedReader(new FileReader(inputFile))) {
@@ -28,7 +28,7 @@ public class JsonLexer {
         return lexFromString(fileContent.toString());
     }
 
-    public List<Token> lexFromString(String input) throws IOException {
+    List<Token> lexFromString(String input) throws IOException {
         List<Token> tokens = new ArrayList<>();
         StringBuilder stringContent = new StringBuilder();
 
@@ -178,7 +178,7 @@ public class JsonLexer {
         return c == ' ' || c == '\n' || c == '\r' || c == '\t';
     }
 
-    private void reset() {
+    void reset() {
         insideString = false;
         escapeNext = false;
     }
