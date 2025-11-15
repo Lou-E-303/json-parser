@@ -1,4 +1,8 @@
-# JsonJar: A finite state machine JSON parser implementation for Java
+<h1 align="center"><b>JsonJar: A finite state machine JSON parser implementation for Java</b></h1>
+
+<p align="center">
+<img src="src/resources/json-jar.png" alt="JsonJar" style="width: 50%;" />
+
 # How it works
 
 - [JsonLexer](https://github.com/Lou-E-303/json-parser/blob/master/src/main/java/jsonparser/lexing_parsing/JsonLexer.java)
