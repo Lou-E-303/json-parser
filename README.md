@@ -1,7 +1,7 @@
-<h1 align="center"><b>JsonJar: A finite state machine JSON parser implementation for Java</b></h1>
-
+<h1 align="center"><b>JsonJar</b></h1>
 <p align="center">
 <img src="src/resources/json-jar.png" alt="JsonJar" style="width: 50%;" />
+<h1 align="center"><b>A finite state machine JSON parser implementation for Java</b></h1>
 
 # How it works
 
