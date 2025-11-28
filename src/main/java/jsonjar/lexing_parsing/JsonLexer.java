@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static jsonjar.error_handling.ErrorConstants.*;
+import static jsonjar.lexing_parsing.JsonParsingErrorConstants.*;
 
 // Responsible for breaking the raw input into tokens and validating token syntax
 
@@ -78,7 +78,7 @@ class JsonLexer {
         }
     }
 
-    private static void handleUnicodeEscape(Reader reader, StringBuilder stringContent) throws IOException {
+    private static void handleUnicodeEscape(Reader reader, StringBuilder stringContent) throws IOException, JsonSyntaxException {
         char[] unicode = new char[4];
         for (int i = 0; i < 4; i++) {
             int nextChar = reader.read();

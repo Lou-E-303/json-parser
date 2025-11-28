@@ -12,7 +12,7 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.List;
 
-import static jsonjar.error_handling.ErrorConstants.*;
+import static jsonjar.lexing_parsing.JsonParsingErrorConstants.*;
 
 public class JsonParser {
     private static final JsonFiniteStateMachine stateMachine = JsonFiniteStateMachine.JSON_FINITE_STATE_MACHINE;

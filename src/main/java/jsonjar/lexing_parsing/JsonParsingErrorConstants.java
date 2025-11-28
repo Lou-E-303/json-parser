@@ -1,7 +1,6 @@
-package jsonjar.error_handling;
+package jsonjar.lexing_parsing;
 
-public enum ErrorConstants {
-    LEXER_FAILED_TO_READ_FILE("Error: Failed to read provided file. "),
+enum JsonParsingErrorConstants {
     LEXER_INVALID_ESCAPE_CHARACTER("Error: Invalid escape character '\\"),
     LEXER_UNEXPECTED_END_OF_UNICODE("Error: Unexpected end of input in Unicode escape."),
     LEXER_INVALID_STARTING_CHARACTER("Error: invalid starting character '"),
@@ -13,11 +12,11 @@ public enum ErrorConstants {
 
     private final String message;
 
-    ErrorConstants(String message) {
+    JsonParsingErrorConstants(String message) {
         this.message = message;
     }
 
-    public String getMessage() {
+    String getMessage() {
         return message;
     }
 }
