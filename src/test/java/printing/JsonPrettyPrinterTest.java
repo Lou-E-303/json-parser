@@ -1,7 +1,6 @@
 package printing;
 
 import jsonjar.json_objects.Json;
-import jsonjar.lexing_parsing.JsonLexer;
 import jsonjar.lexing_parsing.JsonParser;
 import jsonjar.printing.JsonPrettyPrinter;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,13 +17,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class JsonPrettyPrinterTest {
     JsonPrettyPrinter printer;
-    JsonLexer lexer;
     JsonParser parser;
 
     @BeforeEach
     void init() {
         printer = new JsonPrettyPrinter();
-        lexer = new JsonLexer();
         parser = new JsonParser();
     }
 

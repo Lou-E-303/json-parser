@@ -11,7 +11,7 @@ import static jsonjar.error_handling.ErrorConstants.*;
 
 // Responsible for breaking the raw input into tokens and validating token syntax
 
-public class JsonLexer {
+class JsonLexer {
     private boolean insideString = false;
     private boolean escapeNext = false;
 
