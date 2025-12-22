@@ -3,6 +3,9 @@
 <img src="src/resources/json-jar.png" alt="JsonJar" style="width: 50%;" />
 <h1 align="center"><b>A finite state machine JSON parser implementation for Java</b></h1>
 
+[![](https://jitpack.io/v/Lou-E-303/jsonjar.svg)](https://jitpack.io/#Lou-E-303/jsonjar)
+
+
 # How it works
 
 - [JsonLexer](https://github.com/Lou-E-303/json-parser/blob/master/src/main/java/jsonparser/lexing_parsing/JsonLexer.java)
