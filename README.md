@@ -40,7 +40,7 @@ From there, you can see the main logical flow of the parser, which parses lexica
 Everything else in this repo is utility built to support these three components.
 # Run
 
-- Coming soon!
+- See JitPack badge above for instructions on how to include JsonJar in your project.
 # Links
 
 Link to challenge [here](https://codingchallenges.fyi/challenges/challenge-json-parser/) with thanks to John Crickett.
