@@ -1,4 +1,4 @@
-<h2 align="center"><b>JsonJar</b></h2>
+<h1 align="center"><b>JsonJar</b></h2>
 <p align="center">
 <img src="src/resources/json-jar.png" alt="JsonJar" style="width: 50%;" />
 <h3 align="center">A JSON parser implementation for Java</h3>
