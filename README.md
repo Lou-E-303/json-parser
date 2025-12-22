@@ -1,4 +1,4 @@
-<h1 align="center"><b>JsonJar</b></h1>
+<h2 align="center"><b>JsonJar</b></h2>
 <p align="center">
 <img src="src/resources/json-jar.png" alt="JsonJar" style="width: 50%;" />
 <h3 align="center">A JSON parser implementation for Java</h3>
@@ -6,9 +6,26 @@
 [![](https://jitpack.io/v/Lou-E-303/jsonjar.svg?refresh=true)](https://jitpack.io/#Lou-E-303/jsonjar)
 
 # Features
+```java
+JsonParser parser = new JsonParser();
+```
 
-- JSON parsing from file or string using finite state machine implementation
-- Pretty-printing of JSON content
+```java
+// Parse JSON from a string
+String jsonString = "{\"name\":\"Alice\",\"age\":30,\"active\":true}";
+Json result = parser.parseFromString(jsonString);
+```
+```java
+// Parse JSON from a file
+File jsonFile = new File("data.json");
+Json result = parser.parseFromFile(jsonFile);
+```
+```java
+// Pretty print parsed JSON
+JsonPrettyPrinter printer = new JsonPrettyPrinter();
+String formatted = printer.getFormattedJsonString(result, 0);
+System.out.println(formatted);
+```
 
 # Interface
 
