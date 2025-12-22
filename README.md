@@ -3,8 +3,25 @@
 <img src="src/resources/json-jar.png" alt="JsonJar" style="width: 50%;" />
 <h1 align="center"><b>A finite state machine JSON parser implementation for Java</b></h1>
 
-[![](https://jitpack.io/v/Lou-E-303/jsonjar.svg)](https://jitpack.io/#Lou-E-303/jsonjar)
+[![](https://jitpack.io/v/Lou-E-303/jsonjar.svg?refresh=true)](https://jitpack.io/#Lou-E-303/jsonjar)
 
+# Features
+
+- JSON parsing from file or string using finite state machine implementation
+- Pretty-printing of JSON content
+
+# Interface
+
+## Parsing
+
+- `JsonParser.parseFromString()`: Parses valid JSON strings to hierarchical `Json` objects.
+- `JsonParser.parseFromFile()`: Parses valid JSON files to hierarchical `Json` objects.
+
+Both will throw an `IOException` in case of string or file read failure, and a `JsonReadException` in case of JSON read failure (e.g. due to invalid JSON input).
+
+## Pretty-printing
+
+- `JsonPrettyPrinter.getFormattedJsonString()`: Takes a `Json` object and returns a pretty-printed `String` object with proper indentation.
 
 # How it works
 
