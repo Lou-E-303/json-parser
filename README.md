@@ -1,7 +1,7 @@
 <h1 align="center"><b>JsonJar</b></h1>
 <p align="center">
 <img src="src/resources/json-jar.png" alt="JsonJar" style="width: 50%;" />
-<h1 align="center"><b>A finite state machine JSON parser implementation for Java</b></h1>
+<h3 align="center">A JSON parser implementation for Java</h3>
 
 [![](https://jitpack.io/v/Lou-E-303/jsonjar.svg?refresh=true)](https://jitpack.io/#Lou-E-303/jsonjar)
 
@@ -14,8 +14,8 @@
 
 ## Parsing
 
-- `JsonParser.parseFromString()`: Parses valid JSON strings to hierarchical `Json` objects.
-- `JsonParser.parseFromFile()`: Parses valid JSON files to hierarchical `Json` objects.
+- `JsonParser.parseFromString()`: Parses valid JSON `String` objects to hierarchical `Json` objects.
+- `JsonParser.parseFromFile()`: Parses valid JSON `File` objects to hierarchical `Json` objects.
 
 Both will throw an `IOException` in case of string or file read failure, and a `JsonReadException` in case of JSON read failure (e.g. due to invalid JSON input).
 
@@ -37,10 +37,8 @@ From there, you can see the main logical flow of the parser, which parses lexica
 2. The tokens are then processed by the parser according to formal JSON grammar rules
 3. The finite state machine manages the parse state transitions.
 
-Everything else in this repo is utility built to support these three components.
-# Run
+Everything else in this library is utility built to support these three components.
 
-- See JitPack badge above for instructions on how to include JsonJar in your project.
 # Links
 
 Link to challenge [here](https://codingchallenges.fyi/challenges/challenge-json-parser/) with thanks to John Crickett.
