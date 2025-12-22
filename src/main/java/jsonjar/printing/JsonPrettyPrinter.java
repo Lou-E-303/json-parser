@@ -5,16 +5,10 @@ import jsonjar.json_objects.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.logging.Logger;
 
 public class JsonPrettyPrinter {
     private static final String INDENT = "  ";
-    private final Logger logger = Logger.getLogger(getClass().getName());
     private final StringBuilder output = new StringBuilder();
-
-    public void print(Json json) {
-        logger.info(getFormattedJsonString(json, 0));
-    }
 
     public String getFormattedJsonString(Json json, int currentIndentLevel) {
         output.setLength(0); // Clear previous output
