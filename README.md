@@ -55,6 +55,10 @@ From there, you can see the main logical flow of the parser, which parses lexica
 
 Everything else in this library is utility built to support these three components.
 
+# Run
+
+See JitPack instructions [here](https://jitpack.io/#Lou-E-303/jsonjar).
+
 # Links
 
 Link to challenge [here](https://codingchallenges.fyi/challenges/challenge-json-parser/) with thanks to John Crickett.
