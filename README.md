@@ -34,8 +34,7 @@ System.out.println(formatted);
 - `JsonParser.parseFromString()`: Parses valid JSON `String` objects to hierarchical `Json` objects.
 - `JsonParser.parseFromFile()`: Parses valid JSON `File` objects to hierarchical `Json` objects.
 
-Both will throw an `IOException` in case of string or file read failure, and a `JsonReadException` in case of JSON read failure (e.g. due to invalid JSON input).
-
+Both will throw an `IOException` in case of string or file read failure, and a `JsonSyntaxException` in case of syntactical issue with JSON input.
 ## Pretty-printing
 
 - `JsonPrettyPrinter.getFormattedJsonString()`: Takes a `Json` object and returns a pretty-printed `String` object with proper indentation.
